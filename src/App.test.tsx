@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Web3Factory } from './types/web3/index';
 import App from './App';
+import * as W3 from './lib/W3/';
+// import Web3JS = require('web3');
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -9,9 +10,10 @@ it('renders without crashing', () => {
 });
 
 it('could use types from web3', () => {
-  let web3 = Web3Factory.GetWeb3();
-  console.log('Getting Ethereum block number');
-  web3.eth.getBlock(1, false, (error, result) => {
+  // console.log(Web3JS);
+  let web3 = new W3.Web3();
+  console.log(`Getting Ethereum block number`);
+  web3.eth.getBlockNumber((error, result) => {
     if (!error) {
       console.log(result);
     } else {

@@ -3,8 +3,8 @@
     "rules": {
         "align": [
             true,
-            "parameters",
-            "arguments",
+            //"parameters",
+            //"arguments",
             "statements"
         ],
         "ban": false,
