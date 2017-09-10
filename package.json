@@ -2,27 +2,47 @@
   "name": "soltsice",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
     "@types/bignumber.js": "^4.0.3",
+    "@types/history": "^4.6.0",
     "@types/jest": "^20.0.8",
+    "@types/material-ui": "^0.18.0",
     "@types/node": "^8.0.25",
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
-    "@types/underscore": "^1.8.2",
+    "@types/react-router": "^4.0.15",
+    "@types/react-router-dom": "^4.0.7",
+    "@types/underscore": "^1.8.2"
+  },
+  "dependencies": {
+
+    "history": "^4.7.2",
+    "material-ui": "^0.19.1",
     "mobx": "^3.2.2",
     "mobx-react": "^4.2.2",
     "mobx-react-devtools": "^4.2.15",
+    "mobx-react-router": "^4.0.1",
+    "node-sass": "^4.5.3",
+    "normalize.css": "^7.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts-ts": "^2.6.0",
     "truffle-blockchain-utils": "0.0.3",
     "truffle-contract": "^2.0.5",
-    "web3": "^0.20.0"
+    "web3": "^0.20.0",
+    "zeppelin-solidity": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "build:contracts": "truffle compile",
+    "copy-contracts": "cp -R build/contracts/. src/contracts",
+    "testrpc": "testrpc -m dbrainio",
+    "build-css": "node-sass src/ -o src/ --recursive",
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive"
   }
 }

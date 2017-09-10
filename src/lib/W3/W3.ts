@@ -17,10 +17,10 @@ export class Web3 {
         Shh: new (provider: Web3.Provider) => Web3.Shh
         Bzz: new (provider: Web3.Provider) => Web3.Bzz
     } = Web3JS.modules;
-
+    
     get currentProvider(): Web3.Provider { return this.web3.currentProvider; }
     get eth(): Web3.Eth { return this.web3.eth; }
-
+    get version(): any { return this.web3.version; }
     web3;
     constructor(provider?: Web3.Provider) {
         let tmpWeb3;
