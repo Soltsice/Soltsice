@@ -1,11 +1,11 @@
 import './App.css';
 
 import * as React from 'react';
-import DevTools from 'mobx-react-devtools';
+import { observer, inject } from 'mobx-react';
 import { isProduction } from '../../constants';
 import * as stores from '../../stores';
 import { TimerButton } from '../TimerButton';
-import { Route } from 'react-router';
+import { Route, RouteComponentProps } from 'react-router';
 import { Link, match } from 'react-router-dom';
 
 const logo = require('./logo.svg');
@@ -13,14 +13,17 @@ const logo = require('./logo.svg');
 interface Props {
   foo: string;
   match?: match<any>;
+  AppState?: stores.AppState;
 }
 
+@observer
 class MyComponent extends React.Component<Props, {}> {
   render() {
     return <span>{this.props.foo}</span>;
   }
 }
 
+@observer
 export class App extends React.Component<Props> {
   render() {
     let m = this.props.match!;
@@ -40,8 +43,6 @@ export class App extends React.Component<Props> {
         <div>
           <MyComponent foo={this.props.foo} />
         </div>
-        {!isProduction && <DevTools />}
-        <Link to="404">Not found </Link>
 
         <h2>Topics</h2>
         <ul>
@@ -78,11 +79,14 @@ export class App extends React.Component<Props> {
   }
 }
 
-class Topic extends React.Component<Props> {
+@inject(stores.STORE_APP)
+@observer
+class Topic extends React.Component<RouteComponentProps<any>> {
   render() {
     return (
       <div>
         <h3>{this.props.match!.params.topicId}</h3>
+        <h4>Seconds passed: {(this.props[stores.STORE_APP] as stores.AppState).timer}</h4>
         <p>{JSON.stringify(this.props)}</p>
       </div>
     );

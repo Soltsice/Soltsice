@@ -21,6 +21,9 @@ export class Web3 {
     get currentProvider(): Web3.Provider { return this.web3.currentProvider; }
     get eth(): Web3.Eth { return this.web3.eth; }
     get version(): any { return this.web3.version; }
+    get utils(): Web3.Utils {
+        return this.web3.utils;
+    }
     web3;
     constructor(provider?: Web3.Provider) {
         let tmpWeb3;
@@ -45,6 +48,10 @@ export class Web3 {
         this.web3 = tmpWeb3;
     }
 
+    public getAccounts(): Promise<string[]> {
+        return new Promise((resolve, reject) =>
+            this.web3.eth.getAccounts((error, result) => error ? reject(error) : resolve(result)));
+    }
     public setProvider(provider: Web3.Provider) {
         this.web3.setProvider(provider);
     }
