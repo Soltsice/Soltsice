@@ -3,8 +3,9 @@ pragma solidity ^0.4.15;
 import 'zeppelin-solidity/contracts/crowdsale/FinalizableCrowdsale.sol';
 import 'zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol';
 import './DBrainToken.sol';
+import './MultiSigWallet.sol';
 
-contract DBrainCrowdsale is FinalizableCrowdsale, CappedCrowdsale {
+contract DBrainCrowdsale is MultiSigWallet, FinalizableCrowdsale, CappedCrowdsale {
     
     // TODO this is WIP and not reviewed, need review all parent chain details, e.g. if need to override something else
     // TODO use safe math in case of any arithmetic ops

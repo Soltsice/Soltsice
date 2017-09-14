@@ -23,9 +23,27 @@ class MyComponent extends React.Component<Props, {}> {
   }
 }
 
+@inject(stores.STORE_USER)
 @observer
 export class App extends React.Component<Props> {
+
+  private userStore = this.props[stores.STORE_USER] as stores.UserStore;
+
+  // startSigninWindow() {
+
+  //   console.log('PROPS: ', this.props);
+
+  //   let userStore = this.props[stores.STORE_USER] as stores.UserStore;
+
+  //   console.log('USER: ', userStore.user);
+  //   console.log('userStore: ', userStore);
+  //   userStore.startSigninWindow();
+  // }
+
   render() {
+    console.log('PROPS: ', this.props);
+    console.log('USER: ', this.userStore.user);
+    console.log('userStore: ', this.userStore);
     let m = this.props.match!;
     return (
       <div className="App">
@@ -33,6 +51,9 @@ export class App extends React.Component<Props> {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React!</h2>
         </div>
+        <button onClick={() => this.userStore.startSigninWindow()}>
+          {this.userStore.isLoggedIn ? <span>Logout </span> : <span>Login</span>}
+        </button>
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>

@@ -17,7 +17,7 @@ import { App } from './components/App';
 import { NotFound } from './components/NotFound';
 
 // enable MobX strict mode
-useStrict(false);
+useStrict(true);
 
 // render react DOM
 ReactDOM.render(
