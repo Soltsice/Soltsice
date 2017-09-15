@@ -7,7 +7,7 @@ import { BigNumber } from 'bignumber.js';
 /**
  * ERC20 and custom methods on DBrain token
  */
-export class DBrainToken { // implements ERC20
+export class DBrainTokenXXX { // implements ERC20
     public address: string;
     private web3: Web3;
     private instance: Promise<any>;

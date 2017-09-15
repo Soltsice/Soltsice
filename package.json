@@ -1,7 +1,7 @@
 {
   "name": "soltsice",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "devDependencies": {
     "@types/bignumber.js": "^4.0.3",
     "@types/history": "^4.6.0",
@@ -12,7 +12,8 @@
     "@types/react-dom": "^15.5.4",
     "@types/react-router": "^4.0.15",
     "@types/react-router-dom": "^4.0.7",
-    "@types/underscore": "^1.8.2"
+    "@types/underscore": "^1.8.2",
+    "amd-loader": "0.0.8"
   },
   "dependencies": {
     "axios": "^0.16.2",
@@ -46,9 +47,10 @@
     "testrpc": "testrpc -m dbrainio -i 314",
     "build-css": "node-sass src/ -o src/ --recursive",
     "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
-    "soltsice": "npm run soltsice:copy && npm run soltsice:compile && node ./soltsice.js ./src/contracts ./src/lib/W3/contracts",
-    "soltsice:compile": "tsc ./soltsice.ts || exit 0",
+    "soltsice": "npm run soltsice:copy && npm run soltsice:compile && npm run soltsice:contracts",
     "soltsice:todo": "tsc --module amd --out ./soltsice.js ./soltsice.ts || exit 0",
-    "soltsice:copy": "cp -R build/contracts/. src/contracts"    
+    "soltsice:copy": "cp -R build/contracts/. src/contracts",
+    "soltsice:compile": "tsc ./soltsice.ts || exit 0",
+    "soltsice:contracts": "node ./soltsice.js ./src/contracts ./src/lib/W3/contracts"
   }
 }

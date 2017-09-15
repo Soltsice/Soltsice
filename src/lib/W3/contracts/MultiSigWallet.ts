@@ -4,16 +4,16 @@ import { BigNumber } from 'bignumber.js';
 import { Web3 } from '..';
 
 /**
- * DBrainToken API
+ * MultiSigWallet API
  */
-export class DBrainToken {
+export class MultiSigWallet {
     public address: string;
     private web3: Web3;
     private instance: Promise<any>;
     constructor(
         web3: Web3,
         deploymentParams?: string | Web3.TC.TxParams,
-        ctorParams?: {_multisig: string}
+        ctorParams?: {_owners: string[], _required: BigNumber}
     ) {
         if (typeof deploymentParams === 'string' && !Web3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
@@ -31,7 +31,7 @@ export class DBrainToken {
 
         let instance = new Promise((resolve, reject) => {
             if (typeof deploymentParams === 'string' && Web3.isValidAddress(deploymentParams)) {
-                console.log('USING DEPLOYED: ', 'DBrainToken');
+                console.log('USING DEPLOYED: ', 'MultiSigWallet');
                 this.address = deploymentParams!;
                 this.instance = Contract.at(this.address).then((inst) => {
                     resolve(inst);
@@ -39,9 +39,9 @@ export class DBrainToken {
                     reject(err);
                 });
             } else {
-                console.log('NEW CONTRACT: ', 'DBrainToken');
+                console.log('NEW CONTRACT: ', 'MultiSigWallet');
                 // tslint:disable-next-line:max-line-length
-                this.instance = Contract.new([ctorParams!._multisig] as Web3.TC.ContractDataType[]).then((inst) => {
+                this.instance = Contract.new([ctorParams!._owners, ctorParams!._required] as Web3.TC.ContractDataType[]).then((inst) => {
                     console.log('NEW ADDRESS', inst.address);
                     resolve(inst);
                 }).catch((err) => {
@@ -58,10 +58,127 @@ export class DBrainToken {
     */
     
     // tslint:disable-next-line:variable-name
-    mintingFinished(): Promise<boolean> {
+    owners(_0: BigNumber): Promise<string> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.mintingFinished
+                inst.owners
+                    .call(_0)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    removeOwner(owner: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.removeOwner(owner)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    revokeConfirmation(transactionId: BigNumber): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.revokeConfirmation(transactionId)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    isOwner(_0: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.isOwner
+                    .call(_0)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    confirmations(_0: BigNumber, _1: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.confirmations
+                    .call(_0, _1)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.getTransactionCount
+                    .call(pending, executed)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    addOwner(owner: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.addOwner(owner)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    isConfirmed(transactionId: BigNumber): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.isConfirmed
+                    .call(transactionId)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    getConfirmationCount(transactionId: BigNumber): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.getConfirmationCount
+                    .call(transactionId)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    transactions(_0: BigNumber): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.transactions
+                    .call(_0)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    getOwners(): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.getOwners
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -70,10 +187,34 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    name(): Promise<string> {
+    getTransactionIds(from: BigNumber, to: BigNumber, pending: boolean, executed: boolean): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.name
+                inst.getTransactionIds
+                    .call(from, to, pending, executed)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    getConfirmations(transactionId: BigNumber): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.getConfirmations
+                    .call(transactionId)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    transactionCount(): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.transactionCount
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -82,10 +223,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    approve(_spender: string, _value: BigNumber): Promise<boolean> {
+    changeRequirement(_required: BigNumber): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.approve(_spender, _value)
+                inst.changeRequirement(_required)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -93,10 +234,32 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    totalSupply(): Promise<BigNumber> {
+    confirmTransaction(transactionId: BigNumber): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.totalSupply
+                inst.confirmTransaction(transactionId)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    submitTransaction(destination: string, value: BigNumber, data: string): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.submitTransaction(destination, value, data)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    MAX_OWNER_COUNT(): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.MAX_OWNER_COUNT
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -105,21 +268,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    transferFrom(_from: string, _to: string, _value: BigNumber): Promise<boolean> {
+    required(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.transferFrom(_from, _to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    decimals(): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.decimals
+                inst.required
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -128,10 +280,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    unpause(): Promise<boolean> {
+    replaceOwner(owner: string, newOwner: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.unpause()
+                inst.replaceOwner(owner, newOwner)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -139,126 +291,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    mint(_to: string, _amount: BigNumber): Promise<boolean> {
+    executeTransaction(transactionId: BigNumber): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.mint(_to, _amount)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    multisig(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.multisig
-                    .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    paused(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.paused
-                    .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    balanceOf(_owner: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.balanceOf
-                    .call(_owner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    finishMinting(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.finishMinting()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    pause(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.pause()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    owner(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.owner
-                    .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    symbol(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.symbol
-                    .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    transfer(_to: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.transfer(_to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    allowance(_owner: string, _spender: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.allowance
-                    .call(_owner, _spender)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    transferOwnership(newOwner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.transferOwnership(newOwner)
+                inst.executeTransaction(transactionId)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

@@ -1,6 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Web3 } from './src/lib/W3/';
+require('amd-loader');
+
+var endOfLine = require('os').EOL;
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -11,7 +14,7 @@ process.on('unhandledRejection', err => {
 
 // tslint:disable-next-line:typedef
 function parseArgs(args: string[]): { source: string, destination: string } {
-    console.log(args);
+    // console.log(args);
     if (args.length < 1 || args.length > 2) {
         throw 'Wrong number of args';
     }
@@ -24,9 +27,13 @@ function parseArgs(args: string[]): { source: string, destination: string } {
 
 // tslint:disable-next-line:typedef
 function generateTypes(options: { source: string, destination: string }) {
-    console.log('Testing generateTypes');
-    console.log('__dirname', __dirname);
-    console.log(options);
+
+    let destination = path.join(__dirname, options.destination);
+    if (!fs.existsSync(destination)) {
+        fs.mkdirSync(destination);
+    }
+
+    // console.log('__dirname', __dirname);
     let files = getSourceFiles(options.source);
     let paths = getSourcePaths(options.source, files);
     let targets = getDestinationPaths(options.destination, files);
@@ -36,18 +43,23 @@ function generateTypes(options: { source: string, destination: string }) {
         fs.writeFileSync(targets[idx], ts);
     });
 
-    // TODO create index file
+    // create index file
+
+    let exports = files.map(f => `export * from './${f.replace('.json', '')}';`).join(endOfLine);
+
+    fs.writeFileSync(path.join(destination, 'index.ts'), exports);
+
 }
 
 function getSourceFiles(src: string): string[] {
-    let filesArr: string[] = fs.readdirSync(src).filter((f) => f.endsWith('DBrainToken.json'));
+    let filesArr: string[] = fs.readdirSync(src).filter((f) => f.endsWith('.json'));
     return filesArr;
 }
 
 function getSourcePaths(src: string, files: string[]): string[] {
     let filesArr = files.map(f => path.join(__dirname, src, f));
     filesArr.forEach(file => {
-        console.log(file);
+        // console.log(file);
     });
     return filesArr;
 }
@@ -77,15 +89,52 @@ function abiTypeToTypeName(abiType?: string) {
                 outputType = 'string';
                 break;
 
+            case 'string[]':
+            case 'address[]':
+                outputType = 'string[]';
+                break;
+
             case 'bytes':
                 outputType = 'string';
                 break;
 
             default:
-                console.warn('Not implemented ABI type: ', abiType);
+                console.warn('Not implemented ABI type, using `any` instead: ', abiType);
+                outputType = 'any';
         }
     }
     return outputType;
+}
+
+function processCtor(abi: Web3.ABIDefinition): { typesNames: string, names: string } {
+
+    let inputs = abi.inputs;
+    let inputsString: string;
+    let inputsNamesString: string;
+    if (inputs && inputs.length > 0) {
+        inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', ');
+        inputsNamesString = inputs.map(i => 'ctorParams!.' + i.name).join(', ');
+    } else {
+        inputsString = '';
+        inputsNamesString = '';
+    }
+    return { typesNames: inputsString, names: inputsNamesString };
+}
+
+function processInputs(abi: Web3.ABIDefinition): { typesNames: string, names: string } {
+
+    let inputs = abi.inputs;
+    let inputsString: string;
+    let inputsNamesString: string;
+    if (inputs && inputs.length > 0) {
+        inputs = inputs.map((i, idx) => i.name === '' ? Object.assign(i, { name: ('_' + idx) }) : i);
+        inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', ');
+        inputsNamesString = inputs.map(i => i.name).join(', ');
+    } else {
+        inputsString = '';
+        inputsNamesString = '';
+    }
+    return { typesNames: inputsString, names: inputsNamesString };
 }
 
 function processAbi(abi: Web3.ABIDefinition): string {
@@ -93,29 +142,24 @@ function processAbi(abi: Web3.ABIDefinition): string {
     let name = abi.name;
     let isConstant = abi.constant;
 
-    let inputs = abi.inputs;
-    let inputsString: string;
-    let inputsNamesString: string;
-    if (inputs && inputs.length > 0) {
-        inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', ');
-        inputsNamesString = inputs.map(i => i.name).join(', ');
-    } else {
-        inputsString = '';
-        inputsNamesString = '';
-    }
+    let inputs = processInputs(abi);
+    let inputsString = inputs.typesNames;
+    let inputsNamesString = inputs.names;
 
     let outputs = abi.outputs;
 
+    let outputType: string;
     if (outputs && outputs.length > 1) {
-        console.warn('Multiple output ABI not implemented: ', abi);
-        return '';
+        console.warn('Multiple output ABI not implemented, using `any` type for: ', abi);
+        outputType = 'any';
+    } else {
+        outputType = abiTypeToTypeName((outputs && outputs.length > 0) ? outputs[0].type : undefined);
     }
-
-    let outputType: string = abiTypeToTypeName((outputs && outputs.length > 0) ? outputs[0].type : undefined);
 
     let methodsBody: string =
         isConstant ?
             `
+    // tslint:disable-next-line:variable-name
     ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
@@ -129,6 +173,7 @@ function processAbi(abi: Web3.ABIDefinition): string {
     `
             :
             `
+    // tslint:disable-next-line:variable-name
     ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
@@ -156,13 +201,26 @@ function processFile(fileName: string, filePath: string, targetPath: string): st
 
     let abis = contract.abi as Web3.ABIDefinition[];
 
-    let methodsBody = abis.map(processAbi).join(``);
+    // When a contract is created, its constructor (a function with the same name as the contract)
+    // is executed once.A constructor is optional.Only one constructor is allowed, and this means 
+    // overloading is not supported.
+    let ctor = abis.filter(a => a.type === 'constructor');
+    let ctorParams = ctor.length === 1 ? processCtor(ctor[0]) : { typesNames: '', names: '' };
+
+    let methodsBody = abis.filter(a => a.type === 'function').map(processAbi).join('');
+
+    let bnImport = ``;
+    if (ctorParams.typesNames.indexOf('BigNumber') >= 0 || methodsBody.indexOf('BigNumber') >= 0) {
+        bnImport = `
+import { BigNumber } from 'bignumber.js';`;
+    }
+
+    // TODO 
 
     let template: string =
 
         `
-import { default as contract } from 'truffle-contract';
-import { BigNumber } from 'bignumber.js';
+import { default as contract } from 'truffle-contract';${bnImport}
 import { Web3 } from '${relPath}';
 
 /**
@@ -174,8 +232,8 @@ export class ${contractName} {
     private instance: Promise<any>;
     constructor(
         web3: Web3,
-        constructorParams: Web3.TC.ContractDataType[],
-        deploymentParams?: string | Web3.TC.TxParams
+        deploymentParams?: string | Web3.TC.TxParams,
+        ctorParams?: {${ctorParams.typesNames}}
     ) {
         if (typeof deploymentParams === 'string' && !Web3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
@@ -202,7 +260,8 @@ export class ${contractName} {
                 });
             } else {
                 console.log('NEW CONTRACT: ', '${contractName}');
-                this.instance = Contract.new(constructorParams).then((inst) => {
+                // tslint:disable-next-line:max-line-length
+                this.instance = Contract.new([${ctorParams.names}] as Web3.TC.ContractDataType[]).then((inst) => {
                     console.log('NEW ADDRESS', inst.address);
                     resolve(inst);
                 }).catch((err) => {
@@ -224,6 +283,5 @@ export class ${contractName} {
 }
 
 generateTypes(parseArgs(process.argv.slice(2)));
-
 
 // TODO ctor, events

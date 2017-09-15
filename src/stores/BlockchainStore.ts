@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 import * as W3 from '../lib/W3/';
-
+import * as Contracts from '../lib/W3/contracts';
 /** Store current network status, accounts and DBrainToken-related info */
 export class BlockchainStore {
     @observable
@@ -28,7 +28,7 @@ export class BlockchainStore {
 
     // its methods return Promises, will need to set store state from it
     @observable
-    token: W3.DBrainToken;
+    token: Contracts.DBrainToken;
 
     private setUpPromise: Promise<void>;
     private multiSigAddress: string;
@@ -44,14 +44,12 @@ export class BlockchainStore {
 
         // this.web3 = new W3.Web3();
 
-
-
-        let token = new W3.DBrainToken(web3, '0xaaae6c870ea81df05ec84e63ca52fcdbdde86600');
+        let token = new Contracts.DBrainToken(this.web3, '0xaaae6c870ea81df05ec84e63ca52fcdbdde86600');
 
         console.log(token);
 
-        token.totalSupplySting().then((res) => {
-            console.log('TOTAL SUPPLY', res);
+        token.totalSupply().then((res) => {
+            console.log('TOTAL SUPPLY', res.dividedBy(1e18).toFormat(0));
         }).catch((err) => {
             console.log('error in totalSupply call', err);
         });
@@ -162,7 +160,6 @@ export class BlockchainStore {
         }).then(() => {
             console.log('object');
         });
-
 
     }
 

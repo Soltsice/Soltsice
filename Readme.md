@@ -3,7 +3,19 @@ Soltsice
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
-Manual installation from scratch
+Usage
+----------------------
+
+Soltsice allows to generate TypeScript files for Ethereum contracts with the command:
+
+> npm run soltsice ./sourceDir ./destinationDir
+
+All `.json` artifact from `truffle compile` in the folder `./sourceDir` will be transformed into TypeScript classes in 
+`./destinationDir` with a single `index.ts` file with all exports.
+
+NPM package is WIP
+
+Manual setup from scratch
 ------------------
 
 0. Install global dependencies
@@ -124,13 +136,6 @@ and `eth_getBlockByNumber` line in the `testrpc` console window.
 
 **Congrats! You now have statically-typed access to web3.js library from a statically-typed React application!**
 
-
-Usage
-----------------------
-
 The resulting project is a mix of Truffle and React+TypeScript apps. 
 There are just no single reason not to use static types when they are available!
-
-
-
 

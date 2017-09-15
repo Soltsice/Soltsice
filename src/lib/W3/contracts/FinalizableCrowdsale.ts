@@ -4,16 +4,16 @@ import { BigNumber } from 'bignumber.js';
 import { Web3 } from '..';
 
 /**
- * DBrainToken API
+ * FinalizableCrowdsale API
  */
-export class DBrainToken {
+export class FinalizableCrowdsale {
     public address: string;
     private web3: Web3;
     private instance: Promise<any>;
     constructor(
         web3: Web3,
         deploymentParams?: string | Web3.TC.TxParams,
-        ctorParams?: {_multisig: string}
+        ctorParams?: {}
     ) {
         if (typeof deploymentParams === 'string' && !Web3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
@@ -31,7 +31,7 @@ export class DBrainToken {
 
         let instance = new Promise((resolve, reject) => {
             if (typeof deploymentParams === 'string' && Web3.isValidAddress(deploymentParams)) {
-                console.log('USING DEPLOYED: ', 'DBrainToken');
+                console.log('USING DEPLOYED: ', 'FinalizableCrowdsale');
                 this.address = deploymentParams!;
                 this.instance = Contract.at(this.address).then((inst) => {
                     resolve(inst);
@@ -39,9 +39,9 @@ export class DBrainToken {
                     reject(err);
                 });
             } else {
-                console.log('NEW CONTRACT: ', 'DBrainToken');
+                console.log('NEW CONTRACT: ', 'FinalizableCrowdsale');
                 // tslint:disable-next-line:max-line-length
-                this.instance = Contract.new([ctorParams!._multisig] as Web3.TC.ContractDataType[]).then((inst) => {
+                this.instance = Contract.new([] as Web3.TC.ContractDataType[]).then((inst) => {
                     console.log('NEW ADDRESS', inst.address);
                     resolve(inst);
                 }).catch((err) => {
@@ -58,10 +58,10 @@ export class DBrainToken {
     */
     
     // tslint:disable-next-line:variable-name
-    mintingFinished(): Promise<boolean> {
+    endBlock(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.mintingFinished
+                inst.endBlock
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -70,10 +70,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    name(): Promise<string> {
+    rate(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.name
+                inst.rate
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -82,21 +82,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    approve(_spender: string, _value: BigNumber): Promise<boolean> {
+    weiRaised(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.approve(_spender, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    totalSupply(): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.totalSupply
+                inst.weiRaised
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -105,21 +94,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    transferFrom(_from: string, _to: string, _value: BigNumber): Promise<boolean> {
+    startBlock(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.transferFrom(_from, _to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    decimals(): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.decimals
+                inst.startBlock
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -128,10 +106,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    unpause(): Promise<boolean> {
+    finalize(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.unpause()
+                inst.finalize()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -139,21 +117,10 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    mint(_to: string, _amount: BigNumber): Promise<boolean> {
+    wallet(): Promise<string> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.mint(_to, _amount)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    multisig(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.multisig
+                inst.wallet
                     .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -162,45 +129,11 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    paused(): Promise<boolean> {
+    isFinalized(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.paused
+                inst.isFinalized
                     .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    balanceOf(_owner: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.balanceOf
-                    .call(_owner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    finishMinting(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.finishMinting()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    pause(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.pause()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -220,34 +153,22 @@ export class DBrainToken {
     }
     
     // tslint:disable-next-line:variable-name
-    symbol(): Promise<string> {
+    buyTokens(beneficiary: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
-                inst.symbol
+                inst.buyTokens(beneficiary)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    hasEnded(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.hasEnded
                     .call()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    transfer(_to: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.transfer(_to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    allowance(_owner: string, _spender: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
-                inst.allowance
-                    .call(_owner, _spender)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -259,6 +180,18 @@ export class DBrainToken {
         return new Promise((resolve, reject) => {
             this.instance.then((inst) => {
                 inst.transferOwnership(newOwner)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+    
+    // tslint:disable-next-line:variable-name
+    token(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.token
+                    .call()
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
