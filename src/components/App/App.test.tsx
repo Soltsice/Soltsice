@@ -6,7 +6,6 @@ import * as W3 from '../../lib/W3/';
 it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<App foo="asd" />, div);
-  
 });
 
 it('could use types from web3', () => {

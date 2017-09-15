@@ -7,7 +7,7 @@
     "@types/history": "^4.6.0",
     "@types/jest": "^20.0.8",
     "@types/material-ui": "^0.18.0",
-    "@types/node": "^8.0.25",
+    "@types/node": "^8.0.28",
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
     "@types/react-router": "^4.0.15",
@@ -43,9 +43,12 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "build:contracts": "truffle compile",
-    "copy-contracts": "cp -R build/contracts/. src/contracts",
     "testrpc": "testrpc -m dbrainio -i 314",
     "build-css": "node-sass src/ -o src/ --recursive",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive"
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
+    "soltsice": "npm run soltsice:copy && npm run soltsice:compile && node ./soltsice.js ./src/contracts ./src/lib/W3/contracts",
+    "soltsice:compile": "tsc ./soltsice.ts || exit 0",
+    "soltsice:todo": "tsc --module amd --out ./soltsice.js ./soltsice.ts || exit 0",
+    "soltsice:copy": "cp -R build/contracts/. src/contracts"    
   }
 }

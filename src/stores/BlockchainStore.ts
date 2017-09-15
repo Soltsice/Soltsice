@@ -38,9 +38,9 @@ export class BlockchainStore {
 
         this.multiSigAddress = ''; // must be hardcoded somewhere
 
-        setInterval(() => {
-            this.update();
-        }, 10000);
+        // setInterval(() => {
+        //     this.update();
+        // }, 10000);
 
         // this.web3 = new W3.Web3();
 
@@ -129,10 +129,10 @@ export class BlockchainStore {
 
     @action
     setAccounts(accounts: string[]) {
+        this.accounts = accounts;
         if (accounts.length > 0) {
             this.setAccountIndex(0);
         }
-        this.accounts = accounts;
         console.log('ACCOUNTS: ', accounts);
     }
 

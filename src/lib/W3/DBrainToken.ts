@@ -1,16 +1,17 @@
 import { default as contract } from 'truffle-contract';
-import * as W3 from './W3';
-// import { ERC20 } from './ERC20';
+import { Web3 } from './W3';
 import { BigNumber } from 'bignumber.js';
+
+// import { ERC20 } from './ERC20';
 
 /**
  * ERC20 and custom methods on DBrain token
  */
 export class DBrainToken { // implements ERC20
     public address: string;
-    private web3: W3.Web3;
+    private web3: Web3;
     private instance: Promise<any>;
-    constructor(web3: W3.Web3, from: string, multisig: string, deployedContractAddress?: string) {
+    constructor(web3: Web3, from: Web3.address, multisig: Web3.address, deployedContractAddress?: Web3.address) {
         if (!this.isValidAddress(from)) {
             throw 'Invalid from address';
         }
@@ -24,7 +25,7 @@ export class DBrainToken { // implements ERC20
         this.web3 = web3;
 
         let tokenArtifacts = require('../../contracts/DBrainToken.json');
-        
+
         let Token = contract(tokenArtifacts);
         Token.setProvider(web3.currentProvider);
         Token.defaults({
@@ -86,4 +87,70 @@ export class DBrainToken { // implements ERC20
         }
         return false;
     }
+}
+
+/**
+ * CustomContract API
+ */
+export class CustomContract {
+    public address: string;
+    private web3: Web3;
+    private instance: Promise<any>;
+    constructor(
+        web3: Web3,
+        constructorParams: Web3.TC.ContractDataType[],
+        deploymentParams?: string | Web3.TC.TxParams
+    ) {
+        if (typeof deploymentParams === 'string' && !Web3.isValidAddress(deploymentParams as string)) {
+            throw 'Invalid deployed contract address';
+        }
+
+        this.web3 = web3;
+        let tokenArtifacts = require('../../contracts/DBrainToken.json');
+
+        let Contract = contract(tokenArtifacts);
+        Contract.setProvider(web3.currentProvider);
+
+        if (typeof deploymentParams !== 'string') {
+            Contract.defaults(deploymentParams);
+        }
+
+        let instance = new Promise((resolve, reject) => {
+            if (typeof deploymentParams === 'string' && Web3.isValidAddress(deploymentParams)) {
+                console.log('USING DEPLOYED: ', 'CustomContract');
+                this.address = deploymentParams!;
+                this.instance = Contract.at(this.address).then((inst) => {
+                    resolve(inst);
+                }).catch((err) => {
+                    reject(err);
+                });
+            } else {
+                console.log('NEW CONTRACT: ', 'CustomContract');
+                this.instance = Contract.new(constructorParams).then((inst) => {
+                    console.log('NEW ADDRESS', inst.address);
+                    resolve(inst);
+                }).catch((err) => {
+                    reject(err);
+                });
+            }
+        });
+
+        this.instance = instance;
+    }
+
+    /*
+        Contract methods
+    */
+
+    totalSupply(): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this.instance.then((inst) => {
+                inst.totalSupply
+                    .call()
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
+
 }

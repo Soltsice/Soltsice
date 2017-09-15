@@ -58,6 +58,37 @@ export class Web3 {
 }
 
 export namespace Web3 {
+    export type address = string;
+    export type bytes = string;
+    
+    export function isValidAddress(addr: address): boolean {
+        if (addr && addr.startsWith('0x') && addr.length === 42) {
+            return true;
+        }
+        return false;
+    }
+
+    /** truffle-contract */
+    export namespace TC {
+        export interface TxParams {
+            from: address;
+            gas: number;
+            gasPrice: number;
+            value: number;
+        }
+
+        export type ContractDataType = BigNumber | number | string | boolean;
+
+        export function txParamsDefaultDeploy(from: address): TxParams {
+            return {
+                from: from,
+                gas: 4712388,
+                gasPrice: 100000000000,
+                value: 0
+            };
+        }
+    }
+    
     // '{"jsonrpc":"2.0","method":"eth_sendTransaction","params":[{see above}],"id":1}'
     export interface JsonRPCRequest {
         jsonrpc: string;
