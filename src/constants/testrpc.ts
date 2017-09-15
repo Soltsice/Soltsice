@@ -9,6 +9,7 @@ export const testAccounts: string[] =
         '0x0b67838dd16332c1f5954deceaa2d0813494940a'
     ];
 
+ /** these are not 0x prefixed */
 export const testPrivateKeys: string[] =
     [
         '1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce',
