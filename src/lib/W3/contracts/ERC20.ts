@@ -20,7 +20,7 @@ export class ERC20 {
         }
 
         this.web3 = web3;
-        let tokenArtifacts = require('../../contracts/DBrainToken.json');
+        let tokenArtifacts = require('../../../contracts/ERC20.json');
 
         let Contract = contract(tokenArtifacts);
         Contract.setProvider(web3.currentProvider);

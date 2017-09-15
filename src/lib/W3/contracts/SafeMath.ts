@@ -19,7 +19,7 @@ export class SafeMath {
         }
 
         this.web3 = web3;
-        let tokenArtifacts = require('../../contracts/DBrainToken.json');
+        let tokenArtifacts = require('../../../contracts/SafeMath.json');
 
         let Contract = contract(tokenArtifacts);
         Contract.setProvider(web3.currentProvider);

@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx';
 import * as W3 from '../lib/W3/';
+import * as Contracts from '../lib/W3/contracts';
 
 // import { isProduction, testAccounts } from '../constants';
 
@@ -14,14 +15,16 @@ export class AppState {
 
     let web3: W3.Web3 = new W3.Web3();
 
-    let token = new W3.DBrainToken(web3,
-      '0xd7126c8c920800706f826df0772d792343cfecca',
-      '0xd7126c8c920800706f826df0772d792343cfecca');
+    let token = new Contracts.DBrainToken(web3,
+      W3.Web3.TC.txParamsDefaultDeploy('0xd7126c8c920800706f826df0772d792343cfecca'),
+      {
+        _multisig: '0xd7126c8c920800706f826df0772d792343cfecca'
+      });
 
     console.log(token);
 
-    token.totalSupplySting().then((res) => {
-      console.log('TOTAL SUPPLY', res);
+    token.totalSupply().then((res) => {
+      console.log('TOTAL SUPPLY', res.dividedBy(1e18).toFormat(0));
     }).catch((err) => {
       console.log('error in totalSupply call', err);
     });

@@ -27,8 +27,8 @@ export class Web3 {
     web3;
     constructor(provider?: Web3.Provider) {
         let tmpWeb3;
-        console.log('Ctor provider:');
-        console.log(provider);
+        // console.log('Ctor provider:');
+        // console.log(provider);
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
             if (typeof window['web3'] !== 'undefined' && typeof window['web3'].currentProvider !== 'undefined') {

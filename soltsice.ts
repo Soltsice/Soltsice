@@ -14,7 +14,7 @@ process.on('unhandledRejection', err => {
 
 // tslint:disable-next-line:typedef
 function parseArgs(args: string[]): { source: string, destination: string } {
-    // console.log(args);
+    console.log(args);
     if (args.length < 1 || args.length > 2) {
         throw 'Wrong number of args';
     }
@@ -196,7 +196,8 @@ function processFile(fileName: string, filePath: string, targetPath: string): st
     let contract = require(filePath);
 
     let relPath = path.relative(path.dirname(targetPath), './src/lib/W3');
-
+    let artifactRelPath = path.relative(path.dirname(targetPath), filePath).replace(/\\/g, '/');
+    console.log('REL PATH ', artifactRelPath);
     let contractName: string = contract.contract_name;
 
     let abis = contract.abi as Web3.ABIDefinition[];
@@ -240,7 +241,7 @@ export class ${contractName} {
         }
 
         this.web3 = web3;
-        let tokenArtifacts = require('../../contracts/DBrainToken.json');
+        let tokenArtifacts = require('${artifactRelPath}');
 
         let Contract = contract(tokenArtifacts);
         Contract.setProvider(web3.currentProvider);

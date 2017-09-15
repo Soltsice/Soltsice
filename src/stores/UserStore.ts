@@ -162,7 +162,7 @@ export class UserStore {
     // }
 
     public startSigninWindow() {
-        this.userManager!.signinRedirect({ data: 'no data' }).then((user) => {
+        this.userManager!.signinPopup({ data: 'no data' }).then((user) => {
             console.log('signinRedirect done');
             this._setAuthHeaders(user);
             this.setUser(user);
