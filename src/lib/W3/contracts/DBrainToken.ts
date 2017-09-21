@@ -13,7 +13,7 @@ export class DBrainToken {
     constructor(
         web3: Web3,
         deploymentParams?: string | Web3.TC.TxParams,
-        ctorParams?: {_multisig: string}
+        ctorParams?: { _multisig: string }
     ) {
         if (typeof deploymentParams === 'string' && !Web3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
@@ -23,7 +23,10 @@ export class DBrainToken {
         let tokenArtifacts = require('../../../contracts/DBrainToken.json');
 
         let Contract = contract(tokenArtifacts);
-        Contract.setProvider(web3.currentProvider);
+        let cp = web3.currentProvider;
+        if (cp) {
+            Contract.setProvider(cp);
+        }
 
         if (typeof deploymentParams !== 'string') {
             Contract.defaults(deploymentParams);
@@ -56,7 +59,7 @@ export class DBrainToken {
     /*
         Contract methods
     */
-    
+
     // tslint:disable-next-line:variable-name
     mintingFinished(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -68,7 +71,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     name(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -80,7 +83,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     approve(_spender: string, _value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -91,7 +94,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
@@ -103,7 +106,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     transferFrom(_from: string, _to: string, _value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -114,7 +117,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     decimals(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
@@ -126,7 +129,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     unpause(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -137,7 +140,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     mint(_to: string, _amount: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -148,7 +151,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     multisig(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -160,7 +163,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     paused(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -172,7 +175,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     balanceOf(_owner: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
@@ -184,7 +187,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     finishMinting(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -195,7 +198,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     pause(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -206,7 +209,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     owner(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -218,7 +221,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     symbol(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -230,7 +233,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     transfer(_to: string, _value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -241,7 +244,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     allowance(_owner: string, _spender: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
@@ -253,7 +256,7 @@ export class DBrainToken {
             });
         });
     }
-    
+
     // tslint:disable-next-line:variable-name
     transferOwnership(newOwner: string): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -264,5 +267,5 @@ export class DBrainToken {
             });
         });
     }
-    
+
 }

@@ -153,7 +153,7 @@ export class BlockchainStore {
         // 2. local node
         // 3. remote calls via proxy (not implemented yet, will use 
         //    Etherscan or our own API since we need server- side operations on blockchain anyway)
-        this.web3 = new W3.Web3();
+        this.web3 = W3.Web3.Default;
 
         this.web3.getAccounts().then((accounts) => {
             this.setAccounts(accounts);

@@ -3,17 +3,19 @@ import './App.css';
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { isProduction } from '../../constants';
-import * as stores from '../../stores';
+import * as store from '../../stores';
 import { TimerButton } from '../TimerButton';
 import { Route, RouteComponentProps } from 'react-router';
 import { Link, match } from 'react-router-dom';
+import { Logo } from '../Logo';
+import { LoginButton } from '../LoginButton';
 
-const logo = require('./logo.svg');
+// onst logo = require('./logo.svg');
 
 interface Props {
   foo: string;
   match?: match<any>;
-  AppState?: stores.AppState;
+  AppState?: store.AppState;
 }
 
 @observer
@@ -23,11 +25,11 @@ class MyComponent extends React.Component<Props, {}> {
   }
 }
 
-@inject(stores.STORE_USER)
+@inject(store.STORE_USER)
 @observer
 export class App extends React.Component<Props> {
 
-  private userStore = this.props[stores.STORE_USER] as stores.UserStore;
+  // private userStore = this.props[store.STORE_USER] as store.UserStore;
 
   // startSigninWindow() {
 
@@ -41,24 +43,24 @@ export class App extends React.Component<Props> {
   // }
 
   render() {
-    console.log('PROPS: ', this.props);
-    console.log('USER: ', this.userStore.user);
-    console.log('userStore: ', this.userStore);
+    // console.log('PROPS: ', this.props);
+    // console.log('USER: ', this.userStore.user);
+    // console.log('userStore: ', this.userStore);
     let m = this.props.match!;
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <Logo white={true} />
+          {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <h2>Welcome to React!</h2>
         </div>
-        <button onClick={() => this.userStore.startSigninWindow()}>
-          {this.userStore.isLoggedIn ? <span>Logout </span> : <span>Login</span>}
-        </button>
+        <LoginButton />
+        
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>
         <div>
-          <TimerButton appState={stores.appState} />
+          <TimerButton appState={store.appState} />
         </div>
         <h1>Prod: {String(isProduction)}</h1>
         <div>
@@ -100,14 +102,14 @@ export class App extends React.Component<Props> {
   }
 }
 
-@inject(stores.STORE_APP)
+@inject(store.STORE_APP)
 @observer
 class Topic extends React.Component<RouteComponentProps<any>> {
   render() {
     return (
       <div>
         <h3>{this.props.match!.params.topicId}</h3>
-        <h4>Seconds passed: {(this.props[stores.STORE_APP] as stores.AppState).timer}</h4>
+        <h4>Seconds passed: {(this.props[store.STORE_APP] as store.AppState).timer}</h4>
         <p>{JSON.stringify(this.props)}</p>
       </div>
     );

@@ -9,21 +9,21 @@
     <div id="error"></div>
     <script src="oidc-client.min.js"></script>
     <script>
-        new Oidc.UserManager().signinPopupCallback();
+        //new Oidc.UserManager().signinPopupCallback();
         // Log.logger = console;
-        // new Oidc.UserManager().signinRedirectCallback().then(function (user) {
-        //     if (user == null) {
-        //         document.getElementById("waiting").style.display = "none";
-        //         document.getElementById("error").innerText = "No sign-in request pending.";
-        //     }
-        //     else {
-        //         window.location = "/";
-        //     }
-        // })
-        // .catch(function (er) {
-        //     document.getElementById("waiting").style.display = "none";
-        //     document.getElementById("error").innerText = er.message;
-        // });
+        new Oidc.UserManager().signinRedirectCallback().then(function (user) {
+            if (user == null) {
+                document.getElementById("waiting").style.display = "none";
+                document.getElementById("error").innerText = "No sign-in request pending.";
+            }
+            else {
+                window.location = "/";
+            }
+        })
+        .catch(function (er) {
+            document.getElementById("waiting").style.display = "none";
+            document.getElementById("error").innerText = er.message;
+        });
     </script>
 </body>
 </html>

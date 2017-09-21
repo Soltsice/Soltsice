@@ -4,6 +4,12 @@ import * as us from 'underscore';
 let Web3JS = require('web3');
 
 export class Web3 {
+
+    /**
+     * Default Web3 instance - resolves to a global injected my MIST, MetaMask, etc
+     * or to `localhost:8545` if not running on https
+     */
+    static Default: Web3 = new Web3();
     
     // this is the only class wrapper over JS object, others are interfaces
     // cannot just cast from JS, but ctor does some standard logic to resolve web3
@@ -18,27 +24,38 @@ export class Web3 {
         Bzz: new (provider: Web3.Provider) => Web3.Bzz
     } = Web3JS.modules;
     
-    get currentProvider(): Web3.Provider { return this.web3.currentProvider; }
+    get currentProvider(): Web3.Provider { return this.web3 ? this.web3.currentProvider : undefined; }
     get eth(): Web3.Eth { return this.web3.eth; }
     get version(): any { return this.web3.version; }
     get utils(): Web3.Utils {
         return this.web3.utils;
     }
+
     web3;
+    private globalWeb3;
+
     constructor(provider?: Web3.Provider) {
         let tmpWeb3;
         // console.log('Ctor provider:');
         // console.log(provider);
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
-            if (typeof window['web3'] !== 'undefined' && typeof window['web3'].currentProvider !== 'undefined') {
+            if ((typeof window['web3'] !== 'undefined' && typeof window['web3'].currentProvider !== 'undefined')
+                || this.globalWeb3) {
                 // tslint:disable-next-line:no-string-literal
-                tmpWeb3 = new Web3JS(window['web3'].currentProvider);
+                this.globalWeb3 = window['web3'];
+                // tslint:disable-next-line:no-string-literal
+                tmpWeb3 = new Web3JS(this.globalWeb3.currentProvider);
                 console.log('Using a global web3 provider.');
             } else {
                 // set the provider you want from Web3.providers
-                tmpWeb3 = new Web3JS(new Web3JS.providers.HttpProvider('http://localhost:8545'));
-                console.log('Cannot find global web3 provider. Using HttpProvider(http://localhost:8545).');
+                if (window.location.protocol !== 'https:') {
+                    tmpWeb3 = new Web3JS(new Web3JS.providers.HttpProvider('http://localhost:8545'));
+                    console.log('Cannot find global web3 provider. Using HttpProvider(http://localhost:8545).');
+                } else {
+                    // tslint:disable-next-line:max-line-length
+                    console.log('Cannot find global web3 provider. Running on https, will not try to access localhost at 8545');
+                }
             }
         } else {
             // regardless if a web3 exists, we create a new one for a specific provider
@@ -519,5 +536,3 @@ export namespace Web3 {
 
     export interface Bzz { }
 }
-
-export const web3 = new Web3();

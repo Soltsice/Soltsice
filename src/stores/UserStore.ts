@@ -1,9 +1,10 @@
 import { observable, computed, action } from 'mobx';
+import { persist } from 'mobx-persist';
 // import { Observable, Subject } from 'rxjs/Rx';
 // import axios from 'axios';
 import { UserManager, User, UserManagerSettings } from 'oidc-client'; // Log, MetadataService,
 
-const localAuthority: boolean = false;
+const localAuthority: boolean = true;
 
 const settings: UserManagerSettings = {
     authority: localAuthority ? 'https://localhost:44333/i' : 'https://id.dbrain.io',
@@ -24,6 +25,7 @@ const settings: UserManagerSettings = {
 
 export class UserStore {
 
+    @persist('object')
     @observable
     user: User | null = null;
 
@@ -39,7 +41,7 @@ export class UserStore {
 
     @computed
     get isLoggedIn(): boolean {
-        return this.user ? true : false;
+        return this.user && !this.user.expired ? true : false;
     }
 
     @computed
@@ -50,10 +52,15 @@ export class UserStore {
 
     @computed
     get accessToken(): string {
-        return this.user ? this.user.access_token : '';
+        return this.user && !this.user.expired ? this.user.access_token : '';
     }
 
-    private userManager: UserManager;
+    @computed
+    get hasAccessToken(): boolean {
+        return this.user && !this.user.expired ? true : false;
+    }
+
+    userManager: UserManager;
     // private authHeaders: Headers;
     // private connected: Boolean;
 
@@ -61,7 +68,7 @@ export class UserStore {
      *
      */
     constructor() {
-        console.log('UserStore ctor');
+        // console.log('UserStore ctor');
         this.userManager = new UserManager(settings);
         this.silentRequest();
         this.userManager.events.addUserUnloaded((e) => {
@@ -103,15 +110,12 @@ export class UserStore {
     public silentRequest() {
         this.userManager.signinSilent()
             .then((user) => {
-                console.log('Init user: ' + user.profile.preferred_username);
-                this._setAuthHeaders(user);
+                // console.log('silentRequest user: ', user.profile.preferred_username);
                 this.setUser(user);
-
             })
             .catch((err) => {
-                console.log('err: ' + err);
-                this._setAuthHeaders(null);
-                this.setUser(null);
+                console.log('ERR: UserStore silentRequest: ', err);
+                // this.setUser(null);
             });
     }
 
@@ -135,9 +139,9 @@ export class UserStore {
         let t = this;
         this.userManager.clearStaleState().then(function () {
             t.setUser(null);
-            console.log('clearStateState success');
+            // console.log('clearStateState success');
         }).catch(function (e: any) {
-            console.log('clearStateState error', e.message);
+            console.log('clearStateState error', e);
         });
     }
 
@@ -164,7 +168,6 @@ export class UserStore {
     public startSigninWindow() {
         this.userManager!.signinPopup({ data: 'no data' }).then((user) => {
             console.log('signinRedirect done');
-            this._setAuthHeaders(user);
             this.setUser(user);
         }).catch((err) => {
             console.log(err);
@@ -174,7 +177,6 @@ export class UserStore {
     public startSigninRedirect() {
         this.userManager!.signinRedirect({ data: 'some data' }).then((user) => {
             console.log('signinRedirect done');
-            this._setAuthHeaders(user);
             this.setUser(user);
         }).catch(function (err: any) {
             console.log(err);
@@ -193,11 +195,16 @@ export class UserStore {
         let th = this;
         this.userManager.signoutRedirect().then(function (resp: any) {
             console.log('signed out', resp);
-            th._setAuthHeaders(null);
             th.setUser(null);
         }).catch((err) => {
             console.log(err);
         });
+    }
+
+    @action
+    setUser(user: User | null) {
+        this._setAuthHeaders(user);
+        this.user = user;
     }
 
     // endSignoutMainWindow() {
@@ -281,10 +288,6 @@ export class UserStore {
     //     }
     //     return options;
     // }
-
-    @action private setUser(user: User | null) {
-        this.user = user;
-    }
 
 }
 
