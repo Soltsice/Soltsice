@@ -18,5 +18,3 @@ export const testPrivateKeys: string[] =
         'b11ca488b6881322b141510bc2568a9434b74c25b5a315ac3699bcb6d4677eac',
         'cebd6eb5764cb4dbaa42ddf62db0834bc58a9fb93f5776bff32d2f97544bc500'
     ];
-
-// export default {testAccounts, testPrivateKeys};

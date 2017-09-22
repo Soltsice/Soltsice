@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "build/dist",
-    "module": "esnext",
+    "outDir": "dist",
+    "module": "CommonJS",
     "target": "es5",
+    "declaration": true,
+    //"outFile": "dist/index.js",
     "lib": [
       "es6",
       "dom"
     ],
     "sourceMap": true,
-    "allowJs": true,
+    "allowJs": false,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "src",
+    //"rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -25,11 +27,11 @@
   "exclude": [
     "node_modules",
     "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "soltsice.ts"
+    "dist",
+    "src/lib"
+  ],
+  "include": [
+    "./test/**/*",
+    "./src/**/*"
   ]
 }
