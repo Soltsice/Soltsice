@@ -7,10 +7,10 @@ import { W3, SoltsiceContract } from '..';
 export class Contactable extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/Contactable.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/Contactable.json', [], deploymentParams)
     }
 
     /*
@@ -20,7 +20,7 @@ export class Contactable extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     contactInformation(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.contactInformation
                     .call()
                     .then((res) => resolve(res))
@@ -32,7 +32,7 @@ export class Contactable extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     owner(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.owner
                     .call()
                     .then((res) => resolve(res))
@@ -44,7 +44,7 @@ export class Contactable extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     setContactInformation(info: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.setContactInformation(info)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -55,7 +55,7 @@ export class Contactable extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     transferOwnership(newOwner: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.transferOwnership(newOwner)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));

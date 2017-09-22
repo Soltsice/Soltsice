@@ -8,10 +8,10 @@ import { W3, SoltsiceContract } from '..';
 export class MetaCoin extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/MetaCoin.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/MetaCoin.json', [], deploymentParams)
     }
 
     /*
@@ -21,7 +21,7 @@ export class MetaCoin extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     getBalanceInEth(addr: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.getBalanceInEth(addr)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -32,7 +32,7 @@ export class MetaCoin extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     sendCoin(receiver: string, amount: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.sendCoin(receiver, amount)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -43,7 +43,7 @@ export class MetaCoin extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     getBalance(addr: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.getBalance(addr)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));

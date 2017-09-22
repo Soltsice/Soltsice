@@ -17,7 +17,7 @@ export class DummyToken extends SoltsiceContract {
 
     totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.totalSupply
                     .call()
                     .then((res) => resolve(res))

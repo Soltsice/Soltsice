@@ -170,7 +170,7 @@ export module soltsice {
     // tslint:disable-next-line:variable-name
     ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.${name}
                     .call(${inputsNamesString})
                     .then((res) => resolve(res))
@@ -184,7 +184,7 @@ export module soltsice {
     // tslint:disable-next-line:variable-name
     ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.${name}(${inputsNamesString})
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -236,10 +236,10 @@ import { W3, SoltsiceContract } from '${importPath}';
 export class ${contractName} extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {${ctorParams.typesNames}}
     ) {
-        super(web3, '${artifactRelPath}', constructorParams, deploymentParams)
+        super(web3, '${artifactRelPath}', [${ctorParams.names}], deploymentParams)
     }
 
     /*

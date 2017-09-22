@@ -8,10 +8,10 @@ import { W3, SoltsiceContract } from '..';
 export class ConvertLib extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/ConvertLib.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/ConvertLib.json', [], deploymentParams)
     }
 
     /*
@@ -21,7 +21,7 @@ export class ConvertLib extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     convert(amount: BigNumber, conversionRate: BigNumber): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.convert(amount, conversionRate)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));

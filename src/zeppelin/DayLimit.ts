@@ -8,10 +8,10 @@ import { W3, SoltsiceContract } from '..';
 export class DayLimit extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {_limit: BigNumber}
     ) {
-        super(web3, '../../build/contracts/DayLimit.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/DayLimit.json', [ctorParams!._limit], deploymentParams)
     }
 
     /*
@@ -21,7 +21,7 @@ export class DayLimit extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     dailyLimit(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.dailyLimit
                     .call()
                     .then((res) => resolve(res))
@@ -33,7 +33,7 @@ export class DayLimit extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     lastDay(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.lastDay
                     .call()
                     .then((res) => resolve(res))
@@ -45,7 +45,7 @@ export class DayLimit extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     spentToday(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.spentToday
                     .call()
                     .then((res) => resolve(res))

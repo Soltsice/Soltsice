@@ -7,10 +7,10 @@ import { W3, SoltsiceContract } from '..';
 export class MerkleProof extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/MerkleProof.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/MerkleProof.json', [], deploymentParams)
     }
 
     /*
@@ -20,7 +20,7 @@ export class MerkleProof extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     verifyProof(_proof: string, _root: any, _leaf: any): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.verifyProof
                     .call(_proof, _root, _leaf)
                     .then((res) => resolve(res))

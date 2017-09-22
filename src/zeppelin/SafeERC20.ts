@@ -7,10 +7,10 @@ import { W3, SoltsiceContract } from '..';
 export class SafeERC20 extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/SafeERC20.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/SafeERC20.json', [], deploymentParams)
     }
 
     /*

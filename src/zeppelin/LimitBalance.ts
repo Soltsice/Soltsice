@@ -8,10 +8,10 @@ import { W3, SoltsiceContract } from '..';
 export class LimitBalance extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {_limit: BigNumber}
     ) {
-        super(web3, '../../build/contracts/LimitBalance.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/LimitBalance.json', [ctorParams!._limit], deploymentParams)
     }
 
     /*
@@ -21,7 +21,7 @@ export class LimitBalance extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     limit(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.limit
                     .call()
                     .then((res) => resolve(res))

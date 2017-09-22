@@ -7,10 +7,10 @@ import { W3, SoltsiceContract } from '..';
 export class ECRecovery extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/ECRecovery.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/ECRecovery.json', [], deploymentParams)
     }
 
     /*
@@ -20,7 +20,7 @@ export class ECRecovery extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     recover(hash: any, sig: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.recover
                     .call(hash, sig)
                     .then((res) => resolve(res))

@@ -8,10 +8,10 @@ import { W3, SoltsiceContract } from '..';
 export class ERC20 extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {}
     ) {
-        super(web3, '../../build/contracts/ERC20.json', constructorParams, deploymentParams)
+        super(web3, '../../build/contracts/ERC20.json', [], deploymentParams)
     }
 
     /*
@@ -21,7 +21,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     approve(spender: string, value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.approve(spender, value)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -32,7 +32,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.totalSupply
                     .call()
                     .then((res) => resolve(res))
@@ -44,7 +44,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     transferFrom(from: string, to: string, value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.transferFrom(from, to, value)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -55,7 +55,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     balanceOf(who: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.balanceOf
                     .call(who)
                     .then((res) => resolve(res))
@@ -67,7 +67,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     transfer(to: string, value: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.transfer(to, value)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
@@ -78,7 +78,7 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     allowance(owner: string, spender: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.allowance
                     .call(owner, spender)
                     .then((res) => resolve(res))

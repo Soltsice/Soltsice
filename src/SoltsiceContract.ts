@@ -7,7 +7,8 @@ import { W3 } from './W3';
 export class SoltsiceContract {
     public address: string;
     protected web3: W3;
-    protected instance: Promise<any>;
+    /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
+    public _instance: Promise<any>;
     protected constructor(
         web3: W3,
         tokenArtifactsPath: string,
@@ -30,14 +31,14 @@ export class SoltsiceContract {
             if (typeof deploymentParams === 'string' && W3.isValidAddress(deploymentParams)) {
                 console.log('USING DEPLOYED: ', this.constructor.name);
                 this.address = deploymentParams!;
-                this.instance = Contract.at(this.address).then((inst) => {
+                this._instance = Contract.at(this.address).then((inst) => {
                     resolve(inst);
                 }).catch((err) => {
                     reject(err);
                 });
             } else {
                 console.log('NEW CONTRACT: ', this.constructor.name);
-                this.instance = Contract.new(constructorParams).then((inst) => {
+                this._instance = Contract.new(constructorParams).then((inst) => {
                     console.log('NEW ADDRESS', inst.address);
                     resolve(inst);
                 }).catch((err) => {
@@ -46,7 +47,7 @@ export class SoltsiceContract {
             }
         });
 
-        this.instance = instance;
+        this._instance = instance;
     }
 
 }

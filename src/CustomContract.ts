@@ -8,10 +8,11 @@ import { SoltsiceContract } from './SoltsiceContract'
 export class CustomContract extends SoltsiceContract {
     constructor(
         web3: W3,
-        constructorParams: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams
+        deploymentParams?: string | W3.TC.TxParams,
+        ctorParams?: {str: string}
+        
     ) {
-        super(web3, `../../contracts/CustomContract.json`, constructorParams, deploymentParams)
+        super(web3, `../../contracts/CustomContract.json`, [ctorParams!.str], deploymentParams)
     }
 
     /*
@@ -20,7 +21,7 @@ export class CustomContract extends SoltsiceContract {
 
     totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this.instance.then((inst) => {
+            this._instance.then((inst) => {
                 inst.totalSupply
                     .call()
                     .then((res) => resolve(res))
