@@ -28,7 +28,7 @@
     "node_modules",
     "build",
     "dist",
-    "src/lib"
+    "zeppelin"
   ],
   "include": [
     "./test/**/*",

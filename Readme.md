@@ -10,19 +10,20 @@
 
 Soltsice allows to generate TypeScript files for Ethereum contracts with the command:
 
-> soltsice ./sourceDir ./destinationDir
+> soltsice ./artifacts ./types
 
-All `.json` artifacts from `truffle compile` in the folder `./sourceDir` will be transformed into TypeScript classes in 
-`./destinationDir` with a single `index.ts` file with all exports.
+All `.json` artifacts from `truffle compile` in the folder `artifacts` will be transformed into TypeScript classes in 
+`types` with a single `index.ts` file with all exports.
 
 Every TypeScript contract class inherits `SoltsiceContract`, which is a wrapper over [Truffle-contract](https://github.com/trufflesuite/truffle-contract) with methods generated from ABI.
-If some functionality is not yet supported by Soltsice, you may use `SoltsiceContract._instance` field to access untyped Truffle-contract instance.
+If some functionality is not yet supported by Soltsice, you may use `SoltsiceContract._instance : Promise<any>` field to access untyped Truffle-contract instance.
 
-The package ships with types for all [OpenZeppelin](https://github.com/OpenZeppelin/zeppelin-solidity/) contracts. You may import them as:
+You could import generated types as:
 
 ```
-import { W3, StandardToken } from "soltsice";
+import { W3 } from "soltsice";
 import { BigNumber } from "bignumber.js";
+import { StandardToken } from "./types";
 
 // default wrapper for web3: either window['web3'] if present,
 // or http provider connected to localhost: 8545, if not running on https 
@@ -33,8 +34,13 @@ let st: StandardToken = new StandardToken(w3, "address of deployed contract");
 // note that typings are optional in variable definitions, TypeScript infers types
 let supply: Promise<BigNumber> = st.totalSupply();
 
-console.log("TOTAL SUPPLY", supply);
+supply.then(value => {
+    console.log("TOTAL SUPPLY", value.dividedBy(1e18).toFormat(0));
+});
+
 ```
+
+See a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
 
 ### Type inference & intellisense
 

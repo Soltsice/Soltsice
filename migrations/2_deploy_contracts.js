@@ -8,5 +8,4 @@ module.exports = function(deployer) {
   deployer.link(ConvertLib, MetaCoin);
   deployer.deploy(MetaCoin);
   deployer.deploy(DummyContract, 123, 456);
-  deployer.deploy(DBrainToken, '0xd7126c8c920800706f826df0772d792343cfecca');
 };

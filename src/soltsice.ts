@@ -203,7 +203,7 @@ export module soltsice {
         let contract = require(filePath);
 
         let importPath = W3ImportPath;
-        let artifactRelPath = path.relative(path.dirname(targetPath), filePath).replace(/\\/g, '/');
+        let artifactRelPath = path.resolve(filePath).replace(/\\/g, '/'); // path.relative(path.dirname(targetPath), filePath).replace(/\\/g, '/');
         console.log('REL PATH ', artifactRelPath);
         let contractName: string = contract.contract_name;
 
@@ -236,8 +236,8 @@ import { W3, SoltsiceContract } from '${importPath}';
 export class ${contractName} extends SoltsiceContract {
     constructor(
         web3: W3,
-        deploymentParams?: string | W3.TC.TxParams,
-        ctorParams?: {${ctorParams.typesNames}}
+        deploymentParams: string | W3.TC.TxParams,
+        ctorParams${ctorParams.typesNames === '' ? '?' : ''}: {${ctorParams.typesNames}}
     ) {
         super(web3, '${artifactRelPath}', [${ctorParams.names}], deploymentParams)
     }

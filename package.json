@@ -1,7 +1,7 @@
 {
   "name": "soltsice",
   "private": false,
-  "version": "0.3.2",
+  "version": "0.3.4",
   "description": "Solidity & TypeScript Integration, Configuration and Examples",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -47,7 +47,7 @@
     "soltsice": "npm run soltsice:copy && npm run soltsice:compile && npm run soltsice:contracts",
     "soltsice:copy": "cp -R build/contracts/. src/contracts",
     "soltsice:compile": "tsc ./soltsice.ts || exit 0",
-    "soltsice:contracts": "node ./dist/src/soltsice.js ./build/contracts ./src/zeppelin .."
+    "soltsice:contracts": "node ./dist/src/soltsice.js ./build/contracts ./src/contracts .."
   },
   "bin": {
     "soltsice": "dist/src/soltsice.js"
