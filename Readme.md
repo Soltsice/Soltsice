@@ -1,15 +1,12 @@
-Soltsice
-==========
+# Soltsice
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
-Intall
-----------------------
+## Intall
 
 > npm install soltsice --save
 
-Usage
-----------------------
+## Usage
 
 Soltsice allows to generate TypeScript files for Ethereum contracts with the command:
 
@@ -39,17 +36,30 @@ let supply: Promise<BigNumber> = st.totalSupply();
 console.log("TOTAL SUPPLY", supply);
 ```
 
-**Workflow:**
+### Type inference & intellisense
+
+The purpose of this library is to have peace of mind and type safety when working with rapidly changing Solidity ABI.
+TypeScript wrappers over contracts allow to use powerful intellisense feature of code editors.
+
+*Methods with signatures*
+
+<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/doc/methods.png" alt="Methods with signatures" width="600" />
+
+*Typed Constructor*
+
+<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/doc/constructor.png" alt="Typed Constructor" width="600" />
+
+### Workflow
 
 * Edit Solidity contracts, run `truffle compile`, run tests on Truffle stack (solidity or js)
-* Run Soltsice command `soltsice src dest`, all TypeScript contracts will be updated, any API changes will block subsequent TS compilation
+* Run Soltsice command `soltsice ./src ./dest`, all TypeScript contracts will be updated, any API changes will block subsequent TS compilation
   (except for rare edge cases such as multiple return parameters which are returned as an array and we use `any` TS type for them)
 * Adjust React components & stores to the changes.
 
-Contributing
------------------------
-Some functionality such as libraries is not supported yet. Contributors are welcome!
+## Contributing
 
-License
------------------------
+Some functionality such as Solidity libraries is not supported yet. Contributors are welcome!
+
+## License
+
 MIT
