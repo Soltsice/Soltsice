@@ -94,7 +94,7 @@ export namespace W3 {
             value: number;
         }
 
-        export type ContractDataType = BigNumber | number | string | boolean;
+        export type ContractDataType = BigNumber | number | string | boolean | BigNumber[] | number[] | string[];
 
         export function txParamsDefaultDeploy(from: address): TxParams {
             return {

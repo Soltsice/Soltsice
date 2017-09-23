@@ -12,7 +12,7 @@ export class CustomContract extends SoltsiceContract {
         ctorParams?: {str: string}
         
     ) {
-        super(web3, `../../contracts/CustomContract.json`, [ctorParams!.str], deploymentParams)
+        super(web3, require(`../../contracts/CustomContract.json`), [ctorParams!.str], deploymentParams)
     }
 
     /*

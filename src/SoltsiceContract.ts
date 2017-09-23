@@ -11,7 +11,7 @@ export class SoltsiceContract {
     public _instance: Promise<any>;
     protected constructor(
         web3: W3,
-        tokenArtifactsPath: string,
+        tokenArtifacts: string,
         constructorParams: W3.TC.ContractDataType[],
         deploymentParams?: string | W3.TC.TxParams,
     ) {
@@ -19,7 +19,6 @@ export class SoltsiceContract {
             throw 'Invalid deployed contract address';
         }
         this.web3 = web3;
-        let tokenArtifacts = require(tokenArtifactsPath);
         let Contract = contract(tokenArtifacts);
         Contract.setProvider(web3.currentProvider);
 
