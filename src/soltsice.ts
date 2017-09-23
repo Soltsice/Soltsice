@@ -42,9 +42,9 @@ export module soltsice {
         let files = getSourceFiles(options.source);
         // console.log('FILES', files);
         let paths = getSourcePaths(options.source, files);
-        console.log('PATHS', paths);
+        // console.log('PATHS', paths);
         let targets = getDestinationPaths(options.destination, files);
-        console.log('TARGETS', targets);
+        // console.log('TARGETS', targets);
         paths.forEach((file, idx) => {
             var ts = processFile(files[idx], file, targets[idx], options.W3importPath);
             console.log('Writing to ', targets[idx]);
@@ -239,7 +239,7 @@ export class ${contractName} extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams,
         ctorParams${ctorParams.typesNames === '' ? '?' : ''}: {${ctorParams.typesNames}}
     ) {
-        super(web3, '${artifactRelPath}', [${ctorParams.names}], deploymentParams)
+        super(web3, '${artifactRelPath}', [${ctorParams.names}], deploymentParams);
     }
 
     /*
