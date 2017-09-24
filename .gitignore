@@ -2,7 +2,7 @@ node_modules
 build
 dist
 package-lock.json
-src/contracts
+src/artifacts
 src/lib/W3/*.js
 soltsice.js
 contracts/zeppelin

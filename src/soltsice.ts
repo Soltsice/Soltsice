@@ -205,7 +205,10 @@ export module soltsice {
         let importPath = W3ImportPath;
         let artifactRelPath = path.relative(path.dirname(targetPath), filePath).replace(/\\/g, '/'); // path.resolve(filePath).replace(/\\/g, '/'); //
         console.log('REL PATH ', artifactRelPath);
-        let contractName: string = contract.contract_name;
+        let contractName: string = contract.contract_name || contract.contractName;
+        if (!contractName) {
+            throw 'Cannot find contract name in the artifact';
+        }
 
         let abis = contract.abi as W3.ABIDefinition[];
 

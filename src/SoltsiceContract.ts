@@ -11,7 +11,7 @@ export class SoltsiceContract {
     public _instance: Promise<any>;
     protected constructor(
         web3: W3,
-        tokenArtifacts: string,
+        tokenArtifacts: any,
         constructorParams: W3.TC.ContractDataType[],
         deploymentParams?: string | W3.TC.TxParams,
     ) {
