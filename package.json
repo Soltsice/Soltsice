@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/underscore": "^1.8.2",
     "bignumber.js": "^4.0.0",
+    "copyfiles": "^1.2.0",
     "truffle-contract": "^3.0.0",
     "web3": "^0.20.1"
   },
@@ -45,7 +46,7 @@
     "soltsice": "npm run soltsice:copy && npm run soltsice:compile && npm run soltsice:contracts",
     "soltsice:copy": "cp -R build/contracts/. src/contracts",
     "soltsice:compile": "tsc ./soltsice.ts || exit 0",
-    "soltsice:contracts": "cp -R build/contracts/. src/artifacts && node ./dist/src/soltsice.js ./src/artifacts ./src/contracts .."
+    "soltsice:contracts": "tsc && cp -R build/contracts/. src/artifacts && cp -R build/contracts/. dist/src/artifacts && node ./dist/src/soltsice.js ./src/artifacts ./src/contracts .. && tsc"
   },
   "bin": {
     "soltsice": "dist/src/soltsice.js"

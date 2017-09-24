@@ -7,15 +7,15 @@ import { W3, SoltsiceContract } from '..';
  */
 export class ERC20Basic extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams?: {}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/ERC20Basic.json'), 
-            [], 
+            ctorParams ? [] : [], 
             deploymentParams
         );
     }

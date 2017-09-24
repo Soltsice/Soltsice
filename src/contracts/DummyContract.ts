@@ -7,15 +7,15 @@ import { W3, SoltsiceContract } from '..';
  */
 export class DummyContract extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams: {_secret: BigNumber, _wellKnown: BigNumber}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {_secret: BigNumber, _wellKnown: BigNumber},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/DummyContract.json'), 
-            [ctorParams!._secret, ctorParams!._wellKnown], 
+            ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : [], 
             deploymentParams
         );
     }

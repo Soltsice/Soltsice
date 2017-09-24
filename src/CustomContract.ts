@@ -7,12 +7,16 @@ import { SoltsiceContract } from './SoltsiceContract'
  */
 export class CustomContract extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams?: string | W3.TC.TxParams,
+        deploymentParams: string | W3.TC.TxParams | object,
+        web3?: W3,
         ctorParams?: {str: string}
-        
     ) {
-        super(web3, require(`../../contracts/CustomContract.json`), [ctorParams!.str], deploymentParams)
+        super(
+            web3,
+            require(`../../contracts/CustomContract.json`),
+            ctorParams ? [ctorParams!.str] : [],
+            deploymentParams
+        )
     }
 
     /*

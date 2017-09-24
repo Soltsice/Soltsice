@@ -7,15 +7,15 @@ import { W3, SoltsiceContract } from '..';
  */
 export class DummyToken extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams: {_multisig: string}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {_multisig: string},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/DummyToken.json'), 
-            [ctorParams!._multisig], 
+            ctorParams ? [ctorParams!._multisig] : [], 
             deploymentParams
         );
     }

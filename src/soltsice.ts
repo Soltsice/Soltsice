@@ -238,15 +238,15 @@ import { W3, SoltsiceContract } from '${importPath}';
  */
 export class ${contractName} extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams${ctorParams.typesNames === '' ? '?' : ''}: {${ctorParams.typesNames}}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {${ctorParams.typesNames}},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('${artifactRelPath}'), 
-            [${ctorParams.names}], 
+            ctorParams ? [${ctorParams.names}] : [], 
             deploymentParams
         );
     }

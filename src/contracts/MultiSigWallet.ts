@@ -7,15 +7,15 @@ import { W3, SoltsiceContract } from '..';
  */
 export class MultiSigWallet extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams: {_owners: string[], _required: BigNumber}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {_owners: string[], _required: BigNumber},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/MultiSigWallet.json'), 
-            [ctorParams!._owners, ctorParams!._required], 
+            ctorParams ? [ctorParams!._owners, ctorParams!._required] : [], 
             deploymentParams
         );
     }

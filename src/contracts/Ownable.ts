@@ -6,15 +6,15 @@ import { W3, SoltsiceContract } from '..';
  */
 export class Ownable extends SoltsiceContract {
     constructor(
-        web3: W3,
-        deploymentParams: string | W3.TC.TxParams,
-        ctorParams?: {}
+        deploymentParams: string | W3.TC.TxParams | object,
+        ctorParams?: {},
+        web3?: W3,
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/Ownable.json'), 
-            [], 
+            ctorParams ? [] : [], 
             deploymentParams
         );
     }
