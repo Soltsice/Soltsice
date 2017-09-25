@@ -11,4 +11,5 @@ export * from './MultiSigWallet';
 export * from './Ownable';
 export * from './Pausable';
 export * from './SafeMath';
+export * from './SortedList';
 export * from './StandardToken';

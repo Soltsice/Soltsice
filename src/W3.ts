@@ -6,11 +6,11 @@ let Web3JS = require('web3');
 export class W3 {
 
     /**
-     * Default Web3 instance - resolves to a global injected my MIST, MetaMask, etc
+     * Default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
      * or to `localhost:8545` if not running on https
      */
     static Default: W3 = new W3();
-    
+
     // this is the only class wrapper over JS object, others are interfaces
     // cannot just cast from JS, but ctor does some standard logic to resolve web3
     // so we do not need cast but could just use new Web3()
@@ -23,17 +23,20 @@ export class W3 {
         Shh: new (provider: W3.Provider) => W3.Shh
         Bzz: new (provider: W3.Provider) => W3.Bzz
     } = Web3JS.modules;
-    
+
     get currentProvider(): W3.Provider { return this.web3 ? this.web3.currentProvider : undefined; }
     get eth(): W3.Eth { return this.web3.eth; }
-    get version(): any { return this.web3.version; }
+    get version(): W3.Version0 { return this.web3.version; }
     get utils(): W3.Utils {
         return this.web3.utils;
     }
 
+    /** web3 untyped instance created with a resolved or given in ctor provider, if any */
     web3;
-    private globalWeb3;
 
+    private globalWeb3;
+    private netId: Promise<string>;
+    private netNode: Promise<string>;
     constructor(provider?: W3.Provider) {
         let tmpWeb3;
         // console.log('Ctor provider:');
@@ -62,22 +65,237 @@ export class W3 {
             tmpWeb3 = new Web3JS(provider);
             console.log('Using a provider from constructor.');
         }
+        if (!tmpWeb3.version.api.startsWith("0.20")) {
+            throw 'Only web3 0.20.xx package is currently supported';
+        }
         this.web3 = tmpWeb3;
+
+        this.updateNetworkInfo();
+
     }
 
-    public getAccounts(): Promise<string[]> {
+    /** Request netid string from ctor or after provider change */
+    private updateNetworkInfo(): void {
+        this.netId = new Promise((resolve, reject) =>
+            this.web3.version.getNetwork((error, result) => error ? reject(error) : resolve(result))
+        );
+        this.netNode = new Promise((resolve, reject) =>
+            this.web3.version.getNode((error, result) => error ? reject(error) : resolve(result))
+        );
+    }
+
+    /*
+    Below are frequently used functions that should not depend on web3 API (0.20 or 1.0).
+    Will update them for web3 1.0 when truffle-contract support it without sendAsync error.
+    */
+
+
+    public get accounts(): Promise<string[]> {
         return new Promise((resolve, reject) =>
             this.web3.eth.getAccounts((error, result) => error ? reject(error) : resolve(result)));
     }
+
+    public get web3API(): string {
+        return this.web3.version.api;
+    }
+
+    public get isPre1API(): boolean {
+        return this.web3API.startsWith('0.20.');
+    }
+
+    public get isTestRPC(): Promise<boolean> {
+        return this.netNode.then(node => { return node.includes('TestRPC'); });
+    }
+
+    /** Get network ID as a promise. */
+    public get networkId(): Promise<string> {
+        return this.netId;
+    }
+
     public setProvider(provider: W3.Provider) {
         this.web3.setProvider(provider);
+        this.updateNetworkInfo();
+    }
+
+    public sendRPC(payload: W3.JsonRPCRequest): Promise<W3.JsonRPCResponse> {
+        return new Promise((resolve, reject) => {
+            if (this.isPre1API) {
+                this.web3.currentProvider.sendAsync(payload, (e, r) => {
+                    if (e) {
+                        reject(e);
+                    } else {
+                        resolve(r);
+                    }
+                });
+            } else {
+                this.web3.currentProvider.send(payload, (e, r) => {
+                    if (e) {
+                        reject(e);
+                    } else {
+                        resolve(r);
+                    }
+                });
+            }
+        })
+    }
+
+    /** Returns the time of the last mined block in seconds. */
+    public get latestTime(): Promise<number> {
+        return new Promise((resolve, reject) => {
+            if (this.isPre1API) {
+                this.web3.eth.getBlock('latest', (err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res.timestamp as number);
+                    }
+                });
+            } else {
+                reject('web3 1.0 support is not implemented');
+            }
+        });
+    }
+
+    public get blockNumber(): Promise<number> {
+        //getBlockNumber(callback: (err: Error, blockNumber: number) => void): void;
+        return new Promise((resolve, reject) => {
+            if (this.isPre1API) {
+                this.web3.eth.getBlockNumber((err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res as number);
+                    }
+                });
+            } else {
+                reject('web3 1.0 support is not implemented');
+            }
+        });
     }
 }
+
+
+export class TestRPC {
+
+    private w3: W3;
+    /**
+     *
+     */
+    constructor(w3?: W3) {
+        this.w3 = w3 || W3.Default;
+    }
+
+    /**
+     * Snapshot the state of the blockchain at the current block. Takes no parameters.
+     * Returns the integer id of the snapshot created.
+     */
+    public async snapshot(): Promise<string> {
+        if (!(await this.w3.isTestRPC)) {
+            throw 'Not on TestRPC';
+        }
+        const id = Date.now();
+        return this.w3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'evm_snapshot',
+            params: [],
+            id: id,
+        }).then(r => {
+            console.log('RPC RESPONSE: ', r);
+            return <string>r.result;
+        });
+    }
+
+
+    /**
+     * Revert the state of the blockchain to a previous snapshot.
+     * Takes a single parameter, which is the snapshot id to revert to.
+     * If no snapshot id is passed it will revert to the latest snapshot. Returns true.
+     */
+    public async revert(snapshotId?: string): Promise<boolean> {
+        if (!(await this.w3.isTestRPC)) {
+            throw 'Not on TestRPC';
+        }
+        const id = Date.now();
+        return this.w3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'evm_revert',
+            params: snapshotId ? [snapshotId] : [],
+            id: id,
+        }).then(async r => {
+            return true;
+        });
+    }
+
+    /**
+     * Jump forward in time. Takes one parameter, which is the amount of time to increase in seconds.
+     * Returns the total time adjustment, in seconds.
+     */
+    public async increaseTime(seconds: number): Promise<number> {
+        if (!(await this.w3.isTestRPC)) {
+            throw 'Not on TestRPC';
+        }
+        const id = Date.now();
+        return this.w3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'evm_increaseTime',
+            params: [W3.duration.seconds(seconds)],
+            id: id,
+        }).then(async r => {
+            await this.mine();
+            return <number>r.result;
+        });
+    }
+
+
+    /**
+     * Beware that due to the need of calling two separate testrpc methods and rpc calls overhead
+     * it's hard to increase time precisely to a target point so design your test to tolerate
+     * small fluctuations from time to time.
+     *
+     * @param target time in seconds
+     */
+    public async increaseTimeTo(target): Promise<number> {
+        let now = await this.w3.latestTime;
+        if (target < now) throw Error(`Cannot increase current time(${now}) to a moment in the past(${target})`);
+        let diff = target - now;
+        return this.increaseTime(diff);
+    }
+
+    /**
+     * Force a block to be mined. Takes no parameters. Mines a block independent of whether or not mining is started or stopped.
+     */
+    public async mine(): Promise<void> {
+        if (!(await this.w3.isTestRPC)) {
+            throw 'Not on TestRPC';
+        }
+        const id = Date.now();
+        return this.w3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'evm_mine',
+            params: [],
+            id: id,
+        }).then(r => {
+            return;
+        });
+    }
+
+    public async advanceToBlock(blockNumber: number) {
+        let lastBlock = await this.w3.blockNumber;
+        if (lastBlock > blockNumber) {
+            throw Error(`block number ${blockNumber} is in the past (current is ${lastBlock})`)
+        }
+        while (await this.w3.blockNumber < blockNumber) {
+            await this.mine()
+        }
+    }
+}
+
+
 
 export namespace W3 {
     export type address = string;
     export type bytes = string;
-    
+
     export function isValidAddress(addr: address): boolean {
         if (addr && addr.startsWith('0x') && addr.length === 42) {
             return true;
@@ -85,7 +303,7 @@ export namespace W3 {
         return false;
     }
 
-    /** truffle-contract */
+    /** Truffle Contract */
     export namespace TC {
         export interface TxParams {
             from: address;
@@ -105,7 +323,7 @@ export namespace W3 {
             };
         }
     }
-    
+
     // '{"jsonrpc":"2.0","method":"eth_sendTransaction","params":[{see above}],"id":1}'
     export interface JsonRPCRequest {
         jsonrpc: string;
@@ -121,8 +339,16 @@ export namespace W3 {
     }
 
     export interface Provider {
-        send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void);
+        sendAsync(
+            payload: JsonRPCRequest,
+            callback: (err: Error, result: JsonRPCResponse) => void,
+        ): void;
     }
+
+    // export interface Provider {
+    //     send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void);
+    // }
+
     export interface WebsocketProvider extends Provider { }
     export interface HttpProvider extends Provider { }
     export interface IpcProvider extends Provider { }
@@ -521,6 +747,27 @@ export namespace W3 {
         sign(address: string, dataToSign: string, cb?: Callback<string>): Promise<string>;
     }
 
+    export interface SyncingState {
+        startingBlock: number;
+        currentBlock: number;
+        highestBlock: number;
+    };
+
+    export type SyncingResult = false | SyncingState;
+
+
+
+    export interface Version0 {
+        api: string;
+        network: string;
+        node: string;
+        ethereum: string;
+        whisper: string;
+        getNetwork(callback: (err: Error, networkId: string) => void): void;
+        getNode(callback: (err: Error, nodeVersion: string) => void): void;
+        getEthereum(callback: (err: Error, ethereum: string) => void): void;
+        getWhisper(callback: (err: Error, whisper: string) => void): void;
+    }
     export interface Net { }
 
     export interface Personal {
@@ -535,4 +782,13 @@ export namespace W3 {
     export interface Shh { }
 
     export interface Bzz { }
+
+    export const duration = {
+        seconds: function (val: number) { return val },
+        minutes: function (val: number) { return val * this.seconds(60) },
+        hours: function (val: number) { return val * this.minutes(60) },
+        days: function (val: number) { return val * this.hours(24) },
+        weeks: function (val: number) { return val * this.days(7) },
+        years: function (val: number) { return val * this.days(365) }
+    };
 }

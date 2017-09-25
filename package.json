@@ -1,7 +1,7 @@
 {
   "name": "soltsice",
   "private": false,
-  "version": "0.3.9",
+  "version": "0.4.0",
   "description": "Solidity & TypeScript Integration, Configuration and Examples",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -29,7 +29,6 @@
   "dependencies": {
     "@types/underscore": "^1.8.2",
     "bignumber.js": "^4.0.0",
-    "copyfiles": "^1.2.0",
     "truffle-contract": "^3.0.0",
     "web3": "^0.20.1"
   },
