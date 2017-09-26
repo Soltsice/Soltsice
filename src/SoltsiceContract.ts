@@ -44,7 +44,7 @@ export class SoltsiceContract {
                 });
             } else if (instanceOfTxParams(deploymentParams)) {
                 console.log('NEW CONTRACT: ', this.constructor.name);
-                this._instance = Contract.new(constructorParams).then((inst) => {
+                this._instance = Contract.new(...constructorParams!, deploymentParams).then((inst) => {
                     console.log('NEW ADDRESS', inst.address);
                     resolve(inst);
                 }).catch((err) => {
