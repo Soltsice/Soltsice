@@ -25,7 +25,7 @@ export class DummyContract extends SoltsiceContract {
     */
     
     // tslint:disable-next-line:variable-name
-    getPublic(): Promise<BigNumber> {
+    public getPublic(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPublic
@@ -36,30 +36,54 @@ export class DummyContract extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    setPublic(_newValue: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.setPublic(_newValue)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get setPublic() {
+        let call = (_newValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.setPublic(_newValue)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_newValue: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.setPublic.request(_newValue).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
+    
+    public get setPrivate() {
+        let call = (_newValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.setPrivate(_newValue)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_newValue: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.setPrivate.request(_newValue).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
     
     // tslint:disable-next-line:variable-name
-    setPrivate(_newValue: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.setPrivate(_newValue)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    owner(): Promise<string> {
+    public owner(): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
@@ -71,7 +95,7 @@ export class DummyContract extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getPrivate(): Promise<BigNumber> {
+    public getPrivate(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPrivate
@@ -83,7 +107,7 @@ export class DummyContract extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    wellKnown(): Promise<BigNumber> {
+    public wellKnown(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.wellKnown
@@ -94,15 +118,27 @@ export class DummyContract extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transferOwnership(newOwner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transferOwnership(newOwner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transferOwnership() {
+        let call = (newOwner: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferOwnership(newOwner)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (newOwner: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transferOwnership.request(newOwner).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

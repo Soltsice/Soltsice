@@ -24,37 +24,73 @@ export class MetaCoin extends SoltsiceContract {
         Contract methods
     */
     
-    // tslint:disable-next-line:variable-name
-    getBalanceInEth(addr: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getBalanceInEth(addr)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get getBalanceInEth() {
+        let call = (addr: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalanceInEth(addr)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (addr: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.getBalanceInEth.request(addr).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
-    // tslint:disable-next-line:variable-name
-    sendCoin(receiver: string, amount: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.sendCoin(receiver, amount)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get sendCoin() {
+        let call = (receiver: string, amount: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.sendCoin(receiver, amount)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (receiver: string, amount: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.sendCoin.request(receiver, amount).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
-    // tslint:disable-next-line:variable-name
-    getBalance(addr: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getBalance(addr)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get getBalance() {
+        let call = (addr: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalance(addr)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (addr: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.getBalance.request(addr).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

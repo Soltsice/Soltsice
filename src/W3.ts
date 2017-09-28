@@ -1,3 +1,5 @@
+// typings originally from https://github.com/ethereum/web3.js/pull/897 and https://github.com/0xProject/web3-typescript-typings
+
 import { BigNumber } from 'bignumber.js'; // TODO change to BN
 import * as us from 'underscore';
 
@@ -314,11 +316,28 @@ export namespace W3 {
 
         export type ContractDataType = BigNumber | number | string | boolean | BigNumber[] | number[] | string[];
 
+        export interface TransactionResult {
+            /** Transaction hash. */
+            tx: string;
+            receipt: TransactionReceipt;
+            /** This array has decoded events, while reseipt.logs has raw logs when returned from TC transaction */
+            logs: Log[];
+        }
+
         export function txParamsDefaultDeploy(from: address): TxParams {
             return {
                 from: from,
                 gas: 4712388,
-                gasPrice: 100000000000,
+                gasPrice: 20000000000,
+                value: 0
+            };
+        }
+
+        export function txParamsDefaultSend(from: address): TxParams {
+            return {
+                from: from,
+                gas: 50000,
+                gasPrice: 20000000000,
                 value: 0
             };
         }
@@ -462,6 +481,7 @@ export namespace W3 {
         blockNumber: number;
         raw?: { data: string, topics: any[] };
     }
+
     export interface TransactionReceipt {
         transactionHash: string;
         transactionIndex: number;
@@ -472,7 +492,7 @@ export namespace W3 {
         contractAddress: string;
         cumulativeGasUsed: number;
         gasUsed: number;
-        logs?: Array<Log>;
+        logs?: Log[];
         events?: {
             [eventName: string]: EventLog
         };
@@ -500,23 +520,36 @@ export namespace W3 {
         totalDifficulty: number;
         uncles: Array<string>;
     }
+
     export interface Logs {
         fromBlock?: number;
         address?: string;
         topics?: Array<string | string[]>;
 
     }
+
+    /**  */
     export interface Log {
-        address: string;
-        data: string;
-        topics: Array<string>;
+        /** true when the log was removed, due to a chain reorganization. false if its a valid log. */
+        removed?: boolean;
         logIndex: number;
-        transactionHash: string;
         transactionIndex: number;
+        transactionHash: string;
         blockHash: string;
         blockNumber: number;
+        address: string;
+        data?: string;
+        topics?: Array<string>;
 
+        /** Truffle-contract returns this as 'mined' */
+        type?: string
+
+        /** Event name decoded by Truffle-contract */
+        event?: string;
+        /** Args passed to a Truffle-contract method */
+        args?: any;
     }
+
     export interface Subscribe<T> {
         subscription: {
             id: string;
@@ -534,12 +567,14 @@ export namespace W3 {
         on(type: 'changed', handler: (data: T) => void): void;
         on(type: 'error', handler: (data: Error) => void): void;
     }
+
     export interface Account {
         address: string;
         privateKey: string;
         publicKey: string;
 
     }
+
     export interface PrivateKey {
         address: string;
         Crypto: {

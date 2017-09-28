@@ -25,7 +25,7 @@ export class BasicToken extends SoltsiceContract {
     */
     
     // tslint:disable-next-line:variable-name
-    totalSupply(): Promise<BigNumber> {
+    public totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
@@ -37,7 +37,7 @@ export class BasicToken extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    balanceOf(_owner: string): Promise<BigNumber> {
+    public balanceOf(_owner: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
@@ -48,15 +48,27 @@ export class BasicToken extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transfer(_to: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transfer(_to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transfer() {
+        let call = (_to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer(_to, _value)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_to: string, _value: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transfer.request(_to, _value).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

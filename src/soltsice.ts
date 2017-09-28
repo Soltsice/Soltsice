@@ -168,7 +168,7 @@ export module soltsice {
             isConstant ?
                 `
     // tslint:disable-next-line:variable-name
-    ${name}(${inputsString}): Promise<${outputType}> {
+    public ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.${name}
@@ -181,16 +181,28 @@ export module soltsice {
     `
                 :
                 `
-    // tslint:disable-next-line:variable-name
-    ${name}(${inputsString}): Promise<${outputType}> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.${name}(${inputsNamesString})
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get ${name}() {
+        let call = (${inputsString}): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.${name}(${inputsNamesString})
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (${inputsString}): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.${name}.request(${inputsNamesString}).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     `
             ;
 

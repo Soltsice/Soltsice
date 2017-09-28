@@ -25,7 +25,7 @@ export class MultiSigWallet extends SoltsiceContract {
     */
     
     // tslint:disable-next-line:variable-name
-    owners(_0: BigNumber): Promise<string> {
+    public owners(_0: BigNumber): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owners
@@ -36,30 +36,54 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    removeOwner(owner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.removeOwner(owner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get removeOwner() {
+        let call = (owner: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.removeOwner(owner)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (owner: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.removeOwner.request(owner).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
+    
+    public get revokeConfirmation() {
+        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.revokeConfirmation(transactionId)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (transactionId: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.revokeConfirmation.request(transactionId).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
     
     // tslint:disable-next-line:variable-name
-    revokeConfirmation(transactionId: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.revokeConfirmation(transactionId)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    isOwner(_0: string): Promise<boolean> {
+    public isOwner(_0: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.isOwner
@@ -71,7 +95,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    confirmations(_0: BigNumber, _1: string): Promise<boolean> {
+    public confirmations(_0: BigNumber, _1: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.confirmations
@@ -83,7 +107,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber> {
+    public getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionCount
@@ -94,19 +118,31 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    addOwner(owner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.addOwner(owner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get addOwner() {
+        let call = (owner: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.addOwner(owner)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (owner: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.addOwner.request(owner).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
     // tslint:disable-next-line:variable-name
-    isConfirmed(transactionId: BigNumber): Promise<boolean> {
+    public isConfirmed(transactionId: BigNumber): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.isConfirmed
@@ -118,7 +154,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getConfirmationCount(transactionId: BigNumber): Promise<BigNumber> {
+    public getConfirmationCount(transactionId: BigNumber): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getConfirmationCount
@@ -130,7 +166,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    transactions(_0: BigNumber): Promise<any> {
+    public transactions(_0: BigNumber): Promise<any> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.transactions
@@ -142,7 +178,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getOwners(): Promise<string[]> {
+    public getOwners(): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getOwners
@@ -154,7 +190,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getTransactionIds(from: BigNumber, to: BigNumber, pending: boolean, executed: boolean): Promise<BigNumber> {
+    public getTransactionIds(from: BigNumber, to: BigNumber, pending: boolean, executed: boolean): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionIds
@@ -166,7 +202,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    getConfirmations(transactionId: BigNumber): Promise<string[]> {
+    public getConfirmations(transactionId: BigNumber): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getConfirmations
@@ -178,7 +214,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    transactionCount(): Promise<BigNumber> {
+    public transactionCount(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.transactionCount
@@ -189,41 +225,77 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    changeRequirement(_required: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.changeRequirement(_required)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get changeRequirement() {
+        let call = (_required: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.changeRequirement(_required)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_required: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.changeRequirement.request(_required).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
+    
+    public get confirmTransaction() {
+        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.confirmTransaction(transactionId)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (transactionId: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.confirmTransaction.request(transactionId).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
+    
+    public get submitTransaction() {
+        let call = (destination: string, value: BigNumber, data: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.submitTransaction(destination, value, data)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (destination: string, value: BigNumber, data: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.submitTransaction.request(destination, value, data).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
     
     // tslint:disable-next-line:variable-name
-    confirmTransaction(transactionId: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.confirmTransaction(transactionId)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    submitTransaction(destination: string, value: BigNumber, data: string): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.submitTransaction(destination, value, data)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    MAX_OWNER_COUNT(): Promise<BigNumber> {
+    public MAX_OWNER_COUNT(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.MAX_OWNER_COUNT
@@ -235,7 +307,7 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    required(): Promise<BigNumber> {
+    public required(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.required
@@ -246,26 +318,50 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    replaceOwner(owner: string, newOwner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.replaceOwner(owner, newOwner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get replaceOwner() {
+        let call = (owner: string, newOwner: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.replaceOwner(owner, newOwner)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (owner: string, newOwner: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.replaceOwner.request(owner, newOwner).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
-    // tslint:disable-next-line:variable-name
-    executeTransaction(transactionId: BigNumber): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.executeTransaction(transactionId)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get executeTransaction() {
+        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.executeTransaction(transactionId)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (transactionId: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.executeTransaction.request(transactionId).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

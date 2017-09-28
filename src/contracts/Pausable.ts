@@ -23,19 +23,31 @@ export class Pausable extends SoltsiceContract {
         Contract methods
     */
     
-    // tslint:disable-next-line:variable-name
-    unpause(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.unpause()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get unpause() {
+        let call = (): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.unpause()
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.unpause.request().params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
     // tslint:disable-next-line:variable-name
-    paused(): Promise<boolean> {
+    public paused(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.paused
@@ -46,19 +58,31 @@ export class Pausable extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    pause(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.pause()
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get pause() {
+        let call = (): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.pause()
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.pause.request().params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
     // tslint:disable-next-line:variable-name
-    owner(): Promise<string> {
+    public owner(): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
@@ -69,15 +93,27 @@ export class Pausable extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transferOwnership(newOwner: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transferOwnership(newOwner)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transferOwnership() {
+        let call = (newOwner: string): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferOwnership(newOwner)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (newOwner: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transferOwnership.request(newOwner).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

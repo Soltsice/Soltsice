@@ -24,15 +24,27 @@ export class ConvertLib extends SoltsiceContract {
         Contract methods
     */
     
-    // tslint:disable-next-line:variable-name
-    convert(amount: BigNumber, conversionRate: BigNumber): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.convert(amount, conversionRate)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get convert() {
+        let call = (amount: BigNumber, conversionRate: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.convert(amount, conversionRate)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (amount: BigNumber, conversionRate: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.convert.request(amount, conversionRate).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

@@ -25,7 +25,7 @@ export class ERC20Basic extends SoltsiceContract {
     */
     
     // tslint:disable-next-line:variable-name
-    totalSupply(): Promise<BigNumber> {
+    public totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
@@ -37,7 +37,7 @@ export class ERC20Basic extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:variable-name
-    balanceOf(who: string): Promise<BigNumber> {
+    public balanceOf(who: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
@@ -48,15 +48,27 @@ export class ERC20Basic extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transfer(to: string, value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transfer(to, value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transfer() {
+        let call = (to: string, value: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer(to, value)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (to: string, value: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transfer.request(to, value).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
 }

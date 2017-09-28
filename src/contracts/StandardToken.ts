@@ -24,19 +24,31 @@ export class StandardToken extends SoltsiceContract {
         Contract methods
     */
     
-    // tslint:disable-next-line:variable-name
-    approve(_spender: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.approve(_spender, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get approve() {
+        let call = (_spender: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.approve(_spender, _value)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_spender: string, _value: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.approve.request(_spender, _value).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
     
     // tslint:disable-next-line:variable-name
-    totalSupply(): Promise<BigNumber> {
+    public totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
@@ -47,30 +59,54 @@ export class StandardToken extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transferFrom(_from: string, _to: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transferFrom(_from, _to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transferFrom() {
+        let call = (_from: string, _to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferFrom(_from, _to, _value)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_from: string, _to: string, _value: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transferFrom.request(_from, _to, _value).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
+    
+    public get decreaseApproval() {
+        let call = (_spender: string, _subtractedValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.decreaseApproval(_spender, _subtractedValue)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_spender: string, _subtractedValue: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.decreaseApproval.request(_spender, _subtractedValue).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
     
     // tslint:disable-next-line:variable-name
-    decreaseApproval(_spender: string, _subtractedValue: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.decreaseApproval(_spender, _subtractedValue)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    balanceOf(_owner: string): Promise<BigNumber> {
+    public balanceOf(_owner: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
@@ -81,30 +117,54 @@ export class StandardToken extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:variable-name
-    transfer(_to: string, _value: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transfer(_to, _value)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
+    public get transfer() {
+        let call = (_to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer(_to, _value)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_to: string, _value: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.transfer.request(_to, _value).params[0].data);
+                });
             });
-        });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
     }
+
+
+    
+    public get increaseApproval() {
+        let call = (_spender: string, _addedValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.increaseApproval(_spender, _addedValue)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            })
+        };
+        let data = (_spender: string, _addedValue: BigNumber): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    resolve(inst.increaseApproval.request(_spender, _addedValue).params[0].data);
+                });
+            });
+        };
+        let method = Object.assign(call, { data: data });
+        return method;
+    }
+
+
     
     // tslint:disable-next-line:variable-name
-    increaseApproval(_spender: string, _addedValue: BigNumber): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.increaseApproval(_spender, _addedValue)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        });
-    }
-    
-    // tslint:disable-next-line:variable-name
-    allowance(_owner: string, _spender: string): Promise<BigNumber> {
+    public allowance(_owner: string, _spender: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.allowance
