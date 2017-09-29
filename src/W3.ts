@@ -174,6 +174,23 @@ export class W3 {
             }
         });
     }
+
+    /** Async unlock while web3.js only has sync version */
+    public async unlockAccount(account: string, password: string, duration?: number): Promise<boolean> {
+        const id = Date.now();
+        return this.sendRPC({
+            jsonrpc: '2.0',
+            method: 'personal_unlockAccount',
+            params: [account, password, duration || 10],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                return false;
+            }
+            return <boolean>r.result;
+        });
+    }
+
 }
 
 
