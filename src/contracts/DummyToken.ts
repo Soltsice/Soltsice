@@ -10,13 +10,15 @@ export class DummyToken extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_multisig: string},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/DummyToken.json'), 
             ctorParams ? [ctorParams!._multisig] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
@@ -49,23 +51,31 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get approve() {
-        let call = (_spender: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_spender: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.approve(_spender, _value)
+                    inst.approve(_spender, _value, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_spender: string, _value: BigNumber): Promise<string> => {
+        let ___data = (_spender: string, _value: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.approve.request(_spender, _value).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_spender: string, _value: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.approve.estimateGas(_spender, _value).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -84,23 +94,31 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get transferFrom() {
-        let call = (_from: string, _to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_from: string, _to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.transferFrom(_from, _to, _value)
+                    inst.transferFrom(_from, _to, _value, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_from: string, _to: string, _value: BigNumber): Promise<string> => {
+        let ___data = (_from: string, _to: string, _value: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.transferFrom.request(_from, _to, _value).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_from: string, _to: string, _value: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferFrom.estimateGas(_from, _to, _value).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -119,46 +137,62 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get unpause() {
-        let call = (): Promise<W3.TC.TransactionResult> => {
+        let ___call = ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.unpause()
+                    inst.unpause( txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (): Promise<string> => {
+        let ___data = (): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.unpause.request().params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.unpause.estimateGas().then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get mint() {
-        let call = (_to: string, _amount: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_to: string, _amount: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.mint(_to, _amount)
+                    inst.mint(_to, _amount, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_to: string, _amount: BigNumber): Promise<string> => {
+        let ___data = (_to: string, _amount: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.mint.request(_to, _amount).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_to: string, _amount: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.mint.estimateGas(_to, _amount).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -189,23 +223,31 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get decreaseApproval() {
-        let call = (_spender: string, _subtractedValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_spender: string, _subtractedValue: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.decreaseApproval(_spender, _subtractedValue)
+                    inst.decreaseApproval(_spender, _subtractedValue, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_spender: string, _subtractedValue: BigNumber): Promise<string> => {
+        let ___data = (_spender: string, _subtractedValue: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.decreaseApproval.request(_spender, _subtractedValue).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_spender: string, _subtractedValue: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.decreaseApproval.estimateGas(_spender, _subtractedValue).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -224,46 +266,62 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get finishMinting() {
-        let call = (): Promise<W3.TC.TransactionResult> => {
+        let ___call = ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.finishMinting()
+                    inst.finishMinting( txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (): Promise<string> => {
+        let ___data = (): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.finishMinting.request().params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.finishMinting.estimateGas().then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get pause() {
-        let call = (): Promise<W3.TC.TransactionResult> => {
+        let ___call = ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.pause()
+                    inst.pause( txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (): Promise<string> => {
+        let ___data = (): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.pause.request().params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.pause.estimateGas().then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -294,46 +352,62 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get transfer() {
-        let call = (_to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.transfer(_to, _value)
+                    inst.transfer(_to, _value, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_to: string, _value: BigNumber): Promise<string> => {
+        let ___data = (_to: string, _value: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.transfer.request(_to, _value).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_to: string, _value: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer.estimateGas(_to, _value).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get increaseApproval() {
-        let call = (_spender: string, _addedValue: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_spender: string, _addedValue: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.increaseApproval(_spender, _addedValue)
+                    inst.increaseApproval(_spender, _addedValue, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_spender: string, _addedValue: BigNumber): Promise<string> => {
+        let ___data = (_spender: string, _addedValue: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.increaseApproval.request(_spender, _addedValue).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_spender: string, _addedValue: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.increaseApproval.estimateGas(_spender, _addedValue).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -352,23 +426,31 @@ export class DummyToken extends SoltsiceContract {
     }
     
     public get transferOwnership() {
-        let call = (newOwner: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.transferOwnership(newOwner)
+                    inst.transferOwnership(newOwner, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (newOwner: string): Promise<string> => {
+        let ___data = (newOwner: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.transferOwnership.request(newOwner).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (newOwner: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 

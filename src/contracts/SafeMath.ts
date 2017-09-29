@@ -9,13 +9,15 @@ export class SafeMath extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/SafeMath.json'), 
             ctorParams ? [] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 

@@ -10,13 +10,15 @@ export class MetaCoin extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/MetaCoin.json'), 
             ctorParams ? [] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
@@ -25,69 +27,93 @@ export class MetaCoin extends SoltsiceContract {
     */
     
     public get getBalanceInEth() {
-        let call = (addr: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (addr: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.getBalanceInEth(addr)
+                    inst.getBalanceInEth(addr, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (addr: string): Promise<string> => {
+        let ___data = (addr: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.getBalanceInEth.request(addr).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (addr: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalanceInEth.estimateGas(addr).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get sendCoin() {
-        let call = (receiver: string, amount: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (receiver: string, amount: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.sendCoin(receiver, amount)
+                    inst.sendCoin(receiver, amount, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (receiver: string, amount: BigNumber): Promise<string> => {
+        let ___data = (receiver: string, amount: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.sendCoin.request(receiver, amount).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (receiver: string, amount: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.sendCoin.estimateGas(receiver, amount).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get getBalance() {
-        let call = (addr: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (addr: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.getBalance(addr)
+                    inst.getBalance(addr, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (addr: string): Promise<string> => {
+        let ___data = (addr: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.getBalance.request(addr).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (addr: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalance.estimateGas(addr).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 

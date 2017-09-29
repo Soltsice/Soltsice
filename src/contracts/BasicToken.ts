@@ -10,13 +10,15 @@ export class BasicToken extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/BasicToken.json'), 
             ctorParams ? [] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
@@ -49,23 +51,31 @@ export class BasicToken extends SoltsiceContract {
     }
     
     public get transfer() {
-        let call = (_to: string, _value: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.transfer(_to, _value)
+                    inst.transfer(_to, _value, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_to: string, _value: BigNumber): Promise<string> => {
+        let ___data = (_to: string, _value: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.transfer.request(_to, _value).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_to: string, _value: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer.estimateGas(_to, _value).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 

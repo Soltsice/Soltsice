@@ -10,13 +10,15 @@ export class MultiSigWallet extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_owners: string[], _required: BigNumber},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/MultiSigWallet.json'), 
             ctorParams ? [ctorParams!._owners, ctorParams!._required] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
@@ -37,46 +39,62 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     public get removeOwner() {
-        let call = (owner: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.removeOwner(owner)
+                    inst.removeOwner(owner, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (owner: string): Promise<string> => {
+        let ___data = (owner: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.removeOwner.request(owner).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (owner: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.removeOwner.estimateGas(owner).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get revokeConfirmation() {
-        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.revokeConfirmation(transactionId)
+                    inst.revokeConfirmation(transactionId, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (transactionId: BigNumber): Promise<string> => {
+        let ___data = (transactionId: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.revokeConfirmation.request(transactionId).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (transactionId: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.revokeConfirmation.estimateGas(transactionId).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -119,23 +137,31 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     public get addOwner() {
-        let call = (owner: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.addOwner(owner)
+                    inst.addOwner(owner, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (owner: string): Promise<string> => {
+        let ___data = (owner: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.addOwner.request(owner).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (owner: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.addOwner.estimateGas(owner).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -226,69 +252,93 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     public get changeRequirement() {
-        let call = (_required: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (_required: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.changeRequirement(_required)
+                    inst.changeRequirement(_required, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (_required: BigNumber): Promise<string> => {
+        let ___data = (_required: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.changeRequirement.request(_required).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (_required: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.changeRequirement.estimateGas(_required).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get confirmTransaction() {
-        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.confirmTransaction(transactionId)
+                    inst.confirmTransaction(transactionId, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (transactionId: BigNumber): Promise<string> => {
+        let ___data = (transactionId: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.confirmTransaction.request(transactionId).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (transactionId: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.confirmTransaction.estimateGas(transactionId).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get submitTransaction() {
-        let call = (destination: string, value: BigNumber, data: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (destination: string, value: BigNumber, data: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.submitTransaction(destination, value, data)
+                    inst.submitTransaction(destination, value, data, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (destination: string, value: BigNumber, data: string): Promise<string> => {
+        let ___data = (destination: string, value: BigNumber, data: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.submitTransaction.request(destination, value, data).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (destination: string, value: BigNumber, data: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.submitTransaction.estimateGas(destination, value, data).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -319,46 +369,62 @@ export class MultiSigWallet extends SoltsiceContract {
     }
     
     public get replaceOwner() {
-        let call = (owner: string, newOwner: string): Promise<W3.TC.TransactionResult> => {
+        let ___call = (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.replaceOwner(owner, newOwner)
+                    inst.replaceOwner(owner, newOwner, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (owner: string, newOwner: string): Promise<string> => {
+        let ___data = (owner: string, newOwner: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.replaceOwner.request(owner, newOwner).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (owner: string, newOwner: string): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.replaceOwner.estimateGas(owner, newOwner).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
 
     
     public get executeTransaction() {
-        let call = (transactionId: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.executeTransaction(transactionId)
+                    inst.executeTransaction(transactionId, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (transactionId: BigNumber): Promise<string> => {
+        let ___data = (transactionId: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.executeTransaction.request(transactionId).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (transactionId: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.executeTransaction.estimateGas(transactionId).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 

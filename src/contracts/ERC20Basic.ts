@@ -10,13 +10,15 @@ export class ERC20Basic extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('../artifacts/ERC20Basic.json'), 
             ctorParams ? [] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
@@ -49,23 +51,31 @@ export class ERC20Basic extends SoltsiceContract {
     }
     
     public get transfer() {
-        let call = (to: string, value: BigNumber): Promise<W3.TC.TransactionResult> => {
+        let ___call = (to: string, value: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.transfer(to, value)
+                    inst.transfer(to, value, txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (to: string, value: BigNumber): Promise<string> => {
+        let ___data = (to: string, value: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.transfer.request(to, value).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (to: string, value: BigNumber): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transfer.estimateGas(to, value).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 

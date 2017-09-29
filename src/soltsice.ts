@@ -136,7 +136,7 @@ export module soltsice {
         let inputsNamesString: string;
         if (inputs && inputs.length > 0) {
             inputs = inputs.map((i, idx) => i.name === '' ? Object.assign(i, { name: ('_' + idx) }) : i);
-            inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', ');
+            inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', '); // comma for tx params
             inputsNamesString = inputs.map(i => i.name).join(', ');
         } else {
             inputsString = '';
@@ -182,23 +182,31 @@ export module soltsice {
                 :
                 `
     public get ${name}() {
-        let call = (${inputsString}): Promise<W3.TC.TransactionResult> => {
+        let ___call = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.${name}(${inputsNamesString})
+                    inst.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
-            })
+            });
         };
-        let data = (${inputsString}): Promise<string> => {
+        let ___data = (${inputsString}): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
                     resolve(inst.${name}.request(${inputsNamesString}).params[0].data);
                 });
             });
         };
-        let method = Object.assign(call, { data: data });
+        let ___gas = (${inputsString}): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.${name}.estimateGas(${inputsNamesString}).then((g) => resolve(g));
+                });
+            });
+        };
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
 
@@ -253,13 +261,15 @@ export class ${contractName} extends SoltsiceContract {
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {${ctorParams.typesNames}},
         web3?: W3,
+        link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
             require('${artifactRelPath}'), 
             ctorParams ? [${ctorParams.names}] : [], 
-            deploymentParams
+            deploymentParams,
+            link
         );
     }
 
