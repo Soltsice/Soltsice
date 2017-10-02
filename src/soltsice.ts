@@ -167,6 +167,7 @@ export module soltsice {
         let methodsBody: string =
             isConstant ?
                 `
+    // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
     public ${name}(${inputsString}): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
@@ -182,6 +183,8 @@ export module soltsice {
                 :
                 `
     public get ${name}() {
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___call = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
@@ -192,6 +195,8 @@ export module soltsice {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___data = (${inputsString}): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -199,6 +204,8 @@ export module soltsice {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___gas = (${inputsString}): Promise<number> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -209,8 +216,6 @@ export module soltsice {
         let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
-
-
     `
             ;
 

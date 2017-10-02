@@ -94,4 +94,10 @@ export class SoltsiceContract {
 
     get instance(): Promise<any> { return this._instance };
 
+    /** Send a transaction to the fallback function */
+    public async sendTransaction(txParams: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
+        let instance = await this.instance;
+        return instance.sendTransaction(txParams);
+    }
+
 }
