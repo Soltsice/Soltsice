@@ -2,7 +2,7 @@
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
-## Intall
+## Install
 
 > npm install soltsice --save
 

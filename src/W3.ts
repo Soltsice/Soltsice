@@ -6,12 +6,24 @@ import * as us from 'underscore';
 let Web3JS = require('web3');
 
 export class W3 {
-
+    private static _default: W3;
     /**
      * Default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
      * or to `localhost:8545` if not running on https
      */
-    static Default: W3 = new W3();
+    static get Default(): W3{
+        if (W3._default) {
+            return W3._default;
+        }
+        throw 'Default W3 instance is not set. Use W3.Default setter.';
+        // W3._default = new W3();
+        // return W3._default;
+    } 
+
+    static set Default(w3: W3) {
+        W3._default = w3;
+    } 
+    
 
     // this is the only class wrapper over JS object, others are interfaces
     // cannot just cast from JS, but ctor does some standard logic to resolve web3
