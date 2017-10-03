@@ -25,6 +25,7 @@ export class Ownable extends SoltsiceContract {
         Contract methods
     */
     
+    // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
     public owner(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -38,6 +39,8 @@ export class Ownable extends SoltsiceContract {
     }
     
     public get transferOwnership() {
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___call = (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
@@ -48,6 +51,22 @@ export class Ownable extends SoltsiceContract {
                 });
             });
         };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        let ___tx = (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            txParams = txParams || this._sendParams;
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.transferOwnership.sendTransaction(newOwner, txParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___data = (newOwner: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -55,6 +74,8 @@ export class Ownable extends SoltsiceContract {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___gas = (newOwner: string): Promise<number> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -62,10 +83,8 @@ export class Ownable extends SoltsiceContract {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
         return method;
     }
-
-
     
 }

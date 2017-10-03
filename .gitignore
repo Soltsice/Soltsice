@@ -6,3 +6,4 @@ src/artifacts
 src/lib/W3/*.js
 soltsice.js
 contracts/zeppelin
+.vscode/*

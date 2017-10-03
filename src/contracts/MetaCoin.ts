@@ -27,6 +27,8 @@ export class MetaCoin extends SoltsiceContract {
     */
     
     public get getBalanceInEth() {
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___call = (addr: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
@@ -37,6 +39,22 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        let ___tx = (addr: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            txParams = txParams || this._sendParams;
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalanceInEth.sendTransaction(addr, txParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___data = (addr: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -44,6 +62,8 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___gas = (addr: string): Promise<number> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -51,13 +71,13 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
         return method;
     }
-
-
     
     public get sendCoin() {
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___call = (receiver: string, amount: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
@@ -68,6 +88,22 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        let ___tx = (receiver: string, amount: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
+            txParams = txParams || this._sendParams;
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.sendCoin.sendTransaction(receiver, amount, txParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___data = (receiver: string, amount: BigNumber): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -75,6 +111,8 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___gas = (receiver: string, amount: BigNumber): Promise<number> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -82,13 +120,13 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
         return method;
     }
-
-
     
     public get getBalance() {
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___call = (addr: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             txParams = txParams || this._sendParams;
             return new Promise((resolve, reject) => {
@@ -99,6 +137,22 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        let ___tx = (addr: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            txParams = txParams || this._sendParams;
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.getBalance.sendTransaction(addr, txParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___data = (addr: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -106,6 +160,8 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
         let ___gas = (addr: string): Promise<number> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
@@ -113,10 +169,8 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
         return method;
     }
-
-
     
 }

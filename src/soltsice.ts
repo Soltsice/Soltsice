@@ -195,6 +195,20 @@ export module soltsice {
                 });
             });
         };
+
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        let ___tx = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<string> => {
+            txParams = txParams || this._sendParams;
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        };
+
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (${inputsString}): Promise<string> => {
@@ -213,7 +227,7 @@ export module soltsice {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
         return method;
     }
     `
