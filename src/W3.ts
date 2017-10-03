@@ -5,11 +5,20 @@ import * as us from 'underscore';
 
 let Web3JS = require('web3');
 
+// this is the only class wrapper over JS object, others are interfaces
+// cannot just cast from JS, but ctor does some standard logic to resolve web3
+// so we do not need cast but could just use new Web3()
+
+/**
+ * Strongly-types wrapper over web3.js with additional helper methods.
+ */
 export class W3 {
     private static _default: W3;
     /**
-     * Default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
-     * or to `localhost:8545` if not running on https
+     * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
+     * You must set it explicitly via W3.Default setter. Use an empty `new W3()` constructor to get an instance that
+     * automatically resolves to a global web3 instance `window['web3']` provided by e.g. MIST/Metamask or connects to the default 8545 port if
+     * no global instance is present.
      */
     static get Default(): W3{
         if (W3._default) {
@@ -24,9 +33,6 @@ export class W3 {
         W3._default = w3;
     }
 
-    // this is the only class wrapper over JS object, others are interfaces
-    // cannot just cast from JS, but ctor does some standard logic to resolve web3
-    // so we do not need cast but could just use new Web3()
     static providers: W3.Providers = Web3JS.providers;
     static givenProvider: W3.Provider = Web3JS.givenProvider;
     static modules: {
@@ -44,12 +50,23 @@ export class W3 {
         return this.web3.utils;
     }
 
-    /** web3 untyped instance created with a resolved or given in ctor provider, if any */
-    web3;
+    /**
+     * web3.js untyped instance created with a resolved or given in ctor provider, if any.
+    */
+    public web3;
 
     private globalWeb3;
     private netId: Promise<string>;
     private netNode: Promise<string>;
+    /**
+     * Create a default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
+     * or to `localhost:8545` if not running on https.
+     */
+    constructor()
+    /**
+     * Create a W3 instance with a given provider.
+     * @param provider web3.js provider.
+     */
     constructor(provider?: W3.Provider) {
         let tmpWeb3;
         // console.log('Ctor provider:');
@@ -212,7 +229,7 @@ export class TestRPC {
      *
      */
     constructor(w3?: W3) {
-        this.w3 = w3 || W3.Default;
+        this.w3 = w3 || new W3();
     }
 
     /**

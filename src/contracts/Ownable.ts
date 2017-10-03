@@ -14,8 +14,8 @@ export class Ownable extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/Ownable.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/Ownable.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -51,7 +51,6 @@ export class Ownable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -64,7 +63,6 @@ export class Ownable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (newOwner: string): Promise<string> => {

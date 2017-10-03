@@ -15,8 +15,8 @@ export class DummyContract extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/DummyContract.json'), 
-            ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : [], 
+            require('../artifacts/DummyContract.json'),
+            ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : [],
             deploymentParams,
             link
         );
@@ -52,7 +52,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_newValue: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -65,7 +64,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_newValue: BigNumber): Promise<string> => {
@@ -101,7 +99,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_newValue: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -114,7 +111,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_newValue: BigNumber): Promise<string> => {
@@ -189,7 +185,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -202,7 +197,6 @@ export class DummyContract extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (newOwner: string): Promise<string> => {

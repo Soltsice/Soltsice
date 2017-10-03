@@ -1,5 +1,6 @@
 import contract = require('truffle-contract');
 import { W3 } from './W3';
+import SolidityCoder = require("web3/lib/solidity/coder.js");
 
 /**
  * CustomContract API
@@ -99,4 +100,34 @@ export class SoltsiceContract {
         return instance.sendTransaction(txParams);
     }
 
+    public async parseLogs(receipt: W3.TransactionReceipt) {
+        let logs = receipt.logs;
+
+        let inst = await this.instance;
+        let abi = inst.abi;
+
+        return logs!.map((log) => {
+            let event: any = null;
+
+            for (var i = 0; i < abi.length; i++) {
+                var item = abi[i];
+                if (item.type != "event") continue;
+                var signature = item.name + "(" + item.inputs.map(function (input) { return input.type; }).join(",") + ")";
+                var hash = this.web3.web3.sha3(signature);
+                if (hash == log.topics![0]) {
+                    event = item;
+                    break;
+                }
+            }
+
+            if (event != null) {
+                var inputs = event.inputs!.map(function (input) { return input.type; });
+                var data = SolidityCoder.decodeParams(inputs, log.data!.replace("0x", ""));
+                return data;
+            } else {
+                return undefined;
+            }
+
+        }).filter(d => d);
+    }
 }

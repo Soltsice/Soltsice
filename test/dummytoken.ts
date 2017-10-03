@@ -3,6 +3,8 @@ import { DummyToken } from '../src/contracts';
 import { W3, testAccounts } from '../src';
 import * as assert from 'assert';
 
+W3.Default = new W3();
+
 contract('DummyToken', function (accounts) {
     it('Total supply should be 1400000 * 1e18', async function () {
         var DummyContractInstance = new DummyToken(

@@ -15,8 +15,8 @@ export class Migrations extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/Migrations.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/Migrations.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -39,7 +39,6 @@ export class Migrations extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (new_address: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -52,7 +51,6 @@ export class Migrations extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (new_address: string): Promise<string> => {
@@ -114,7 +112,6 @@ export class Migrations extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (completed: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -127,7 +124,6 @@ export class Migrations extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (completed: BigNumber): Promise<string> => {

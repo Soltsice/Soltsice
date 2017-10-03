@@ -15,8 +15,8 @@ export class ConvertLib extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/ConvertLib.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/ConvertLib.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -39,7 +39,6 @@ export class ConvertLib extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (amount: BigNumber, conversionRate: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -52,7 +51,6 @@ export class ConvertLib extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (amount: BigNumber, conversionRate: BigNumber): Promise<string> => {

@@ -14,8 +14,8 @@ export class SafeMath extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/SafeMath.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/SafeMath.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );

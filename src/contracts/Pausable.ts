@@ -14,8 +14,8 @@ export class Pausable extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/Pausable.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/Pausable.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -38,7 +38,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = ( txParams?: W3.TC.TxParams): Promise<string> => {
@@ -51,7 +50,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (): Promise<string> => {
@@ -100,7 +98,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = ( txParams?: W3.TC.TxParams): Promise<string> => {
@@ -113,7 +110,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (): Promise<string> => {
@@ -162,7 +158,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -175,7 +170,6 @@ export class Pausable extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (newOwner: string): Promise<string> => {

@@ -15,8 +15,8 @@ export class ERC20Basic extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/ERC20Basic.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/ERC20Basic.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -65,7 +65,6 @@ export class ERC20Basic extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (to: string, value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -78,7 +77,6 @@ export class ERC20Basic extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (to: string, value: BigNumber): Promise<string> => {

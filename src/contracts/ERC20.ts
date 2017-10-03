@@ -15,8 +15,8 @@ export class ERC20 extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/ERC20.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/ERC20.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -39,7 +39,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (spender: string, value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -52,7 +51,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (spender: string, value: BigNumber): Promise<string> => {
@@ -101,7 +99,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (from: string, to: string, value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -114,7 +111,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (from: string, to: string, value: BigNumber): Promise<string> => {
@@ -163,7 +159,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (to: string, value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -176,7 +171,6 @@ export class ERC20 extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (to: string, value: BigNumber): Promise<string> => {

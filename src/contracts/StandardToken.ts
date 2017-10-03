@@ -15,8 +15,8 @@ export class StandardToken extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/StandardToken.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/StandardToken.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -39,7 +39,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_spender: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -52,7 +51,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_spender: string, _value: BigNumber): Promise<string> => {
@@ -101,7 +99,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_from: string, _to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -114,7 +111,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_from: string, _to: string, _value: BigNumber): Promise<string> => {
@@ -150,7 +146,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_spender: string, _subtractedValue: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -163,7 +158,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_spender: string, _subtractedValue: BigNumber): Promise<string> => {
@@ -212,7 +206,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -225,7 +218,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_to: string, _value: BigNumber): Promise<string> => {
@@ -261,7 +253,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_spender: string, _addedValue: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -274,7 +265,6 @@ export class StandardToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_spender: string, _addedValue: BigNumber): Promise<string> => {

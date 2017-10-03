@@ -15,8 +15,8 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/MultiSigWallet.json'), 
-            ctorParams ? [ctorParams!._owners, ctorParams!._required] : [], 
+            require('../artifacts/MultiSigWallet.json'),
+            ctorParams ? [ctorParams!._owners, ctorParams!._required] : [],
             deploymentParams,
             link
         );
@@ -52,7 +52,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -65,7 +64,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (owner: string): Promise<string> => {
@@ -101,7 +99,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -114,7 +111,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (transactionId: BigNumber): Promise<string> => {
@@ -189,7 +185,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -202,7 +197,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (owner: string): Promise<string> => {
@@ -329,7 +323,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_required: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -342,7 +335,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_required: BigNumber): Promise<string> => {
@@ -378,7 +370,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -391,7 +382,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (transactionId: BigNumber): Promise<string> => {
@@ -427,7 +417,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (destination: string, value: BigNumber, data: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -440,7 +429,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (destination: string, value: BigNumber, data: string): Promise<string> => {
@@ -502,7 +490,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -515,7 +502,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (owner: string, newOwner: string): Promise<string> => {
@@ -551,7 +537,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -564,7 +549,6 @@ export class MultiSigWallet extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (transactionId: BigNumber): Promise<string> => {

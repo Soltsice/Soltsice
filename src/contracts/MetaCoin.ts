@@ -15,8 +15,8 @@ export class MetaCoin extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/MetaCoin.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/MetaCoin.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -39,7 +39,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (addr: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -52,7 +51,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (addr: string): Promise<string> => {
@@ -88,7 +86,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (receiver: string, amount: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -101,7 +98,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (receiver: string, amount: BigNumber): Promise<string> => {
@@ -137,7 +133,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (addr: string, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -150,7 +145,6 @@ export class MetaCoin extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (addr: string): Promise<string> => {

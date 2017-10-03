@@ -15,8 +15,8 @@ export class BasicToken extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             web3,
-            require('../artifacts/BasicToken.json'), 
-            ctorParams ? [] : [], 
+            require('../artifacts/BasicToken.json'),
+            ctorParams ? [] : [],
             deploymentParams,
             link
         );
@@ -65,7 +65,6 @@ export class BasicToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___tx = (_to: string, _value: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
@@ -78,7 +77,6 @@ export class BasicToken extends SoltsiceContract {
                 });
             });
         };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (_to: string, _value: BigNumber): Promise<string> => {
