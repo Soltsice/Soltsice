@@ -5,8 +5,6 @@ import * as path from 'path';
 import { W3 } from './W3';
 
 export module soltsice {
-
-
     var endOfLine = require('os').EOL;
 
     // Makes the script crash on unhandled rejections instead of silently
@@ -65,7 +63,7 @@ export module soltsice {
     }
 
     function getSourcePaths(src: string, files: string[]): string[] {
-        let filesArr = files.map(f => path.resolve(path.join( src, f))); // __dirname,
+        let filesArr = files.map(f => path.resolve(path.join(src, f))); // __dirname,
         filesArr.forEach(file => {
             // console.log(file);
         });
@@ -73,7 +71,7 @@ export module soltsice {
     }
 
     function getDestinationPaths(destination: string, files: string[]): string[] {
-        let filesArr = files.map(f => path.resolve(path.join(destination, f))) // __dirname, 
+        let filesArr = files.map(f => path.resolve(path.join(destination, f))) // __dirname,
             .map(f => f.replace('.json', '.ts'));
         return filesArr;
     }
@@ -126,7 +124,7 @@ export module soltsice {
             inputsString = '';
             inputsNamesString = '';
         }
-        return { typesNames: inputsString, names: inputsNamesString };
+        return {typesNames: inputsString, names: inputsNamesString};
     }
 
     function processInputs(abi: W3.ABIDefinition): { typesNames: string, names: string } {
@@ -135,14 +133,14 @@ export module soltsice {
         let inputsString: string;
         let inputsNamesString: string;
         if (inputs && inputs.length > 0) {
-            inputs = inputs.map((i, idx) => i.name === '' ? Object.assign(i, { name: ('_' + idx) }) : i);
+            inputs = inputs.map((i, idx) => i.name === '' ? Object.assign(i, {name: ('_' + idx)}) : i);
             inputsString = inputs.map(i => i.name + ': ' + abiTypeToTypeName(i.type)).join(', '); // comma for tx params
             inputsNamesString = inputs.map(i => i.name).join(', ');
         } else {
             inputsString = '';
             inputsNamesString = '';
         }
-        return { typesNames: inputsString, names: inputsNamesString };
+        return {typesNames: inputsString, names: inputsNamesString};
     }
 
     function processAbi(abi: W3.ABIDefinition): string {
@@ -195,20 +193,6 @@ export module soltsice {
                 });
             });
         };
-
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            });
-        };
-
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
         let ___data = (${inputsString}): Promise<string> => {
@@ -227,11 +211,11 @@ export module soltsice {
                 });
             });
         };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
+        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas});
         return method;
     }
     `
-            ;
+        ;
 
         return methodsBody;
     }
@@ -252,10 +236,10 @@ export module soltsice {
         let abis = contract.abi as W3.ABIDefinition[];
 
         // When a contract is created, its constructor (a function with the same name as the contract)
-        // is executed once.A constructor is optional.Only one constructor is allowed, and this means 
+        // is executed once.A constructor is optional.Only one constructor is allowed, and this means
         // overloading is not supported.
         let ctor = abis.filter(a => a.type === 'constructor');
-        let ctorParams = ctor.length === 1 ? processCtor(ctor[0]) : { typesNames: '', names: '' };
+        let ctorParams = ctor.length === 1 ? processCtor(ctor[0]) : {typesNames: '', names: ''};
 
         let methodsBody = abis.filter(a => a.type === 'function').map(processAbi).join('');
 
@@ -265,7 +249,7 @@ export module soltsice {
 import { BigNumber } from 'bignumber.js';`;
         }
 
-        // TODO 
+        // TODO
 
         let template: string =
 

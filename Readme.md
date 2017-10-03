@@ -6,6 +6,20 @@
 
 > npm install soltsice --save
 
+## Quick Start Guide
+
+You need to have Node and Typescript compilers installed. 
+
+> npm install
+
+> npm run build:contracts
+
+> npm run soltsice
+
+> npm run testrpc
+
+> truffle migrate
+
 ## Usage
 
 Soltsice allows to generate TypeScript files for Ethereum contracts with the command:

@@ -24,12 +24,17 @@
   "homepage": "https://github.com/dbrainio/Soltsice#readme",
   "devDependencies": {
     "@types/node": "^8.0.28",
+    "ethereumjs-testrpc": "^4.1.3",
+    "tslint": "^5.7.0",
+    "tslint-react": "^3.2.0",
     "zeppelin-solidity": "^1.3.0"
   },
   "dependencies": {
     "@types/underscore": "^1.8.2",
     "bignumber.js": "^4.0.0",
+    "truffle": "^3.4.11",
     "truffle-contract": "^3.0.0",
+    "typescript": "^2.5.3",
     "web3": "^0.20.1"
   },
   "peerDependencies": {
@@ -39,7 +44,7 @@
     "web3": "^0.20.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "truffle test",
     "build:contracts": "truffle compile",
     "testrpc": "testrpc -v -m dbrainio -i 314 --account=\"0x1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce,1000000000000000000000000\" --account=\"0x058f98c376f9bf8e3bf167821ceabfdb15202408bc9a288c30a2339152341a27,1000000000000000000000000\" --account=\"0x98295a1bbe25893261d962e56419da5064a45af2864052612498ef01346a5cd2,1000000000000000000000000\" --account=\"0xb11ca488b6881322b141510bc2568a9434b74c25b5a315ac3699bcb6d4677eac,1000000000000000000000000\" --account=\"0xcebd6eb5764cb4dbaa42ddf62db0834bc58a9fb93f5776bff32d2f97544bc500,1000000000000000000000000\" ",
     "soltsice": "tsc && cp -R build/contracts/. src/artifacts && cp -R build/contracts/. dist/src/artifacts && npm run soltsice:gen && tsc",
