@@ -1,0 +1,22 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+# https://github.com/Microsoft/TypeScript/blob/master/.editorconfig
+[*.{ts,json,js}]
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+# https://github.com/paritytech/contracts/blob/master/.editorconfig
+[*.sol]
+indent_style = tabs
+indent_size = 4

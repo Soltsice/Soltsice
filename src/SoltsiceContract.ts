@@ -12,13 +12,12 @@ export class SoltsiceContract {
     /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
     protected _instance: Promise<any>;
     protected _sendParams: W3.TC.TxParams;
-    protected constructor(
-        web3?: W3,
-        tokenArtifacts?: any,
-        constructorParams?: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams | object,
-        link?: SoltsiceContract[]
-    ) {
+
+    protected constructor(web3?: W3,
+                          tokenArtifacts?: any,
+                          constructorParams?: W3.TC.ContractDataType[],
+                          deploymentParams?: string | W3.TC.TxParams | object,
+                          link?: SoltsiceContract[]) {
         if (!deploymentParams) {
             throw 'Generated classes must require deploymentParams in their ctor (TODO refactor this parent ctor)'
         }
@@ -31,7 +30,7 @@ export class SoltsiceContract {
         this.web3 = web3;
         this._Contract = contract(tokenArtifacts);
         this._Contract.setProvider(web3.currentProvider);
-        
+
         function instanceOfTxParams(obj: any): obj is W3.TC.TxParams {
             return 'from' in obj && 'gas' in obj && 'gasPrice' in obj && 'value' in obj;
         }
@@ -49,16 +48,14 @@ export class SoltsiceContract {
                 resolve(true);
             }
         })
-       
 
-        
 
         let instance = new Promise(async (resolve, reject) => {
             await linkage;
             let accounts = await this.web3.accounts;
             if (accounts && accounts.length > 0) {
                 this._sendParams = W3.TC.txParamsDefaultSend(accounts[0]);
-            }    
+            }
             if (typeof deploymentParams === 'string') {
                 console.log('USING DEPLOYED: ', this.constructor.name);
                 this.address = deploymentParams!;
@@ -92,7 +89,9 @@ export class SoltsiceContract {
         this._Contract.Link(await contract.instance);
     }
 
-    get instance(): Promise<any> { return this._instance };
+    get instance(): Promise<any> {
+        return this._instance
+    };
 
     /** Send a transaction to the fallback function */
     public async sendTransaction(txParams: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
