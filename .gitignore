@@ -10,10 +10,10 @@
 
 /nbproject
 /.idea
+/.vscode
 
 *~
 *.swp
 *.swap
 
 .DS_Store
-
