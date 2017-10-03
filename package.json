@@ -1,7 +1,7 @@
 {
   "name": "soltsice",
   "private": false,
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Solidity & TypeScript Integration, Configuration and Examples",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -16,7 +16,19 @@
     "web3",
     "dapp"
   ],
-  "author": "Victor Baybekov",
+  "author": "dbrain.io",
+  "authors": [
+    {
+      "name": "Victor Baybekov",
+      "email": "Victor@dbrain.io",
+      "url": "https://github.com/buybackoff"
+    },
+    {
+      "name": "Yury Alexandrov",
+      "email": "Yury@dbrain.io",
+      "homepage": "https://github.com/dizer"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dbrainio/Soltsice/issues"

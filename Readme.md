@@ -20,6 +20,8 @@ You need to have Node and Typescript compilers installed.
 
 > truffle migrate
 
+> truffle test
+
 ## Usage
 
 Soltsice allows to generate TypeScript files for Ethereum contracts with the command:
@@ -41,9 +43,10 @@ import { StandardToken } from "./types";
 
 // default wrapper for web3: either window['web3'] if present,
 // or http provider connected to localhost: 8545, if not running on https 
-let w3: W3 = W3.Default;
+let w3: W3 = new W3());
 
-let st: StandardToken = new StandardToken(w3, "address of deployed contract");
+// null for ctor params for newly deployed contracts
+let st: StandardToken = new StandardToken("address of deployed contract", null, w3);
 
 // note that typings are optional in variable definitions, TypeScript infers types
 let supply: Promise<BigNumber> = st.totalSupply();
