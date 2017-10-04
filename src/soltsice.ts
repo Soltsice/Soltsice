@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { W3 } from './W3';
 
+// tslint:disable:max-line-length
+
 export module soltsice {
     var endOfLine = require('os').EOL;
 
@@ -82,7 +84,7 @@ export module soltsice {
             outputType = 'void';
         } else if (abiType.startsWith('uint') || abiType.startsWith('int')) {
             // TODO parse
-            outputType = 'BigNumber';
+            outputType = 'BigNumber | number';
         } else {
             //     export type ABIDataTypes = 'uint256' | 'boolean' | 'string' | 'bytes' | string; // TODO complete list
             switch (abiType) {
@@ -180,52 +182,54 @@ export module soltsice {
     `
                 :
                 `
-    public get ${name}() {
+    // tslint:disable-next-line:member-ordering
+    public ${name} = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams)
+                    inst.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (${inputsString}): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.${name}.request(${inputsNamesString}).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (${inputsString}): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.${name}.request(${inputsNamesString}).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (${inputsString}): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.${name}.estimateGas(${inputsNamesString}).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (${inputsString}): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.${name}.estimateGas(${inputsNamesString}).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     `
         ;
 

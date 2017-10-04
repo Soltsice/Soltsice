@@ -1,13 +1,13 @@
 import contract = require('truffle-contract');
 import { W3 } from './W3';
-import SolidityCoder = require("web3/lib/solidity/coder.js");
+import SolidityCoder = require('web3/lib/solidity/coder.js');
 
 /**
- * CustomContract API
+ * Base contract for all Soltsice contracts
  */
 export class SoltsiceContract {
-    public address: string;
-    public transactionHash: string;
+    public static Silent: boolean = false;
+    public transactionHash: Promise<string>;
     protected web3: W3;
     protected _Contract: any;
     /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
@@ -15,12 +15,12 @@ export class SoltsiceContract {
     protected _sendParams: W3.TC.TxParams;
 
     protected constructor(web3?: W3,
-                          tokenArtifacts?: any,
-                          constructorParams?: W3.TC.ContractDataType[],
-                          deploymentParams?: string | W3.TC.TxParams | object,
-                          link?: SoltsiceContract[]) {
+        tokenArtifacts?: any,
+        constructorParams?: W3.TC.ContractDataType[],
+        deploymentParams?: string | W3.TC.TxParams | object,
+        link?: SoltsiceContract[]) {
         if (!deploymentParams) {
-            throw 'Generated classes must require deploymentParams in their ctor (TODO refactor this parent ctor)'
+            throw 'Generated classes must require deploymentParams in their ctor (TODO refactor this parent ctor)';
         }
         if (typeof deploymentParams === 'string' && !W3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
@@ -48,8 +48,7 @@ export class SoltsiceContract {
             } else {
                 resolve(true);
             }
-        })
-
+        });
 
         let instance = new Promise(async (resolve, reject) => {
             await linkage;
@@ -57,42 +56,50 @@ export class SoltsiceContract {
             if (accounts && accounts.length > 0) {
                 this._sendParams = W3.TC.txParamsDefaultSend(accounts[0]);
             }
+
+            let useDeployed = (address: string) => {
+                if (!SoltsiceContract.Silent) {
+                    console.log('SOLTSICE: DEPLOYED CONTRACT', this.constructor.name, ' at ', deploymentParams!);
+                }
+                this._Contract.at(address).then((inst) => {
+                    this.transactionHash = inst.transactionHash;
+                    resolve(inst);
+                }).catch((err) => {
+                    reject(err);
+                });
+            };
             if (typeof deploymentParams === 'string') {
-                console.log('USING DEPLOYED: ', this.constructor.name);
-                this.address = deploymentParams!;
-                this._Contract.at(this.address).then((inst) => {
-                    this.address = inst.address;
-                    this.transactionHash = inst.transactionHash;
-                    resolve(inst);
-                }).catch((err) => {
-                    reject(err);
-                });
+                useDeployed(deploymentParams!);
             } else if (instanceOfTxParams(deploymentParams)) {
-                console.log('NEW CONTRACT: ', this.constructor.name);
                 this._Contract.new(...constructorParams!, deploymentParams).then((inst) => {
-                    console.log('NEW ADDRESS', inst.address);
-                    this.address = inst.address;
+                    if (!SoltsiceContract.Silent) {
+                        console.log('SOLTSICE: NEW CONTRACT ', this.constructor.name, ' at ', inst.address);
+                    }
                     this.transactionHash = inst.transactionHash;
                     resolve(inst);
                 }).catch((err) => {
                     reject(err);
                 });
-            } else {
-                this.address = deploymentParams['address'];
-                resolve(deploymentParams);
+            } else if ((<any>deploymentParams).address && typeof (<any>deploymentParams).address === 'string') {
+                // support any object with address property
+                useDeployed((<any>deploymentParams).address);
             }
         });
 
         this._instance = instance;
     }
 
-    public async link(contract: SoltsiceContract) {
-        this._Contract.Link(await contract.instance);
+    public async link(libraryContract: SoltsiceContract) {
+        this._Contract.Link(await libraryContract.instance);
+    }
+
+    get address(): Promise<string> {
+        return this._instance.then(i => i.address);
     }
 
     get instance(): Promise<any> {
-        return this._instance
-    };
+        return this._instance;
+    }
 
     /** Send a transaction to the fallback function */
     public async sendTransaction(txParams: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
@@ -100,7 +107,7 @@ export class SoltsiceContract {
         return instance.sendTransaction(txParams);
     }
 
-    public async parseLogs(receipt: W3.TransactionReceipt) {
+    public async parseLogs(receipt: W3.TransactionReceipt): Promise<W3.Log[]> {
         let logs = receipt.logs;
 
         let inst = await this.instance;
@@ -111,23 +118,54 @@ export class SoltsiceContract {
 
             for (var i = 0; i < abi.length; i++) {
                 var item = abi[i];
-                if (item.type != "event") continue;
-                var signature = item.name + "(" + item.inputs.map(function (input) { return input.type; }).join(",") + ")";
+                if (item.type !== 'event') {
+                    continue;
+                }
+                // tslint:disable-next-line:max-line-length
+                var signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
                 var hash = this.web3.web3.sha3(signature);
-                if (hash == log.topics![0]) {
+                if (hash === log.topics![0]) {
                     event = item;
                     break;
                 }
             }
 
             if (event != null) {
-                var inputs = event.inputs!.map(function (input) { return input.type; });
-                var data = SolidityCoder.decodeParams(inputs, log.data!.replace("0x", ""));
-                return data;
+                var inputs = event.inputs!.map(function (input: any) { return input.type; });
+                var data = SolidityCoder.decodeParams(inputs, log.data!.replace('0x', ''));
+                let args: any = {};
+                for (var index = 0; index < event.inputs.length; index++) {
+                    args[event.inputs[index].name] = data[index];
+                }
+
+                let result: W3.Log = Object.assign({}, log);
+                result.event = event.name;
+                result.args = args;
+                delete result.data;
+                delete result.topics;
+                return result;
+
             } else {
                 return undefined;
             }
 
-        }).filter(d => d);
+        }).filter(d => d) as W3.Log[];
+    }
+
+    /** Send a transaction to the fallback function */
+    public getTransactionResult(txHash: string): Promise<W3.TC.TransactionResult> {
+        return new Promise<W3.TC.TransactionResult>((resolve, reject) => {
+            this.web3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
+                    result.tx = receipt.transactionHash;
+                    result.receipt = receipt;
+                    result.logs = receipt.logs ? await this.parseLogs(receipt) : [];
+                    resolve(result);
+                }
+            });
+        });
     }
 }

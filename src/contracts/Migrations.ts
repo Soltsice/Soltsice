@@ -26,56 +26,58 @@ export class Migrations extends SoltsiceContract {
         Contract methods
     */
     
-    public get upgrade() {
+    // tslint:disable-next-line:member-ordering
+    public upgrade = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (new_address: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (new_address: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.upgrade(new_address, txParams)
+                    inst.upgrade(new_address, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (new_address: string, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.upgrade.sendTransaction(new_address, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (new_address: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.upgrade.sendTransaction(new_address, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (new_address: string): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.upgrade.request(new_address).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (new_address: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.upgrade.request(new_address).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (new_address: string): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.upgrade.estimateGas(new_address).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (new_address: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.upgrade.estimateGas(new_address).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public last_completed_migration(): Promise<BigNumber> {
+    public last_completed_migration(): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.last_completed_migration
@@ -99,51 +101,53 @@ export class Migrations extends SoltsiceContract {
         });
     }
     
-    public get setCompleted() {
+    // tslint:disable-next-line:member-ordering
+    public setCompleted = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (completed: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (completed: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.setCompleted(completed, txParams)
+                    inst.setCompleted(completed, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (completed: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.setCompleted.sendTransaction(completed, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (completed: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setCompleted.sendTransaction(completed, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (completed: BigNumber): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.setCompleted.request(completed).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (completed: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.setCompleted.request(completed).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (completed: BigNumber): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.setCompleted.estimateGas(completed).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (completed: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setCompleted.estimateGas(completed).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
 }

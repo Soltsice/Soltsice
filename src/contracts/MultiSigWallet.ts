@@ -8,7 +8,7 @@ import { W3, SoltsiceContract } from '..';
 export class MultiSigWallet extends SoltsiceContract {
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
-        ctorParams?: {_owners: string[], _required: BigNumber},
+        ctorParams?: {_owners: string[], _required: BigNumber | number},
         web3?: W3,
         link?: SoltsiceContract[]
     ) {
@@ -28,7 +28,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owners(_0: BigNumber): Promise<string> {
+    public owners(_0: BigNumber | number): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owners
@@ -39,99 +39,103 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    public get removeOwner() {
+    // tslint:disable-next-line:member-ordering
+    public removeOwner = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.removeOwner(owner, txParams)
+                    inst.removeOwner(owner, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.removeOwner.sendTransaction(owner, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.removeOwner.sendTransaction(owner, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (owner: string): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.removeOwner.request(owner).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (owner: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.removeOwner.request(owner).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (owner: string): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.removeOwner.estimateGas(owner).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (owner: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.removeOwner.estimateGas(owner).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
-    public get revokeConfirmation() {
+    // tslint:disable-next-line:member-ordering
+    public revokeConfirmation = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.revokeConfirmation(transactionId, txParams)
+                    inst.revokeConfirmation(transactionId, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.revokeConfirmation.sendTransaction(transactionId, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.revokeConfirmation.sendTransaction(transactionId, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (transactionId: BigNumber): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.revokeConfirmation.request(transactionId).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (transactionId: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.revokeConfirmation.request(transactionId).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (transactionId: BigNumber): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.revokeConfirmation.estimateGas(transactionId).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (transactionId: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.revokeConfirmation.estimateGas(transactionId).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
@@ -148,7 +152,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public confirmations(_0: BigNumber, _1: string): Promise<boolean> {
+    public confirmations(_0: BigNumber | number, _1: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.confirmations
@@ -161,7 +165,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber> {
+    public getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionCount
@@ -172,56 +176,58 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    public get addOwner() {
+    // tslint:disable-next-line:member-ordering
+    public addOwner = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.addOwner(owner, txParams)
+                    inst.addOwner(owner, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.addOwner.sendTransaction(owner, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.addOwner.sendTransaction(owner, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (owner: string): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.addOwner.request(owner).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (owner: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.addOwner.request(owner).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (owner: string): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.addOwner.estimateGas(owner).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (owner: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.addOwner.estimateGas(owner).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public isConfirmed(transactionId: BigNumber): Promise<boolean> {
+    public isConfirmed(transactionId: BigNumber | number): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.isConfirmed
@@ -234,7 +240,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getConfirmationCount(transactionId: BigNumber): Promise<BigNumber> {
+    public getConfirmationCount(transactionId: BigNumber | number): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getConfirmationCount
@@ -247,7 +253,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public transactions(_0: BigNumber): Promise<any> {
+    public transactions(_0: BigNumber | number): Promise<any> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.transactions
@@ -273,7 +279,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getTransactionIds(from: BigNumber, to: BigNumber, pending: boolean, executed: boolean): Promise<BigNumber> {
+    public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionIds
@@ -286,7 +292,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getConfirmations(transactionId: BigNumber): Promise<string[]> {
+    public getConfirmations(transactionId: BigNumber | number): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getConfirmations
@@ -299,7 +305,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public transactionCount(): Promise<BigNumber> {
+    public transactionCount(): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.transactionCount
@@ -310,150 +316,156 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    public get changeRequirement() {
+    // tslint:disable-next-line:member-ordering
+    public changeRequirement = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (_required: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (_required: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.changeRequirement(_required, txParams)
+                    inst.changeRequirement(_required, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (_required: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.changeRequirement.sendTransaction(_required, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (_required: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.changeRequirement.sendTransaction(_required, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (_required: BigNumber): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.changeRequirement.request(_required).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (_required: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.changeRequirement.request(_required).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (_required: BigNumber): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.changeRequirement.estimateGas(_required).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (_required: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.changeRequirement.estimateGas(_required).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
-    public get confirmTransaction() {
+    // tslint:disable-next-line:member-ordering
+    public confirmTransaction = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.confirmTransaction(transactionId, txParams)
+                    inst.confirmTransaction(transactionId, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.confirmTransaction.sendTransaction(transactionId, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.confirmTransaction.sendTransaction(transactionId, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (transactionId: BigNumber): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.confirmTransaction.request(transactionId).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (transactionId: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.confirmTransaction.request(transactionId).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (transactionId: BigNumber): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.confirmTransaction.estimateGas(transactionId).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (transactionId: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.confirmTransaction.estimateGas(transactionId).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
-    public get submitTransaction() {
+    // tslint:disable-next-line:member-ordering
+    public submitTransaction = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (destination: string, value: BigNumber, data: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (destination: string, value: BigNumber | number, data: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.submitTransaction(destination, value, data, txParams)
+                    inst.submitTransaction(destination, value, data, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (destination: string, value: BigNumber, data: string, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.submitTransaction.sendTransaction(destination, value, data, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (destination: string, value: BigNumber | number, data: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.submitTransaction.sendTransaction(destination, value, data, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (destination: string, value: BigNumber, data: string): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.submitTransaction.request(destination, value, data).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (destination: string, value: BigNumber | number, data: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.submitTransaction.request(destination, value, data).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (destination: string, value: BigNumber, data: string): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.submitTransaction.estimateGas(destination, value, data).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (destination: string, value: BigNumber | number, data: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.submitTransaction.estimateGas(destination, value, data).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public MAX_OWNER_COUNT(): Promise<BigNumber> {
+    public MAX_OWNER_COUNT(): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.MAX_OWNER_COUNT
@@ -466,7 +478,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public required(): Promise<BigNumber> {
+    public required(): Promise<BigNumber | number> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.required
@@ -477,98 +489,102 @@ export class MultiSigWallet extends SoltsiceContract {
         });
     }
     
-    public get replaceOwner() {
+    // tslint:disable-next-line:member-ordering
+    public replaceOwner = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.replaceOwner(owner, newOwner, txParams)
+                    inst.replaceOwner(owner, newOwner, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.replaceOwner.sendTransaction(owner, newOwner, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.replaceOwner.sendTransaction(owner, newOwner, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (owner: string, newOwner: string): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.replaceOwner.request(owner, newOwner).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (owner: string, newOwner: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.replaceOwner.request(owner, newOwner).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (owner: string, newOwner: string): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.replaceOwner.estimateGas(owner, newOwner).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (owner: string, newOwner: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.replaceOwner.estimateGas(owner, newOwner).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
-    public get executeTransaction() {
+    // tslint:disable-next-line:member-ordering
+    public executeTransaction = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        let ___call = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            txParams = txParams || this._sendParams;
+        (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.executeTransaction(transactionId, txParams)
+                    inst.executeTransaction(transactionId, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
             });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___tx = (transactionId: BigNumber, txParams?: W3.TC.TxParams): Promise<string> => {
-            txParams = txParams || this._sendParams;
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.executeTransaction.sendTransaction(transactionId, txParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.executeTransaction.sendTransaction(transactionId, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___data = (transactionId: BigNumber): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    resolve(inst.executeTransaction.request(transactionId).params[0].data);
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (transactionId: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.executeTransaction.request(transactionId).params[0].data);
+                    });
                 });
-            });
-        };
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        let ___gas = (transactionId: BigNumber): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.executeTransaction.estimateGas(transactionId).then((g) => resolve(g));
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (transactionId: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.executeTransaction.estimateGas(transactionId).then((g) => resolve(g));
+                    });
                 });
-            });
-        };
-        let method = Object.assign(___call, { data: ___data }, {estimateGas: ___gas}, {sendTransaction: ___tx});
-        return method;
-    }
+            }
+        });
     
 }

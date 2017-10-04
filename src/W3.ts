@@ -1,4 +1,5 @@
-// typings originally from https://github.com/ethereum/web3.js/pull/897 and https://github.com/0xProject/web3-typescript-typings
+// typings originally from https://github.com/ethereum/web3.js/pull/897
+// and https://github.com/0xProject/web3-typescript-typings
 
 import { BigNumber } from 'bignumber.js'; // TODO change to BN
 import * as us from 'underscore';
@@ -9,6 +10,14 @@ let Web3JS = require('web3');
 // cannot just cast from JS, but ctor does some standard logic to resolve web3
 // so we do not need cast but could just use new Web3()
 
+/** Convert number or hex string to BigNumber */
+export function toBN(value: number): BigNumber {
+    return new BigNumber(value);
+}
+
+// tslint:disable:member-ordering
+// tslint:disable:max-line-length
+
 /**
  * Strongly-types wrapper over web3.js with additional helper methods.
  */
@@ -17,7 +26,8 @@ export class W3 {
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
      * You must set it explicitly via W3.Default setter. Use an empty `new W3()` constructor to get an instance that
-     * automatically resolves to a global web3 instance `window['web3']` provided by e.g. MIST/Metamask or connects to the default 8545 port if
+     * automatically resolves to a global web3 instance `window['web3']` provided by e.g. MIST/Metamask or connects
+     * to the default 8545 port if
      * no global instance is present.
      */
     static get Default(): W3{
@@ -50,9 +60,14 @@ export class W3 {
         return this.web3.utils;
     }
 
+    /** Convert number or hex string to BigNumber */
+    public toBigNumber(value: number | string): BigNumber {
+        return this.web3.toBigNumber(value);
+    }
+
     /**
      * web3.js untyped instance created with a resolved or given in ctor provider, if any.
-    */
+     */
     public web3;
 
     private globalWeb3;
@@ -96,7 +111,7 @@ export class W3 {
             tmpWeb3 = new Web3JS(provider);
             console.log('Using a provider from constructor.');
         }
-        if (!tmpWeb3.version.api.startsWith("0.20")) {
+        if (!tmpWeb3.version.api.startsWith('0.20')) {
             throw 'Only web3 0.20.xx package is currently supported';
         }
         this.web3 = tmpWeb3;
@@ -119,7 +134,6 @@ export class W3 {
     Below are frequently used functions that should not depend on web3 API (0.20 or 1.0).
     Will update them for web3 1.0 when truffle-contract support it without sendAsync error.
     */
-
 
     public get accounts(): Promise<string[]> {
         return new Promise((resolve, reject) =>
@@ -167,7 +181,7 @@ export class W3 {
                     }
                 });
             }
-        })
+        });
     }
 
     /** Returns the time of the last mined block in seconds. */
@@ -188,7 +202,7 @@ export class W3 {
     }
 
     public get blockNumber(): Promise<number> {
-        //getBlockNumber(callback: (err: Error, blockNumber: number) => void): void;
+        // getBlockNumber(callback: (err: Error, blockNumber: number) => void): void;
         return new Promise((resolve, reject) => {
             if (this.isPre1API) {
                 this.web3.eth.getBlockNumber((err, res) => {
@@ -216,12 +230,11 @@ export class W3 {
             if (r.error) {
                 return false;
             }
-            return <boolean>r.result;
+            return <boolean> r.result;
         });
     }
 
 }
-
 
 export class TestRPC {
 
@@ -249,10 +262,9 @@ export class TestRPC {
             id: id,
         }).then(r => {
             console.log('RPC RESPONSE: ', r);
-            return <string>r.result;
+            return <string> r.result;
         });
     }
-
 
     /**
      * Revert the state of the blockchain to a previous snapshot.
@@ -290,10 +302,9 @@ export class TestRPC {
             id: id,
         }).then(async r => {
             await this.mine();
-            return <number>r.result;
+            return <number> r.result;
         });
     }
-
 
     /**
      * Beware that due to the need of calling two separate testrpc methods and rpc calls overhead
@@ -302,9 +313,11 @@ export class TestRPC {
      *
      * @param target time in seconds
      */
-    public async increaseTimeTo(target): Promise<number> {
+    public async increaseTimeTo(target: number): Promise<number> {
         let now = await this.w3.latestTime;
-        if (target < now) throw Error(`Cannot increase current time(${now}) to a moment in the past(${target})`);
+        if (target < now) {
+            throw Error(`Cannot increase current time(${now}) to a moment in the past(${target})`);
+        }
         let diff = target - now;
         return this.increaseTime(diff);
     }
@@ -330,15 +343,13 @@ export class TestRPC {
     public async advanceToBlock(blockNumber: number) {
         let lastBlock = await this.w3.blockNumber;
         if (lastBlock > blockNumber) {
-            throw Error(`block number ${blockNumber} is in the past (current is ${lastBlock})`)
+            throw Error(`block number ${blockNumber} is in the past (current is ${lastBlock})`);
         }
         while (await this.w3.blockNumber < blockNumber) {
-            await this.mine()
+            await this.mine();
         }
     }
 }
-
-
 
 export namespace W3 {
     export type address = string;
@@ -588,7 +599,7 @@ export namespace W3 {
         topics?: Array<string>;
 
         /** Truffle-contract returns this as 'mined' */
-        type?: string
+        type?: string;
 
         /** Event name decoded by Truffle-contract */
         event?: string;
@@ -832,11 +843,9 @@ export namespace W3 {
         startingBlock: number;
         currentBlock: number;
         highestBlock: number;
-    };
+    }
 
     export type SyncingResult = false | SyncingState;
-
-
 
     export interface Version0 {
         api: string;
@@ -865,11 +874,11 @@ export namespace W3 {
     export interface Bzz { }
 
     export const duration = {
-        seconds: function (val: number) { return val },
-        minutes: function (val: number) { return val * this.seconds(60) },
-        hours: function (val: number) { return val * this.minutes(60) },
-        days: function (val: number) { return val * this.hours(24) },
-        weeks: function (val: number) { return val * this.days(7) },
-        years: function (val: number) { return val * this.days(365) }
+        seconds: function (val: number) { return val; },
+        minutes: function (val: number) { return val * this.seconds(60); },
+        hours: function (val: number) { return val * this.minutes(60); },
+        days: function (val: number) { return val * this.hours(24); },
+        weeks: function (val: number) { return val * this.days(7); },
+        years: function (val: number) { return val * this.days(365); }
     };
 }
