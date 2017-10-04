@@ -22,6 +22,7 @@ export function toBN(value: number): BigNumber {
  * Strongly-types wrapper over web3.js with additional helper methods.
  */
 export class W3 {
+    private static _counter: number = 0;
     private static _default: W3;
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
@@ -30,7 +31,7 @@ export class W3 {
      * to the default 8545 port if
      * no global instance is present.
      */
-    static get Default(): W3{
+    static get Default(): W3 {
         if (W3._default) {
             return W3._default;
         }
@@ -41,6 +42,13 @@ export class W3 {
 
     static set Default(w3: W3) {
         W3._default = w3;
+    }
+
+    static NextCounter(): number {
+        // node is single-threaded
+        // same provider in two W3 instances is OK, counter will be unique accross them
+        W3._counter = W3._counter + 1;
+        return W3._counter;
     }
 
     static providers: W3.Providers = Web3JS.providers;
@@ -63,6 +71,10 @@ export class W3 {
     /** Convert number or hex string to BigNumber */
     public toBigNumber(value: number | string): BigNumber {
         return this.web3.toBigNumber(value);
+    }
+
+    public fromDecimal(value: number | string): string {
+        return this.web3.fromDecimal(value);
     }
 
     /**
@@ -220,7 +232,7 @@ export class W3 {
 
     /** Async unlock while web3.js only has sync version */
     public async unlockAccount(account: string, password: string, duration?: number): Promise<boolean> {
-        const id = Date.now();
+        const id = 'W3:' + W3.NextCounter();
         return this.sendRPC({
             jsonrpc: '2.0',
             method: 'personal_unlockAccount',
@@ -230,7 +242,7 @@ export class W3 {
             if (r.error) {
                 return false;
             }
-            return <boolean> r.result;
+            return <boolean>r.result;
         });
     }
 
@@ -254,7 +266,7 @@ export class TestRPC {
         if (!(await this.w3.isTestRPC)) {
             throw 'Not on TestRPC';
         }
-        const id = Date.now();
+        const id = 'W3:' + W3.NextCounter();
         return this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'evm_snapshot',
@@ -262,7 +274,7 @@ export class TestRPC {
             id: id,
         }).then(r => {
             console.log('RPC RESPONSE: ', r);
-            return <string> r.result;
+            return <string>r.result;
         });
     }
 
@@ -275,7 +287,7 @@ export class TestRPC {
         if (!(await this.w3.isTestRPC)) {
             throw 'Not on TestRPC';
         }
-        const id = Date.now();
+        const id = 'W3:' + W3.NextCounter();
         return this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'evm_revert',
@@ -294,7 +306,7 @@ export class TestRPC {
         if (!(await this.w3.isTestRPC)) {
             throw 'Not on TestRPC';
         }
-        const id = Date.now();
+        const id = 'W3:' + W3.NextCounter();
         return this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'evm_increaseTime',
@@ -302,7 +314,7 @@ export class TestRPC {
             id: id,
         }).then(async r => {
             await this.mine();
-            return <number> r.result;
+            return <number>r.result;
         });
     }
 
@@ -329,7 +341,7 @@ export class TestRPC {
         if (!(await this.w3.isTestRPC)) {
             throw 'Not on TestRPC';
         }
-        const id = Date.now();
+        const id = 'W3:' + W3.NextCounter();
         return this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'evm_mine',
@@ -405,11 +417,11 @@ export namespace W3 {
         jsonrpc: string;
         method: string;
         params: any[];
-        id: number;
+        id: number | string;
     }
     export interface JsonRPCResponse {
         jsonrpc: string;
-        id: number;
+        id: number | string;
         result?: any;
         error?: string;
     }

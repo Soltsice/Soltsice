@@ -84,20 +84,39 @@ describe('DummyContract tests', () => {
             W3.TC.txParamsDefaultDeploy(testAccounts[0]),
             { _secret: toBN(123), _wellKnown: toBN(456) }
         );
-        // let value = await dummy.getPublic();
 
+        let filter = await dummy.newFilter(0);
+        console.log('FILTER: ', filter);
+
+        let count = 2;
         let txResult = await dummy.setPublic(42);
-        // console.log('TX: ', txResult.receipt);
-
-        // let logs = txResult.logs;
-        // console.log('TRUFFLE LOGS: ', logs);
-
-        // let rawLogs = await dummy.parseLogs(txResult.receipt);
-        // console.log('RAW LOGS: ', rawLogs);
+        for (var i = 0; i < count; i++) {
+            txResult = await dummy.setPublic(42 + i);
+        }
 
         let parsedResult = await dummy.getTransactionResult(txResult.tx);
         // console.log('PARSED TX: ', parsedResult.receipt);
         expect(parsedResult).toEqual(txResult);
+
+        // this gets logs only after filter was set
+        let logs = await dummy.getFilterChanges(filter);
+        // console.log('LOGS: ', logs.length, logs);
+        expect(logs.length).toBe(count + 1);
+        expect(logs[count].args.newValue).toEqual(toBN(42 + count - 1));
+
+        txResult = await dummy.setPublic(42 + 10);
+        logs = await dummy.getFilterChanges(filter);
+        expect(logs.length).toBe(1);
+        expect(logs[0].args.newValue).toEqual(toBN(42 + 10));
+
+        // let uninstalled = await dummy.uninstallFilter(filter);
+        // expect(uninstalled).toBe(true);
+
+        // this gets all logs from the given block
+        let allLogs = await dummy.getLogs(0);
+        // console.log('LOGS: ', allLogs.length, allLogs);
+        expect(allLogs.length).toBe(count + 2);
+
     });
 
 });

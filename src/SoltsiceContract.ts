@@ -107,8 +107,7 @@ export class SoltsiceContract {
         return instance.sendTransaction(txParams);
     }
 
-    public async parseLogs(receipt: W3.TransactionReceipt): Promise<W3.Log[]> {
-        let logs = receipt.logs;
+    public async parseLogs(logs: W3.Log[]): Promise<W3.Log[]> {
 
         let inst = await this.instance;
         let abi = inst.abi;
@@ -152,7 +151,14 @@ export class SoltsiceContract {
         }).filter(d => d) as W3.Log[];
     }
 
-    /** Send a transaction to the fallback function */
+    public async parseReceipt(receipt: W3.TransactionReceipt): Promise<W3.Log[]> {
+        if (!receipt.logs) {
+            return [];
+        }
+        return this.parseLogs(receipt.logs);
+    }
+
+    /** Get transaction result by hash. Returns receipt + parsed logs. */
     public getTransactionResult(txHash: string): Promise<W3.TC.TransactionResult> {
         return new Promise<W3.TC.TransactionResult>((resolve, reject) => {
             this.web3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
@@ -162,10 +168,99 @@ export class SoltsiceContract {
                     let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
                     result.tx = receipt.transactionHash;
                     result.receipt = receipt;
-                    result.logs = receipt.logs ? await this.parseLogs(receipt) : [];
+                    result.logs = await this.parseReceipt(receipt);
                     resolve(result);
                 }
             });
         });
     }
+
+    public async newFilter(fromBlock: number, toBlock?: number): Promise<number> {
+        let toBlock1 = toBlock ? this.web3.fromDecimal(toBlock) : 'latest';
+        const id = 'W3:' + W3.NextCounter();
+        let filter = await this.web3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'eth_newFilter',
+            params: [{
+                'fromBlock': this.web3.fromDecimal(fromBlock),
+                'toBlock': toBlock1,
+                'address': await this.address
+              }],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                throw 'Cannot set filter';
+            }
+            return r.result as number;
+            });
+        return this.web3.toBigNumber(filter).toNumber(); // filter
+    }
+
+    public async uninstallFilter(filter: number): Promise<boolean> {
+        const id = 'W3:' + W3.NextCounter();
+        let ret = await this.web3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'eth_uninstallFilter',
+            params: [this.web3.fromDecimal(filter)],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                throw 'Cannot uninstall filter';
+            }
+            return r.result as boolean;
+            });
+        return ret;
+    }
+
+    public async getFilterChanges(filter: number): Promise<W3.Log[]> {
+        const id = 'W3:' + W3.NextCounter();
+
+        let logs = this.web3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'eth_getFilterChanges',
+            params: [this.web3.fromDecimal(filter)],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                return [];
+            }
+            let parsed = await this.parseLogs(r.result as W3.Log[]);
+            return parsed;
+            });
+        return logs;
+    }
+
+    public async getFilterLogs(filter: number): Promise<W3.Log[]> {
+        const id = 'W3:' + W3.NextCounter();
+
+        let logs = this.web3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'eth_getFilterLogs',
+            params: [this.web3.fromDecimal(filter)],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                return [];
+            }
+            let parsed = await this.parseLogs(r.result as W3.Log[]);
+            return parsed;
+            });
+        return logs;
+    }
+
+    public async getLogs(fromBlock: number, toBlock?: number): Promise<W3.Log[]> {
+
+        let toBlock1 = toBlock ? this.web3.fromDecimal(toBlock) : 'latest';
+
+        return new Promise<W3.Log[]>(async (resolve, reject) => {
+            (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(log);
+            });
+        });
+
+    }
+
 }
