@@ -77,7 +77,7 @@ export class Migrations extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public last_completed_migration(): Promise<BigNumber | number> {
+    public last_completed_migration(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.last_completed_migration

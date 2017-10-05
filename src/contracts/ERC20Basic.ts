@@ -28,7 +28,7 @@ export class ERC20Basic extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber | number> {
+    public totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
@@ -41,7 +41,7 @@ export class ERC20Basic extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(who: string): Promise<BigNumber | number> {
+    public balanceOf(who: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf

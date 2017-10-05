@@ -78,13 +78,13 @@ export module soltsice {
         return filesArr;
     }
 
-    function abiTypeToTypeName(abiType?: string) {
+    function abiTypeToTypeName(abiType?: string, isReturnType?: boolean) {
         let outputType: string = '';
         if (!abiType) {
             outputType = 'void';
         } else if (abiType.startsWith('uint') || abiType.startsWith('int')) {
             // TODO parse
-            outputType = 'BigNumber | number';
+            outputType = isReturnType ? 'BigNumber' : 'BigNumber | number';
         } else {
             //     export type ABIDataTypes = 'uint256' | 'boolean' | 'string' | 'bytes' | string; // TODO complete list
             switch (abiType) {
@@ -161,7 +161,7 @@ export module soltsice {
             console.warn('Multiple output ABI not implemented, using `any` type for: ', abi);
             outputType = 'any';
         } else {
-            outputType = abiTypeToTypeName((outputs && outputs.length > 0) ? outputs[0].type : undefined);
+            outputType = abiTypeToTypeName((outputs && outputs.length > 0) ? outputs[0].type : undefined, true);
         }
 
         let methodsBody: string =

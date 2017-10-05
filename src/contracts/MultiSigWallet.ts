@@ -165,7 +165,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber | number> {
+    public getTransactionCount(pending: boolean, executed: boolean): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionCount
@@ -240,7 +240,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getConfirmationCount(transactionId: BigNumber | number): Promise<BigNumber | number> {
+    public getConfirmationCount(transactionId: BigNumber | number): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getConfirmationCount
@@ -279,7 +279,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean): Promise<BigNumber | number> {
+    public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getTransactionIds
@@ -305,7 +305,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public transactionCount(): Promise<BigNumber | number> {
+    public transactionCount(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.transactionCount
@@ -465,7 +465,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public MAX_OWNER_COUNT(): Promise<BigNumber | number> {
+    public MAX_OWNER_COUNT(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.MAX_OWNER_COUNT
@@ -478,7 +478,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public required(): Promise<BigNumber | number> {
+    public required(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.required

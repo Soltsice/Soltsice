@@ -90,7 +90,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber | number> {
+    public totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
@@ -250,7 +250,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string): Promise<BigNumber | number> {
+    public balanceOf(_owner: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
@@ -423,7 +423,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public allowance(_owner: string, _spender: string): Promise<BigNumber | number> {
+    public allowance(_owner: string, _spender: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.allowance

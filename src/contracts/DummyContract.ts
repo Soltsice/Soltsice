@@ -28,7 +28,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPublic(): Promise<BigNumber | number> {
+    public getPublic(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPublic
@@ -152,7 +152,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPrivate(): Promise<BigNumber | number> {
+    public getPrivate(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPrivate
@@ -165,7 +165,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public wellKnown(): Promise<BigNumber | number> {
+    public wellKnown(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.wellKnown
