@@ -91,7 +91,7 @@ describe('DummyContract tests', () => {
         let count = 2;
         let txResult = await dummy.setPublic(42);
         for (var i = 0; i < count; i++) {
-            txResult = await dummy.setPublic(42 + i);
+            txResult = await dummy.setPrivate(42 + i);
         }
 
         let parsedResult = await dummy.getTransactionResult(txResult.tx);

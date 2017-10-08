@@ -108,41 +108,88 @@ export class SoltsiceContract {
     }
 
     public async parseLogs(logs: W3.Log[]): Promise<W3.Log[]> {
-
+        let web3 = this.web3;
         let inst = await this.instance;
         let abi = inst.abi;
 
         return logs!.map((log) => {
-            let event: any = null;
+            let logABI: any = null;
 
-            for (var i = 0; i < abi.length; i++) {
-                var item = abi[i];
+            for (let i = 0; i < abi.length; i++) {
+                let item = abi[i];
                 if (item.type !== 'event') {
                     continue;
                 }
                 // tslint:disable-next-line:max-line-length
-                var signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
-                var hash = this.web3.web3.sha3(signature);
+                let signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
+                let hash = this.web3.web3.sha3(signature);
                 if (hash === log.topics![0]) {
-                    event = item;
+                    logABI = item;
                     break;
                 }
             }
+            if (logABI != null) {
+                // Adapted from truffle-contract
+                let copy = Object.assign({}, log);
 
-            if (event != null) {
-                var inputs = event.inputs!.map(function (input: any) { return input.type; });
-                var data = SolidityCoder.decodeParams(inputs, log.data!.replace('0x', ''));
-                let args: any = {};
-                for (var index = 0; index < event.inputs.length; index++) {
-                    args[event.inputs[index].name] = data[index];
-                }
+                let decode = (fullABI, indexed, data) => {
+                    let _inputs = fullABI.inputs.filter(function (input: any) {
+                        return input.indexed === indexed;
+                    });
 
-                let result: W3.Log = Object.assign({}, log);
-                result.event = event.name;
-                result.args = args;
-                delete result.data;
-                delete result.topics;
-                return result;
+                    let partial = {
+                        inputs: _inputs,
+                        name: fullABI.name,
+                        type: fullABI.type,
+                        anonymous: fullABI.anonymous
+                    };
+
+                    let types = partial.inputs.map(x => x.type);
+                    let params = SolidityCoder.decodeParams(types, data);
+                    let temp = {};
+
+                    for (let index = 0; index < _inputs.length; index++) {
+                        temp[_inputs[index].name] = params[index];
+                    }
+
+                    return temp;
+                };
+
+                let argTopics = logABI.anonymous ? copy.topics : copy.topics!.slice(1);
+                let indexedData = argTopics!.map(function (topics: string) { return topics.slice(2); }).join('');
+                // tslint:disable-next-line:max-line-length
+                let indexedParams = decode(logABI, true, indexedData);
+
+                let notIndexedData = copy.data!.replace('0x', '');
+                // tslint:disable-next-line:max-line-length
+                let notIndexedParams = decode(logABI, false, notIndexedData);
+
+                copy.event = logABI.name;
+
+                copy.args = logABI.inputs.reduce(function (acc: any, current: any) {
+                    let val = indexedParams[current.name];
+
+                    if (val === undefined) {
+                      val = notIndexedParams[current.name];
+                    }
+
+                    acc[current.name] = val;
+                    return acc;
+                }, {});
+
+                Object.keys(copy.args).forEach(function(key: any) {
+                    let val = copy.args[key];
+
+                    // We have BN. Convert it to BigNumber
+                    if (val.constructor.isBN) {
+                      copy.args[key] = web3.toBigNumber('0x' + val.toString(16));
+                    }
+                });
+
+                delete copy.data;
+                delete copy.topics;
+
+                return copy;
 
             } else {
                 return undefined;
@@ -165,11 +212,19 @@ export class SoltsiceContract {
                 if (err) {
                     reject(err);
                 } else {
-                    let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
-                    result.tx = receipt.transactionHash;
-                    result.receipt = receipt;
-                    result.logs = await this.parseReceipt(receipt);
-                    resolve(result);
+                    if (!receipt) {
+                        reject('Receipt is falsy, transaction does not exists or was not mined yet.');
+                    } else {
+                        try {
+                            let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
+                            result.tx = receipt.transactionHash;
+                            result.receipt = receipt;
+                            result.logs = await this.parseReceipt(receipt);
+                            resolve(result);
+                        } catch (e) {
+                            reject({ error: e, description: 'Unhandled exception' });
+                        }
+                    }
                 }
             });
         });
@@ -185,14 +240,14 @@ export class SoltsiceContract {
                 'fromBlock': this.web3.fromDecimal(fromBlock),
                 'toBlock': toBlock1,
                 'address': await this.address
-              }],
+            }],
             id: id,
         }).then(async r => {
             if (r.error) {
                 throw 'Cannot set filter';
             }
             return r.result as number;
-            });
+        });
         return this.web3.toBigNumber(filter).toNumber(); // filter
     }
 
@@ -208,7 +263,7 @@ export class SoltsiceContract {
                 throw 'Cannot uninstall filter';
             }
             return r.result as boolean;
-            });
+        });
         return ret;
     }
 
@@ -226,7 +281,7 @@ export class SoltsiceContract {
             }
             let parsed = await this.parseLogs(r.result as W3.Log[]);
             return parsed;
-            });
+        });
         return logs;
     }
 
@@ -244,7 +299,7 @@ export class SoltsiceContract {
             }
             let parsed = await this.parseLogs(r.result as W3.Log[]);
             return parsed;
-            });
+        });
         return logs;
     }
 

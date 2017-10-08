@@ -13,8 +13,9 @@ contract DummyContract is Ownable {
         wellKnown = _wellKnown;
     }
 
-    event SecretSet(uint newValue);
-    event PublicSet(uint newValue);
+    event SecretSet(uint newValue, address indexed  contractAddress, address indexed sender);
+    event PublicSet(uint indexed newValue, address indexed  contractAddress, address indexed sender);
+
 
     function getPrivate() onlyOwner constant returns (uint) {
         return secret;
@@ -22,7 +23,7 @@ contract DummyContract is Ownable {
 
     function setPrivate(uint _newValue) onlyOwner {
         secret = _newValue;
-        SecretSet(_newValue);
+        SecretSet(_newValue, this, msg.sender);
     }
 
     function getPublic() onlyOwner constant returns (uint) {
@@ -31,7 +32,7 @@ contract DummyContract is Ownable {
 
     function setPublic(uint _newValue) onlyOwner {
         wellKnown = _newValue;
-        PublicSet(_newValue);
+        PublicSet(_newValue, this, msg.sender);
     }
 
 }
