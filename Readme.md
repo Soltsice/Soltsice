@@ -43,9 +43,9 @@ import { StandardToken } from "./types";
 
 // default wrapper for web3: either window['web3'] if present,
 // or http provider connected to localhost: 8545, if not running on https 
-let w3: W3 = new W3());
+let w3: W3 = new W3();
 
-// null for ctor params for newly deployed contracts
+// null for ctor params which are only used for newly deployed contracts
 let st: StandardToken = new StandardToken("address of deployed contract", null, w3);
 
 // note that typings are optional in variable definitions, TypeScript infers types
@@ -57,7 +57,7 @@ supply.then(value => {
 
 ```
 
-See a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
+See [dbrain-contracts](https://github.com/dbrainio/dbrain-contracts) and [dbrain-blockchain-api](https://github.com/dbrainio/dbrain-blockchain-api) projects that use this library and a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
 
 ### Type inference & intellisense
 
@@ -81,7 +81,7 @@ TypeScript wrappers over contracts allow to use powerful intellisense feature of
 
 ## Contributing
 
-Some functionality such as Solidity libraries is not supported yet. Contributors are welcome!
+If some functionality is not supported yet you are very welcome to open an issue or pull request!
 
 ## License
 
