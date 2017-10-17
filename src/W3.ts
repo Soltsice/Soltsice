@@ -77,6 +77,10 @@ export class W3 {
         return this.web3.fromDecimal(value);
     }
 
+    public toHex(value: number | string): string {
+        return this.web3.toHex(value);
+    }
+
     /**
      * web3.js untyped instance created with a resolved or given in ctor provider, if any.
      */
@@ -244,6 +248,49 @@ export class W3 {
             }
             return <boolean>r.result;
         });
+    }
+
+    /** Sign a message */
+    public async sign(message: string, account: string, password?: string): Promise<string> {
+        message = this.toHex(message);
+        const id = 'W3:' + W3.NextCounter();
+        return this.sendRPC({
+            jsonrpc: '2.0',
+            method: 'personal_sign',
+            params: password ? [message, account, password] : [message, account],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                console.log('ERROR:', r.error);
+                throw new Error(r.error);
+            }
+            return <string>r.result;
+        });
+    }
+
+    /** Recover signature address */
+    public async ecRecover(message: string, signature: string): Promise<string> {
+        message = this.toHex(message);
+        const id = 'W3:' + W3.NextCounter();
+        return this.sendRPC({
+            jsonrpc: '2.0',
+            method: 'personal_ecRecover',
+            params: [message, signature],
+            id: id,
+        }).then(async r => {
+            if (r.error) {
+                throw new Error(r.error);
+            }
+            return <string>r.result;
+        });
+    }
+
+    public get isMetaMask() {
+        try {
+            return this.web3.currentProvider.isMetaMask ? true : false;
+        } catch {
+            return false;
+        }
     }
 
 }

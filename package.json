@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
     "private": false,
-    "version": "0.8.5",
+    "version": "0.8.6",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -52,7 +52,7 @@
         "bignumber.js": "^4.0.0",
         "copyfiles": "^1.2.0",
         "truffle-contract": "^3.0.0",
-        "web3": "^0.20.1"
+        "web3": "^0.20.2"
     },
     "peerDependencies": {
         "bignumber.js": "^4.0.0",

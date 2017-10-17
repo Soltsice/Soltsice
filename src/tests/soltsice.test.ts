@@ -119,4 +119,17 @@ describe('DummyContract tests', () => {
 
     });
 
+    it('could sign and ecRecover', async function () {
+        let newW3 = new W3(new W3.providers.HttpProvider('http://localhost:8546'));
+        let message = 'my message';
+        let acc = (await newW3.accounts)[0];
+        // console.log('ACC', acc);
+        let signature = await newW3.sign(message, acc, 'Ropsten1');
+        console.log('SIGNATURE', signature);
+
+        let recovered = await newW3.ecRecover(message, signature);
+        console.log('RECOVERED:', recovered);
+        expect(recovered).toBe(acc);
+    });
+
 });

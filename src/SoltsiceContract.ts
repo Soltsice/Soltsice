@@ -59,7 +59,7 @@ export class SoltsiceContract {
 
             let useDeployed = (address: string) => {
                 if (!SoltsiceContract.Silent) {
-                    console.log('SOLTSICE: DEPLOYED CONTRACT', this.constructor.name, ' at ', deploymentParams!);
+                    console.log('SOLTSICE: USING EXISTING CONTRACT', this.constructor.name, ' at ', deploymentParams!);
                 }
                 this._Contract.at(address).then((inst) => {
                     this.transactionHash = inst.transactionHash;
@@ -73,7 +73,7 @@ export class SoltsiceContract {
             } else if (instanceOfTxParams(deploymentParams)) {
                 this._Contract.new(...constructorParams!, deploymentParams).then((inst) => {
                     if (!SoltsiceContract.Silent) {
-                        console.log('SOLTSICE: NEW CONTRACT ', this.constructor.name, ' at ', inst.address);
+                        console.log('SOLTSICE: DEPLOYED NEW CONTRACT ', this.constructor.name, ' at ', inst.address);
                     }
                     this.transactionHash = inst.transactionHash;
                     resolve(inst);

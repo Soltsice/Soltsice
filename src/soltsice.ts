@@ -83,8 +83,9 @@ export module soltsice {
         if (!abiType) {
             outputType = 'void';
         } else if (abiType.startsWith('uint') || abiType.startsWith('int')) {
-            // TODO parse
             outputType = isReturnType ? 'BigNumber' : 'BigNumber | number';
+        } else if (abiType.startsWith('bytes')) {
+            outputType = 'string';
         } else {
             //     export type ABIDataTypes = 'uint256' | 'boolean' | 'string' | 'bytes' | string; // TODO complete list
             switch (abiType) {
@@ -100,10 +101,6 @@ export module soltsice {
                 case 'string[]':
                 case 'address[]':
                     outputType = 'string[]';
-                    break;
-
-                case 'bytes':
-                    outputType = 'string';
                     break;
 
                 default:
