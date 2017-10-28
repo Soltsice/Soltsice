@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * MultiSigWallet API
  */
 export class MultiSigWallet extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/MultiSigWallet.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_owners: string[], _required: BigNumber | number},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/MultiSigWallet.json'),
+            w3,
+            MultiSigWallet.Artifacts,
             ctorParams ? [ctorParams!._owners, ctorParams!._required] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

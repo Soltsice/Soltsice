@@ -1,14 +1,14 @@
 // typings originally from https://github.com/ethereum/web3.js/pull/897
 // and https://github.com/0xProject/web3-typescript-typings
-
+import { JsonRPCRequest, JsonRPCResponse } from './jsonrpc';
 import { BigNumber } from 'bignumber.js'; // TODO change to BN
 import * as us from 'underscore';
 
 let Web3JS = require('web3');
 
-// this is the only class wrapper over JS object, others are interfaces
+// W3 is the only class wrapper over JS object, others are interfaces
 // cannot just cast from JS, but ctor does some standard logic to resolve web3
-// so we do not need cast but could just use new Web3()
+// so we do not need cast but could just use new W3()
 
 /** Convert number or hex string to BigNumber */
 export function toBN(value: number): BigNumber {
@@ -24,6 +24,7 @@ export function toBN(value: number): BigNumber {
 export class W3 {
     private static _counter: number = 0;
     private static _default: W3;
+    private static _utf8 = require('utf8');
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
      * You must set it explicitly via W3.Default setter. Use an empty `new W3()` constructor to get an instance that
@@ -77,8 +78,65 @@ export class W3 {
         return this.web3.fromDecimal(value);
     }
 
-    public toHex(value: number | string): string {
-        return this.web3.toHex(value);
+    public isHex(value: any) {
+        return value.toString().startsWith('0x');
+    }
+
+    /**
+     * Convert value to hex with optional left padding.
+     * @param value Value to convert to hex
+     * @param size Size of number in bits (8 for int8, 16 for uint16, etc)
+     */
+    public toHex(value: number | string | BigNumber, stripPrefix?: boolean, size?: number): string {
+        const HEX_CHAR_SIZE = 4;
+        if (typeof value === 'string' && !this.isHex(value)) {
+            // non-hex string
+            return this.utf8ToHex(value, stripPrefix);
+        }
+        // numbers, big numbers, and hex strings
+        if (size) {
+            // tslint:disable-next-line:no-bitwise
+            return (stripPrefix ? '' : '0x') + this.leftPad(this.web3.toHex((value as any) >>> 0).slice(2), size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
+        } else {
+            // tslint:disable-next-line:no-bitwise
+            return (stripPrefix ? '' : '0x') + this.web3.toHex((value as any) >>> 0).slice(2);
+        }
+
+    }
+
+    public leftPad(str: string, len: number, ch: any) {
+        // the notorious 12-lines npm package
+        str = String(str);
+        var i = -1;
+        if (!ch && ch !== 0) { ch = ' '; }
+        len = len - str.length;
+        while (++i < len) {
+            str = ch + str;
+        }
+        return str;
+    }
+
+    public utf8ToHex(str: string, stripPrefix?: boolean): string {
+        // this is from web3 1.0
+
+        str = W3._utf8.encode(str);
+        let hex = '';
+
+        // remove \u0000 padding from either side
+        str = str.replace(/^(?:\u0000)*/, '');
+        str = str.split('').reverse().join('');
+        str = str.replace(/^(?:\u0000)*/, '');
+        str = str.split('').reverse().join('');
+
+        for (let i = 0; i < str.length; i++) {
+            let code = str.charCodeAt(i);
+            // if (code !== 0) {
+            let n = code.toString(16);
+            hex += n.length < 2 ? '0' + n : n;
+            // }
+        }
+
+        return (stripPrefix ? '' : '0x') + hex;
     }
 
     /**
@@ -101,8 +159,6 @@ export class W3 {
     constructor(provider: W3.Provider)
     constructor(provider?: W3.Provider) {
         let tmpWeb3;
-        // console.log('Ctor provider:');
-        // console.log(provider);
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
             if ((typeof window !== 'undefined' && typeof window['web3'] !== 'undefined' && typeof window['web3'].currentProvider !== 'undefined')
@@ -111,15 +167,15 @@ export class W3 {
                 this.globalWeb3 = window['web3'];
                 // tslint:disable-next-line:no-string-literal
                 tmpWeb3 = new Web3JS(this.globalWeb3.currentProvider);
-                console.log('Using a global web3 provider.');
+                console.log('Using an injected web3 provider.');
             } else {
                 // set the provider you want from Web3.providers
                 if (typeof window === 'undefined' || window.location.protocol !== 'https:') {
                     tmpWeb3 = new Web3JS(new Web3JS.providers.HttpProvider('http://localhost:8545'));
-                    console.log('Cannot find global web3 provider. Using HttpProvider(http://localhost:8545).');
+                    console.log('Cannot find an injected web3 provider. Using HttpProvider(http://localhost:8545).');
                 } else {
                     // tslint:disable-next-line:max-line-length
-                    console.log('Cannot find global web3 provider. Running on https, will not try to access localhost at 8545');
+                    console.log('Cannot find an injected web3 provider. Running on https, will not try to access localhost at 8545');
                 }
             }
         } else {
@@ -178,7 +234,7 @@ export class W3 {
         this.updateNetworkInfo();
     }
 
-    public sendRPC(payload: W3.JsonRPCRequest): Promise<W3.JsonRPCResponse> {
+    public sendRPC(payload: JsonRPCRequest): Promise<JsonRPCResponse> {
         return new Promise((resolve, reject) => {
             if (this.isPre1API) {
                 this.web3.currentProvider.sendAsync(payload, (e, r) => {
@@ -250,10 +306,32 @@ export class W3 {
         });
     }
 
+    /** Sign using eth.sign but with prefix as personal_sign */
+    public async ethSignRaw(hex: string, account: string): Promise<string> {
+        // NOTE geth already adds the prefix to eth.sign, no need to do so manually
+        // hex = hex.replace('0x', '');
+        // let prefix = '\x19Ethereum Signed Message:\n' + (hex.length / 2);
+        // let message = this.web3.toHex(prefix) + hex;
+        return new Promise<string>((resolve, reject) => {
+            this.web3.eth.sign(account, hex, (err, res) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(res);
+            });
+        });
+    }
+
     /** Sign a message */
     public async sign(message: string, account: string, password?: string): Promise<string> {
         message = this.toHex(message);
+        return this.signRaw(message, account, password);
+    }
+
+    /** Message already as hex */
+    public async signRaw(message: any, account: string, password?: string): Promise<string> {
         const id = 'W3:' + W3.NextCounter();
+        console.log('signRaw MESSAGE', message);
         return this.sendRPC({
             jsonrpc: '2.0',
             method: 'personal_sign',
@@ -262,7 +340,7 @@ export class W3 {
         }).then(async r => {
             if (r.error) {
                 console.log('ERROR:', r.error);
-                throw new Error(r.error);
+                throw new Error(r.error.message);
             }
             return <string>r.result;
         });
@@ -271,6 +349,10 @@ export class W3 {
     /** Recover signature address */
     public async ecRecover(message: string, signature: string): Promise<string> {
         message = this.toHex(message);
+        return this.ecRecoverRaw(message, signature);
+    }
+
+    public async ecRecoverRaw(message: any, signature: string): Promise<string> {
         const id = 'W3:' + W3.NextCounter();
         return this.sendRPC({
             jsonrpc: '2.0',
@@ -279,7 +361,7 @@ export class W3 {
             id: id,
         }).then(async r => {
             if (r.error) {
-                throw new Error(r.error);
+                throw new Error(r.error.message);
             }
             return <string>r.result;
         });
@@ -443,7 +525,7 @@ export namespace W3 {
         export function txParamsDefaultDeploy(from: address): TxParams {
             return {
                 from: from,
-                gas: 4712388,
+                gas: 4500000,
                 gasPrice: 20000000000,
                 value: 0
             };
@@ -460,18 +542,18 @@ export namespace W3 {
     }
 
     // '{"jsonrpc":"2.0","method":"eth_sendTransaction","params":[{see above}],"id":1}'
-    export interface JsonRPCRequest {
-        jsonrpc: string;
-        method: string;
-        params: any[];
-        id: number | string;
-    }
-    export interface JsonRPCResponse {
-        jsonrpc: string;
-        id: number | string;
-        result?: any;
-        error?: string;
-    }
+    // export interface JsonRPCRequest {
+    //     jsonrpc: string;
+    //     method: string;
+    //     params: any[];
+    //     id: number | string;
+    // }
+    // export interface JsonRPCResponse {
+    //     jsonrpc: string;
+    //     id: number | string;
+    //     result?: any;
+    //     error?: string;
+    // }
 
     export interface Provider {
         sendAsync(

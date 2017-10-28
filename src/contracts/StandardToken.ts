@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * StandardToken API
  */
 export class StandardToken extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/StandardToken.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/StandardToken.json'),
+            w3,
+            StandardToken.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * ConvertLib API
  */
 export class ConvertLib extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/ConvertLib.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/ConvertLib.json'),
+            w3,
+            ConvertLib.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

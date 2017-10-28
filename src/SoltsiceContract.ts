@@ -8,7 +8,8 @@ import SolidityCoder = require('web3/lib/solidity/coder.js');
 export class SoltsiceContract {
     public static Silent: boolean = false;
     public transactionHash: Promise<string>;
-    protected web3: W3;
+    public artifactsHash: Promise<string>;
+    public w3: W3;
     protected _Contract: any;
     /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
     protected _instance: Promise<any>;
@@ -28,7 +29,8 @@ export class SoltsiceContract {
         if (!web3) {
             web3 = W3.Default;
         }
-        this.web3 = web3;
+        this.w3 = web3;
+
         this._Contract = contract(tokenArtifacts);
         this._Contract.setProvider(web3.currentProvider);
 
@@ -38,7 +40,7 @@ export class SoltsiceContract {
 
         let linkage = new Promise<any>(async (resolve, reject) => {
             if (link && link.length > 0) {
-                let network = +(await this.web3.networkId);
+                let network = +(await this.w3.networkId);
                 this._Contract.setNetwork(network);
                 link.forEach(async element => {
                     let inst = await element._instance;
@@ -52,7 +54,7 @@ export class SoltsiceContract {
 
         let instance = new Promise(async (resolve, reject) => {
             await linkage;
-            let accounts = await this.web3.accounts;
+            let accounts = await this.w3.accounts;
             if (accounts && accounts.length > 0) {
                 this._sendParams = W3.TC.txParamsDefaultSend(accounts[0]);
             }
@@ -108,7 +110,7 @@ export class SoltsiceContract {
     }
 
     public async parseLogs(logs: W3.Log[]): Promise<W3.Log[]> {
-        let web3 = this.web3;
+        let web3 = this.w3;
         let inst = await this.instance;
         let abi = inst.abi;
 
@@ -122,7 +124,7 @@ export class SoltsiceContract {
                 }
                 // tslint:disable-next-line:max-line-length
                 let signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
-                let hash = this.web3.web3.sha3(signature);
+                let hash = this.w3.web3.sha3(signature);
                 if (hash === log.topics![0]) {
                     logABI = item;
                     break;
@@ -208,7 +210,7 @@ export class SoltsiceContract {
     /** Get transaction result by hash. Returns receipt + parsed logs. */
     public getTransactionResult(txHash: string): Promise<W3.TC.TransactionResult> {
         return new Promise<W3.TC.TransactionResult>((resolve, reject) => {
-            this.web3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
+            this.w3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -231,13 +233,13 @@ export class SoltsiceContract {
     }
 
     public async newFilter(fromBlock: number, toBlock?: number): Promise<number> {
-        let toBlock1 = toBlock ? this.web3.fromDecimal(toBlock) : 'latest';
+        let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
         const id = 'W3:' + W3.NextCounter();
-        let filter = await this.web3.sendRPC({
+        let filter = await this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_newFilter',
             params: [{
-                'fromBlock': this.web3.fromDecimal(fromBlock),
+                'fromBlock': this.w3.fromDecimal(fromBlock),
                 'toBlock': toBlock1,
                 'address': await this.address
             }],
@@ -248,15 +250,15 @@ export class SoltsiceContract {
             }
             return r.result as number;
         });
-        return this.web3.toBigNumber(filter).toNumber(); // filter
+        return this.w3.toBigNumber(filter).toNumber(); // filter
     }
 
     public async uninstallFilter(filter: number): Promise<boolean> {
         const id = 'W3:' + W3.NextCounter();
-        let ret = await this.web3.sendRPC({
+        let ret = await this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_uninstallFilter',
-            params: [this.web3.fromDecimal(filter)],
+            params: [this.w3.fromDecimal(filter)],
             id: id,
         }).then(async r => {
             if (r.error) {
@@ -270,10 +272,10 @@ export class SoltsiceContract {
     public async getFilterChanges(filter: number): Promise<W3.Log[]> {
         const id = 'W3:' + W3.NextCounter();
 
-        let logs = this.web3.sendRPC({
+        let logs = this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_getFilterChanges',
-            params: [this.web3.fromDecimal(filter)],
+            params: [this.w3.fromDecimal(filter)],
             id: id,
         }).then(async r => {
             if (r.error) {
@@ -288,10 +290,10 @@ export class SoltsiceContract {
     public async getFilterLogs(filter: number): Promise<W3.Log[]> {
         const id = 'W3:' + W3.NextCounter();
 
-        let logs = this.web3.sendRPC({
+        let logs = this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_getFilterLogs',
-            params: [this.web3.fromDecimal(filter)],
+            params: [this.w3.fromDecimal(filter)],
             id: id,
         }).then(async r => {
             if (r.error) {
@@ -305,7 +307,7 @@ export class SoltsiceContract {
 
     public async getLogs(fromBlock: number, toBlock?: number): Promise<W3.Log[]> {
 
-        let toBlock1 = toBlock ? this.web3.fromDecimal(toBlock) : 'latest';
+        let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
 
         return new Promise<W3.Log[]>(async (resolve, reject) => {
             (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {

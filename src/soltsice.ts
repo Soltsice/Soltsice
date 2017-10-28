@@ -273,22 +273,22 @@ import { W3, SoltsiceContract } from '${importPath}';
  * ${contractName} API
  */
 export class ${contractName} extends SoltsiceContract {
+    static get Artifacts() { return require('${artifactRelPath}'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {${ctorParams.typesNames}},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('${artifactRelPath}'),
+            w3,
+            ${contractName}.Artifacts,
             ctorParams ? [${ctorParams.names}] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

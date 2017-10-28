@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * DummyToken API
  */
 export class DummyToken extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/DummyToken.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_multisig: string},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/DummyToken.json'),
+            w3,
+            DummyToken.Artifacts,
             ctorParams ? [ctorParams!._multisig] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

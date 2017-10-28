@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * DummyContract API
  */
 export class DummyContract extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/DummyContract.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/DummyContract.json'),
+            w3,
+            DummyContract.Artifacts,
             ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

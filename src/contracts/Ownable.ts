@@ -5,22 +5,22 @@ import { W3, SoltsiceContract } from '..';
  * Ownable API
  */
 export class Ownable extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/Ownable.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/Ownable.json'),
+            w3,
+            Ownable.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

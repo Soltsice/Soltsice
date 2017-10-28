@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * ERC20Basic API
  */
 export class ERC20Basic extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/ERC20Basic.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/ERC20Basic.json'),
+            w3,
+            ERC20Basic.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */

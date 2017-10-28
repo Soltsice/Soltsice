@@ -6,22 +6,22 @@ import { W3, SoltsiceContract } from '..';
  * Migrations API
  */
 export class Migrations extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/Migrations.json'); }
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
-        web3?: W3,
+        w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
-            web3,
-            require('../artifacts/Migrations.json'),
+            w3,
+            Migrations.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
         );
     }
-
     /*
         Contract methods
     */
