@@ -24,7 +24,27 @@ export function toBN(value: number): BigNumber {
 export class W3 {
     private static _counter: number = 0;
     private static _default: W3;
-    private static _utf8 = require('utf8');
+    public static readonly Utf8 = require('utf8');
+    public static readonly EthUtils: W3.EthUtils = require('ethereumjs-util');
+
+    private static _keythereum;
+    /**
+     * https://github.com/ethereumjs/keythereum
+     */
+    public static get Keythereum() {
+        if (W3._keythereum) {
+            return W3._keythereum;
+        }
+        // tslint:disable-next-line:no-string-literal
+        if (typeof window !== 'undefined' && typeof window['keythereum'] !== 'undefined') {
+            // tslint:disable-next-line:no-string-literal
+            W3._keythereum = window['keythereum'];
+        } else {
+            W3._keythereum = require('keythereum');
+        }
+        return W3._keythereum;
+    }
+
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
      * You must set it explicitly via W3.Default setter. Use an empty `new W3()` constructor to get an instance that
@@ -119,7 +139,7 @@ export class W3 {
     public utf8ToHex(str: string, stripPrefix?: boolean): string {
         // this is from web3 1.0
 
-        str = W3._utf8.encode(str);
+        str = W3.Utf8.encode(str);
         let hex = '';
 
         // remove \u0000 padding from either side
@@ -367,6 +387,24 @@ export class W3 {
         });
     }
 
+    public static sign(message: any, privateKey: string): string {
+        let mb = W3.EthUtils.toBuffer(message);
+        let pb = W3.EthUtils.toBuffer(privateKey);
+        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
+        let signature = W3.EthUtils.ecsign(personalHash, pb);
+        let rpcSignature = W3.EthUtils.toRpcSig(signature.v, signature.r, signature.s);
+        return rpcSignature;
+    }
+
+    public static ecrecover(message: string, signature: string): string {
+        let mb = W3.EthUtils.toBuffer(message);
+        let sigObject = W3.EthUtils.fromRpcSig(signature);
+        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
+        let recoveredBuffer = W3.EthUtils.ecrecover(personalHash, sigObject.v, sigObject.r, sigObject.s);
+        let address = W3.EthUtils.bufferToHex(recoveredBuffer);
+        return address;
+    }
+
     public get isMetaMask() {
         try {
             return this.web3.currentProvider.isMetaMask ? true : false;
@@ -375,121 +413,6 @@ export class W3 {
         }
     }
 
-}
-
-export class TestRPC {
-
-    private w3: W3;
-    /**
-     *
-     */
-    constructor(w3?: W3) {
-        this.w3 = w3 || new W3();
-    }
-
-    /**
-     * Snapshot the state of the blockchain at the current block. Takes no parameters.
-     * Returns the integer id of the snapshot created.
-     */
-    public async snapshot(): Promise<string> {
-        if (!(await this.w3.isTestRPC)) {
-            throw 'Not on TestRPC';
-        }
-        const id = 'W3:' + W3.NextCounter();
-        return this.w3.sendRPC({
-            jsonrpc: '2.0',
-            method: 'evm_snapshot',
-            params: [],
-            id: id,
-        }).then(r => {
-            console.log('RPC RESPONSE: ', r);
-            return <string>r.result;
-        });
-    }
-
-    /**
-     * Revert the state of the blockchain to a previous snapshot.
-     * Takes a single parameter, which is the snapshot id to revert to.
-     * If no snapshot id is passed it will revert to the latest snapshot. Returns true.
-     */
-    public async revert(snapshotId?: string): Promise<boolean> {
-        if (!(await this.w3.isTestRPC)) {
-            throw 'Not on TestRPC';
-        }
-        const id = 'W3:' + W3.NextCounter();
-        return this.w3.sendRPC({
-            jsonrpc: '2.0',
-            method: 'evm_revert',
-            params: snapshotId ? [snapshotId] : [],
-            id: id,
-        }).then(async r => {
-            return true;
-        });
-    }
-
-    /**
-     * Jump forward in time. Takes one parameter, which is the amount of time to increase in seconds.
-     * Returns the total time adjustment, in seconds.
-     */
-    public async increaseTime(seconds: number): Promise<number> {
-        if (!(await this.w3.isTestRPC)) {
-            throw 'Not on TestRPC';
-        }
-        const id = 'W3:' + W3.NextCounter();
-        return this.w3.sendRPC({
-            jsonrpc: '2.0',
-            method: 'evm_increaseTime',
-            params: [W3.duration.seconds(seconds)],
-            id: id,
-        }).then(async r => {
-            await this.mine();
-            return <number>r.result;
-        });
-    }
-
-    /**
-     * Beware that due to the need of calling two separate testrpc methods and rpc calls overhead
-     * it's hard to increase time precisely to a target point so design your test to tolerate
-     * small fluctuations from time to time.
-     *
-     * @param target time in seconds
-     */
-    public async increaseTimeTo(target: number): Promise<number> {
-        let now = await this.w3.latestTime;
-        if (target < now) {
-            throw Error(`Cannot increase current time(${now}) to a moment in the past(${target})`);
-        }
-        let diff = target - now;
-        return this.increaseTime(diff);
-    }
-
-    /**
-     * Force a block to be mined. Takes no parameters. Mines a block independent of whether or not mining is started or stopped.
-     */
-    public async mine(): Promise<void> {
-        if (!(await this.w3.isTestRPC)) {
-            throw 'Not on TestRPC';
-        }
-        const id = 'W3:' + W3.NextCounter();
-        return this.w3.sendRPC({
-            jsonrpc: '2.0',
-            method: 'evm_mine',
-            params: [],
-            id: id,
-        }).then(r => {
-            return;
-        });
-    }
-
-    public async advanceToBlock(blockNumber: number) {
-        let lastBlock = await this.w3.blockNumber;
-        if (lastBlock > blockNumber) {
-            throw Error(`block number ${blockNumber} is in the past (current is ${lastBlock})`);
-        }
-        while (await this.w3.blockNumber < blockNumber) {
-            await this.mine();
-        }
-    }
 }
 
 export namespace W3 {
@@ -540,20 +463,6 @@ export namespace W3 {
             };
         }
     }
-
-    // '{"jsonrpc":"2.0","method":"eth_sendTransaction","params":[{see above}],"id":1}'
-    // export interface JsonRPCRequest {
-    //     jsonrpc: string;
-    //     method: string;
-    //     params: any[];
-    //     id: number | string;
-    // }
-    // export interface JsonRPCResponse {
-    //     jsonrpc: string;
-    //     id: number | string;
-    //     result?: any;
-    //     error?: string;
-    // }
 
     export interface Provider {
         sendAsync(
@@ -626,6 +535,48 @@ export namespace W3 {
         // tslint:disable-next-line:member-ordering
         unitMap: any;
     }
+
+    /**
+     * https://github.com/ethereumjs/ethereumjs-util/blob/master/docs/index.md
+     */
+    export interface EthUtils {
+        BN: BigNumber;
+        addHexPrefix(str: string): string;
+        baToJSON(ba: Buffer | Array<any>): any;
+        bufferToHex(buf: Buffer): string;
+        bufferToInt(buf: Buffer): number;
+        ecrecover(msgHash: Buffer, v: number, r: Buffer, s: Buffer): Buffer;
+        ecsign(msgHash: Buffer, privateKey: Buffer): any;
+        fromRpcSig(sig: string): any;
+        fromSigned(num: Buffer): any; // TODO BN
+        generateAddress(from: Buffer, nonce: Buffer): Buffer;
+        hashPersonalMessage(message: Buffer): Buffer;
+        importPublic(publicKey: Buffer): Buffer;
+        isValidAddress(address: string): boolean;
+        isValidChecksumAddress(address: Buffer): boolean;
+        isValidPrivate(privateKey: Buffer): boolean;
+        isValidPublic(privateKey: Buffer, sanitize: boolean): any;
+        isValidSignature(v: number, r: Buffer, s: Buffer, homestead?: boolean): any;
+
+        privateToAddress(privateKey: Buffer): Buffer;
+        pubToAddress(privateKey: Buffer, sanitize: boolean): Buffer;
+
+        sha256(a: Buffer | Array<any> | string | number): Buffer;
+
+        /** Keccak[bits] */
+        sha3(a: Buffer | Array<any> | string | number, bits?: number): Buffer;
+
+        SHA3_NULL: Buffer;
+        SHA3_NULL_S: string;
+
+        toBuffer(v: any): Buffer;
+        toChecksumAddress(address: string): string;
+
+        toRpcSig(v: number, r: Buffer, s: Buffer): string;
+
+        privateToPublic(privateKey: Buffer): Buffer;
+    }
+
     export type Callback<T> = (error: Error, result: T) => void;
     export type ABIDataTypes = 'uint256' | 'boolean' | 'string' | 'bytes' | string; // TODO complete list
 

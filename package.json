@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
     "private": false,
-    "version": "0.8.8",
+    "version": "0.8.9",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -52,6 +52,8 @@
     "dependencies": {
         "bignumber.js": "^4.0.0",
         "copyfiles": "^1.2.0",
+        "ethereumjs-util": "^5.1.2",
+        "keythereum": "^1.0.2",
         "truffle-contract": "^3.0.0",
         "utf8": "^2.1.2",
         "web3": "^0.20.2"
