@@ -12,6 +12,7 @@ let Web3JS = require('web3');
 
 /** Convert number or hex string to BigNumber */
 export function toBN(value: number): BigNumber {
+    // TODO BN.js
     return new BigNumber(value);
 }
 
@@ -24,26 +25,6 @@ export function toBN(value: number): BigNumber {
 export class W3 {
     private static _counter: number = 0;
     private static _default: W3;
-    public static readonly Utf8 = require('utf8');
-    public static readonly EthUtils: W3.EthUtils = require('ethereumjs-util');
-
-    private static _keythereum;
-    /**
-     * https://github.com/ethereumjs/keythereum
-     */
-    public static get Keythereum() {
-        if (W3._keythereum) {
-            return W3._keythereum;
-        }
-        // tslint:disable-next-line:no-string-literal
-        if (typeof window !== 'undefined' && typeof window['keythereum'] !== 'undefined') {
-            // tslint:disable-next-line:no-string-literal
-            W3._keythereum = window['keythereum'];
-        } else {
-            W3._keythereum = require('keythereum');
-        }
-        return W3._keythereum;
-    }
 
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
@@ -96,67 +77,6 @@ export class W3 {
 
     public fromDecimal(value: number | string): string {
         return this.web3.fromDecimal(value);
-    }
-
-    public isHex(value: any) {
-        return value.toString().startsWith('0x');
-    }
-
-    /**
-     * Convert value to hex with optional left padding.
-     * @param value Value to convert to hex
-     * @param size Size of number in bits (8 for int8, 16 for uint16, etc)
-     */
-    public toHex(value: number | string | BigNumber, stripPrefix?: boolean, size?: number): string {
-        const HEX_CHAR_SIZE = 4;
-        if (typeof value === 'string' && !this.isHex(value)) {
-            // non-hex string
-            return this.utf8ToHex(value, stripPrefix);
-        }
-        // numbers, big numbers, and hex strings
-        if (size) {
-            // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + this.leftPad(this.web3.toHex((value as any) >>> 0).slice(2), size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
-        } else {
-            // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + this.web3.toHex((value as any) >>> 0).slice(2);
-        }
-
-    }
-
-    public leftPad(str: string, len: number, ch: any) {
-        // the notorious 12-lines npm package
-        str = String(str);
-        var i = -1;
-        if (!ch && ch !== 0) { ch = ' '; }
-        len = len - str.length;
-        while (++i < len) {
-            str = ch + str;
-        }
-        return str;
-    }
-
-    public utf8ToHex(str: string, stripPrefix?: boolean): string {
-        // this is from web3 1.0
-
-        str = W3.Utf8.encode(str);
-        let hex = '';
-
-        // remove \u0000 padding from either side
-        str = str.replace(/^(?:\u0000)*/, '');
-        str = str.split('').reverse().join('');
-        str = str.replace(/^(?:\u0000)*/, '');
-        str = str.split('').reverse().join('');
-
-        for (let i = 0; i < str.length; i++) {
-            let code = str.charCodeAt(i);
-            // if (code !== 0) {
-            let n = code.toString(16);
-            hex += n.length < 2 ? '0' + n : n;
-            // }
-        }
-
-        return (stripPrefix ? '' : '0x') + hex;
     }
 
     /**
@@ -344,7 +264,7 @@ export class W3 {
 
     /** Sign a message */
     public async sign(message: string, account: string, password?: string): Promise<string> {
-        message = this.toHex(message);
+        message = W3.toHex(message);
         return this.signRaw(message, account, password);
     }
 
@@ -368,7 +288,7 @@ export class W3 {
 
     /** Recover signature address */
     public async ecRecover(message: string, signature: string): Promise<string> {
-        message = this.toHex(message);
+        message = W3.toHex(message);
         return this.ecRecoverRaw(message, signature);
     }
 
@@ -387,24 +307,6 @@ export class W3 {
         });
     }
 
-    public static sign(message: any, privateKey: string): string {
-        let mb = W3.EthUtils.toBuffer(message);
-        let pb = W3.EthUtils.toBuffer(privateKey);
-        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
-        let signature = W3.EthUtils.ecsign(personalHash, pb);
-        let rpcSignature = W3.EthUtils.toRpcSig(signature.v, signature.r, signature.s);
-        return rpcSignature;
-    }
-
-    public static ecrecover(message: string, signature: string): string {
-        let mb = W3.EthUtils.toBuffer(message);
-        let sigObject = W3.EthUtils.fromRpcSig(signature);
-        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
-        let recoveredBuffer = W3.EthUtils.ecrecover(personalHash, sigObject.v, sigObject.r, sigObject.s);
-        let address = W3.EthUtils.bufferToHex(recoveredBuffer);
-        return address;
-    }
-
     public get isMetaMask() {
         try {
             return this.web3.currentProvider.isMetaMask ? true : false;
@@ -420,10 +322,108 @@ export namespace W3 {
     export type bytes = string;
 
     export function isValidAddress(addr: address): boolean {
-        if (addr && addr.startsWith('0x') && addr.length === 42) {
-            return true;
+        return W3.EthUtils.isValidAddress(addr);
+    }
+
+    export let Utf8: any = require('utf8');
+
+    export function isHex(value: any) {
+        return value.toString().startsWith('0x');
+    }
+
+    /**
+     * Convert value to hex with optional left padding.
+     * @param value Value to convert to hex
+     * @param size Size of number in bits (8 for int8, 16 for uint16, etc)
+     */
+    export function toHex(value: number | string | BigNumber, stripPrefix?: boolean, size?: number): string {
+        const HEX_CHAR_SIZE = 4;
+        if (typeof value === 'string' && !W3.isHex(value)) {
+            // non-hex string
+            return W3.utf8ToHex(value, stripPrefix);
         }
-        return false;
+        // numbers, big numbers, and hex strings
+        if (size) {
+            // tslint:disable-next-line:no-bitwise
+            return (stripPrefix ? '' : '0x') + W3.leftPad(W3.toHex((value as any) >>> 0, true), size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
+        } else {
+            // tslint:disable-next-line:no-bitwise
+            return (stripPrefix ? '' : '0x') + W3.toHex((value as any) >>> 0, true);
+        }
+
+    }
+
+    export function leftPad(str: string, len: number, ch: any) {
+        // the notorious 12-lines npm package
+        str = String(str);
+        var i = -1;
+        if (!ch && ch !== 0) { ch = ' '; }
+        len = len - str.length;
+        while (++i < len) {
+            str = ch + str;
+        }
+        return str;
+    }
+
+    export function utf8ToHex(str: string, stripPrefix?: boolean): string {
+        // this is from web3 1.0
+
+        str = W3.Utf8.encode(str);
+        let hex = '';
+
+        // remove \u0000 padding from either side
+        str = str.replace(/^(?:\u0000)*/, '');
+        str = str.split('').reverse().join('');
+        str = str.replace(/^(?:\u0000)*/, '');
+        str = str.split('').reverse().join('');
+
+        for (let i = 0; i < str.length; i++) {
+            let code = str.charCodeAt(i);
+            // if (code !== 0) {
+            let n = code.toString(16);
+            hex += n.length < 2 ? '0' + n : n;
+            // }
+        }
+
+        return (stripPrefix ? '' : '0x') + hex;
+    }
+
+    export let EthUtils: W3.EthUtils = require('ethereumjs-util');
+
+    export function sign(message: any, privateKey: string): bytes {
+        let mb = W3.EthUtils.toBuffer(message);
+        let pb = W3.EthUtils.toBuffer(privateKey);
+        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
+        let signature = W3.EthUtils.ecsign(personalHash, pb);
+        let rpcSignature = W3.EthUtils.toRpcSig(signature.v, signature.r, signature.s);
+        return rpcSignature;
+    }
+
+    export function ecrecover(message: string, signature: string): address {
+        let mb = W3.EthUtils.toBuffer(message);
+        let sigObject = W3.EthUtils.fromRpcSig(signature);
+        let personalHash = W3.EthUtils.hashPersonalMessage(mb);
+        let recoveredBuffer = W3.EthUtils.ecrecover(personalHash, sigObject.v, sigObject.r, sigObject.s);
+        let addr = W3.EthUtils.bufferToHex(recoveredBuffer);
+        return addr;
+    }
+
+    let _keythereum: any;
+    /**
+     * https://github.com/ethereumjs/keythereum
+     */
+    export function getKeythereum() {
+        if (_keythereum) {
+            return _keythereum;
+        }
+        // tslint:disable-next-line:no-string-literal
+        if (typeof window !== 'undefined' && typeof window['keythereum'] !== 'undefined') {
+            // tslint:disable-next-line:no-string-literal
+            _keythereum = window['keythereum'];
+        } else {
+            _keythereum = require('keythereum');
+        }
+        return _keythereum;
     }
 
     /** Truffle Contract */

@@ -3,7 +3,7 @@ import { W3 } from '../';
 describe('Signing tests', () => {
 
     it('Could generate new account and sign/recover message', async function () {
-        let keythereum = W3.Keythereum;
+        let keythereum = W3.getKeythereum();
         console.log('DEFAULTS: ', keythereum.constants);
         let acc = keythereum.create();
         console.log(acc);
