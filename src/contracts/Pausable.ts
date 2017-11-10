@@ -6,6 +6,17 @@ import { W3, SoltsiceContract } from '..';
  */
 export class Pausable extends SoltsiceContract {
     static get Artifacts() { return require('../artifacts/Pausable.json'); }
+
+    static get BytecodeHash() {
+        // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
+        let artifacts = Pausable.Artifacts;
+        if (!artifacts || !artifacts.bytecode) {
+            return undefined;
+        }
+        let hash = W3.sha3(JSON.stringify(artifacts.bytecode));
+        return hash;
+    }
+
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},

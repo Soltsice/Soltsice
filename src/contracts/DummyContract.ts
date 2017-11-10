@@ -7,6 +7,17 @@ import { W3, SoltsiceContract } from '..';
  */
 export class DummyContract extends SoltsiceContract {
     static get Artifacts() { return require('../artifacts/DummyContract.json'); }
+
+    static get BytecodeHash() {
+        // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
+        let artifacts = DummyContract.Artifacts;
+        if (!artifacts || !artifacts.bytecode) {
+            return undefined;
+        }
+        let hash = W3.sha3(JSON.stringify(artifacts.bytecode));
+        return hash;
+    }
+
     constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number},

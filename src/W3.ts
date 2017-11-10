@@ -87,6 +87,9 @@ export class W3 {
     private globalWeb3;
     private netId: Promise<string>;
     private netNode: Promise<string>;
+
+    public defaultAccount: string;
+
     /**
      * Create a default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
      * or to `localhost:8545` if not running on https.
@@ -97,7 +100,10 @@ export class W3 {
      * @param provider web3.js provider.
      */
     constructor(provider: W3.Provider)
-    constructor(provider?: W3.Provider) {
+    constructor(provider?: W3.Provider, defaultAccount?: string) {
+        if (defaultAccount) {
+            this.defaultAccount = defaultAccount;
+        }
         let tmpWeb3;
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
@@ -321,6 +327,7 @@ export namespace W3 {
     export type address = string;
     export type bytes = string;
 
+    export const zeroAddress: string = '0x0000000000000000000000000000000000000000';
     export function isValidAddress(addr: address): boolean {
         return W3.EthUtils.isValidAddress(addr);
     }
@@ -390,6 +397,14 @@ export namespace W3 {
 
     export let EthUtils: W3.EthUtils = require('ethereumjs-util');
 
+    export function sha3(a: Buffer | Array<any> | string | number, bits?: number) {
+        return EthUtils.bufferToHex(EthUtils.sha3(a, bits));
+    }
+
+    export function sha256(a: Buffer | Array<any> | string | number) {
+        return EthUtils.bufferToHex(EthUtils.sha256(a));
+    }
+
     export function sign(message: any, privateKey: string): bytes {
         let mb = W3.EthUtils.toBuffer(message);
         let pb = W3.EthUtils.toBuffer(privateKey);
@@ -445,20 +460,36 @@ export namespace W3 {
             logs: Log[];
         }
 
-        export function txParamsDefaultDeploy(from: address): TxParams {
+        /** 4500000 gas @ 2 Gwei */
+        export function txParamsDefaultDeploy(from: address, gas?: number, gasPrice?: number): TxParams {
+            if (gasPrice && gasPrice > 40000000000) {
+                throw new Error(`Given gasPrice ${gasPrice} is above 40Gwei (our default is 2 Gwei, common value for fast transactions is 20Gwei), this could be costly. Construct txParams manually if you know what you are doing.`);
+            }
+            if (gas && gas > 4500000) {
+                throw new Error(`Given gas ${gas} is too large and could exceed block size.`);
+            }
+
             return {
                 from: from,
-                gas: 4500000,
-                gasPrice: 20000000000,
+                gas: gas || 4500000,
+                gasPrice: gasPrice || 2000000000, // 2 Gwei, not 20
                 value: 0
             };
         }
 
-        export function txParamsDefaultSend(from: address): TxParams {
+        /** 50000 gas @ 2 Gwei */
+        export function txParamsDefaultSend(from: address, gas?: number, gasPrice?: number): TxParams {
+            if (gasPrice && gasPrice > 40000000000) {
+                throw new Error(`Given gasPrice ${gasPrice} is above 40Gwei (our default is 2 Gwei, common value for fast transactions is 20Gwei), this could be costly. Construct txParams manually if you know what you are doing.`);
+            }
+            if (gas && gas > 4500000) {
+                throw new Error(`Given gas ${gas} is too large and could exceed block size.`);
+            }
+
             return {
                 from: from,
-                gas: 50000,
-                gasPrice: 20000000000,
+                gas: gas || 50000,
+                gasPrice: gasPrice || 2000000000, // 2 Gwei, not 20
                 value: 0
             };
         }

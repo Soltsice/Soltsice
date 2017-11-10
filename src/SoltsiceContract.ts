@@ -1,5 +1,5 @@
 import contract = require('truffle-contract');
-import { W3 } from './W3';
+import { W3 } from './';
 import SolidityCoder = require('web3/lib/solidity/coder.js');
 
 /**
@@ -20,16 +20,16 @@ export class SoltsiceContract {
         constructorParams?: W3.TC.ContractDataType[],
         deploymentParams?: string | W3.TC.TxParams | object,
         link?: SoltsiceContract[]) {
+        if (!web3) {
+            web3 = W3.Default;
+        }
+        this.w3 = web3;
         if (!deploymentParams) {
             throw 'Generated classes must require deploymentParams in their ctor (TODO refactor this parent ctor)';
         }
         if (typeof deploymentParams === 'string' && !W3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
         }
-        if (!web3) {
-            web3 = W3.Default;
-        }
-        this.w3 = web3;
 
         this._Contract = contract(tokenArtifacts);
         this._Contract.setProvider(web3.currentProvider);
@@ -54,9 +54,11 @@ export class SoltsiceContract {
 
         let instance = new Promise(async (resolve, reject) => {
             await linkage;
-            let accounts = await this.w3.accounts;
-            if (accounts && accounts.length > 0) {
-                this._sendParams = W3.TC.txParamsDefaultSend(accounts[0]);
+            if (this.w3.defaultAccount) {
+                this._sendParams = W3.TC.txParamsDefaultSend(this.w3.defaultAccount);
+                if (await this.w3.networkId !== '1') {
+                    this._sendParams.gasPrice = 20000000000; // 20 Gwei, tests are too slow with the 2 Gwei default one
+                }
             }
 
             let useDeployed = (address: string) => {
@@ -70,6 +72,7 @@ export class SoltsiceContract {
                     reject(err);
                 });
             };
+
             if (typeof deploymentParams === 'string') {
                 useDeployed(deploymentParams!);
             } else if (instanceOfTxParams(deploymentParams)) {
@@ -103,8 +106,16 @@ export class SoltsiceContract {
         return this._instance;
     }
 
+    public get TxParams() {
+        return this._sendParams;
+    }
+
     /** Send a transaction to the fallback function */
-    public async sendTransaction(txParams: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
+    public async sendTransaction(txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
+        txParams = txParams || this._sendParams;
+        if (!txParams) {
+            throw new Error('Default tx parameters are not set.');
+        }
         let instance = await this.instance;
         return instance.sendTransaction(txParams);
     }
@@ -172,19 +183,19 @@ export class SoltsiceContract {
                     let val = indexedParams[current.name];
 
                     if (val === undefined) {
-                      val = notIndexedParams[current.name];
+                        val = notIndexedParams[current.name];
                     }
 
                     acc[current.name] = val;
                     return acc;
                 }, {});
 
-                Object.keys(copy.args).forEach(function(key: any) {
+                Object.keys(copy.args).forEach(function (key: any) {
                     let val = copy.args[key];
 
                     // We have BN. Convert it to BigNumber
                     if (val.constructor.isBN) {
-                      copy.args[key] = web3.toBigNumber('0x' + val.toString(16));
+                        copy.args[key] = web3.toBigNumber('0x' + val.toString(16));
                     }
                 });
 
@@ -279,8 +290,10 @@ export class SoltsiceContract {
             id: id,
         }).then(async r => {
             if (r.error) {
+                console.log('FILTER ERR: ', r);
                 return [];
             }
+            console.log('FILTER: ', r);
             let parsed = await this.parseLogs(r.result as W3.Log[]);
             return parsed;
         });

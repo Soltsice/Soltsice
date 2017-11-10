@@ -3,14 +3,14 @@ import { BigNumber } from 'bignumber.js';
 import { W3, SoltsiceContract } from '..';
 
 /**
- * MintableToken API
+ * Storage API
  */
-export class MintableToken extends SoltsiceContract {
-    static get Artifacts() { return require('../artifacts/MintableToken.json'); }
+export class Storage extends SoltsiceContract {
+    static get Artifacts() { return require('../artifacts/Storage.json'); }
 
     static get BytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
-        let artifacts = MintableToken.Artifacts;
+        let artifacts = Storage.Artifacts;
         if (!artifacts || !artifacts.bytecode) {
             return undefined;
         }
@@ -27,7 +27,7 @@ export class MintableToken extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             w3,
-            MintableToken.Artifacts,
+            Storage.Artifacts,
             ctorParams ? [] : [],
             deploymentParams,
             link
@@ -39,11 +39,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public mintingFinished(): Promise<boolean> {
+    public getBooleanValue(record: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
-                inst.mintingFinished
-                    .call()
+                inst.getBooleanValue
+                    .call(record)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -51,13 +51,13 @@ export class MintableToken extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:member-ordering
-    public approve = Object.assign(
+    public setUIntValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.approve(_spender, _value, txParams || this._sendParams)
+                    inst.setUIntValue(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
@@ -66,10 +66,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.approve.sendTransaction(_spender, _value, txParams || this._sendParams)
+                        inst.setUIntValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -79,10 +79,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (_spender: string, _value: BigNumber | number): Promise<string> => {
+            data: (record: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        resolve(inst.approve.request(_spender, _value).params[0].data);
+                        resolve(inst.setUIntValue.request(record, value).params[0].data);
                     });
                 });
             }
@@ -90,10 +90,59 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (_spender: string, _value: BigNumber | number): Promise<number> => {
+            estimateGas: (record: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.approve.estimateGas(_spender, _value).then((g) => resolve(g));
+                        inst.setUIntValue.estimateGas(record, value).then((g) => resolve(g));
+                    });
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:member-ordering
+    public setBooleanValue = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (record: string, value: boolean, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.setBooleanValue(record, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (record: string, value: boolean, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setBooleanValue.sendTransaction(record, value, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (record: string, value: boolean): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.setBooleanValue.request(record, value).params[0].data);
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (record: string, value: boolean): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setBooleanValue.estimateGas(record, value).then((g) => resolve(g));
                     });
                 });
             }
@@ -101,171 +150,24 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber> {
+    public getBytesValue(record: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
-                inst.totalSupply
-                    .call()
+                inst.getBytesValue
+                    .call(record)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
         });
     }
-    
-    // tslint:disable-next-line:member-ordering
-    public transferFrom = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.transferFrom(_from, _to, _value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferFrom.sendTransaction(_from, _to, _value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (_from: string, _to: string, _value: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.transferFrom.request(_from, _to, _value).params[0].data);
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (_from: string, _to: string, _value: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferFrom.estimateGas(_from, _to, _value).then((g) => resolve(g));
-                    });
-                });
-            }
-        });
-    
-    // tslint:disable-next-line:member-ordering
-    public mint = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (_to: string, _amount: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.mint(_to, _amount, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _amount: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.mint.sendTransaction(_to, _amount, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (_to: string, _amount: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.mint.request(_to, _amount).params[0].data);
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (_to: string, _amount: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.mint.estimateGas(_to, _amount).then((g) => resolve(g));
-                    });
-                });
-            }
-        });
-    
-    // tslint:disable-next-line:member-ordering
-    public decreaseApproval = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.decreaseApproval(_spender, _subtractedValue, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.decreaseApproval.sendTransaction(_spender, _subtractedValue, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (_spender: string, _subtractedValue: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.decreaseApproval.request(_spender, _subtractedValue).params[0].data);
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (_spender: string, _subtractedValue: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.decreaseApproval.estimateGas(_spender, _subtractedValue).then((g) => resolve(g));
-                    });
-                });
-            }
-        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string): Promise<BigNumber> {
+    public getAddressValue(record: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
-                inst.balanceOf
-                    .call(_owner)
+                inst.getAddressValue
+                    .call(record)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -273,13 +175,13 @@ export class MintableToken extends SoltsiceContract {
     }
     
     // tslint:disable-next-line:member-ordering
-    public finishMinting = Object.assign(
+    public setAddressValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.finishMinting( txParams || this._sendParams)
+                    inst.setAddressValue(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
@@ -288,10 +190,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: ( txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.finishMinting.sendTransaction( txParams || this._sendParams)
+                        inst.setAddressValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -301,10 +203,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (): Promise<string> => {
+            data: (record: string, value: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        resolve(inst.finishMinting.request().params[0].data);
+                        resolve(inst.setAddressValue.request(record, value).params[0].data);
                     });
                 });
             }
@@ -312,10 +214,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (): Promise<number> => {
+            estimateGas: (record: string, value: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.finishMinting.estimateGas().then((g) => resolve(g));
+                        inst.setAddressValue.estimateGas(record, value).then((g) => resolve(g));
                     });
                 });
             }
@@ -334,63 +236,40 @@ export class MintableToken extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:member-ordering
-    public transfer = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.transfer(_to, _value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getIntValue(record: string): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this._instance.then((inst) => {
+                inst.getIntValue
+                    .call(record)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transfer.sendTransaction(_to, _value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (_to: string, _value: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.transfer.request(_to, _value).params[0].data);
-                    });
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (_to: string, _value: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transfer.estimateGas(_to, _value).then((g) => resolve(g));
-                    });
-                });
-            }
         });
+    }
+    
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getStringValue(record: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this._instance.then((inst) => {
+                inst.getStringValue
+                    .call(record)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        });
+    }
     
     // tslint:disable-next-line:member-ordering
-    public increaseApproval = Object.assign(
+    public setIntValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.then((inst) => {
-                    inst.increaseApproval(_spender, _addedValue, txParams || this._sendParams)
+                    inst.setIntValue(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
                         .catch((err) => reject(err));
                 });
@@ -399,10 +278,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.increaseApproval.sendTransaction(_spender, _addedValue, txParams || this._sendParams)
+                        inst.setIntValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -412,10 +291,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (_spender: string, _addedValue: BigNumber | number): Promise<string> => {
+            data: (record: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        resolve(inst.increaseApproval.request(_spender, _addedValue).params[0].data);
+                        resolve(inst.setIntValue.request(record, value).params[0].data);
                     });
                 });
             }
@@ -423,10 +302,10 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (_spender: string, _addedValue: BigNumber | number): Promise<number> => {
+            estimateGas: (record: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
-                        inst.increaseApproval.estimateGas(_spender, _addedValue).then((g) => resolve(g));
+                        inst.setIntValue.estimateGas(record, value).then((g) => resolve(g));
                     });
                 });
             }
@@ -434,16 +313,65 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public allowance(_owner: string, _spender: string): Promise<BigNumber> {
+    public getUIntValue(record: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
-                inst.allowance
-                    .call(_owner, _spender)
+                inst.getUIntValue
+                    .call(record)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
         });
     }
+    
+    // tslint:disable-next-line:member-ordering
+    public setBytesValue = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.setBytesValue(record, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setBytesValue.sendTransaction(record, value, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (record: string, value: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.setBytesValue.request(record, value).params[0].data);
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (record: string, value: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setBytesValue.estimateGas(record, value).then((g) => resolve(g));
+                    });
+                });
+            }
+        });
     
     // tslint:disable-next-line:member-ordering
     public transferOwnership = Object.assign(
@@ -489,6 +417,55 @@ export class MintableToken extends SoltsiceContract {
                 return new Promise((resolve, reject) => {
                     this._instance.then((inst) => {
                         inst.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                    });
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:member-ordering
+    public setStringValue = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.then((inst) => {
+                    inst.setStringValue(record, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setStringValue.sendTransaction(record, value, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (record: string, value: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        resolve(inst.setStringValue.request(record, value).params[0].data);
+                    });
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (record: string, value: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.then((inst) => {
+                        inst.setStringValue.estimateGas(record, value).then((g) => resolve(g));
                     });
                 });
             }
