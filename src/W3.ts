@@ -99,7 +99,7 @@ export class W3 {
      * Create a W3 instance with a given provider.
      * @param provider web3.js provider.
      */
-    constructor(provider: W3.Provider)
+    constructor(provider?: W3.Provider)
     constructor(provider?: W3.Provider, defaultAccount?: string) {
         if (defaultAccount) {
             this.defaultAccount = defaultAccount;

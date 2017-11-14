@@ -3,7 +3,7 @@ import { W3, storage } from '../';
 import { DummyContract } from '../contracts';
 // import { Storage } from '../contracts';
 
-let w3 = new W3(new W3.providers.HttpProvider('http://localhost:8546'));
+let w3 = new W3(new W3.providers.HttpProvider('http://localhost:8544'));
 let activeAccount = '0xc08d5fe987c2338d28fd020b771a423b68e665e4';
 w3.defaultAccount = activeAccount;
 let deployParams = W3.TC.txParamsDefaultDeploy(activeAccount);
@@ -16,10 +16,10 @@ beforeAll(async () => {
 beforeEach(async () => {
     // Ropsten is SLOW compared to TestRPC
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
-    if ((await w3.networkId) !== '3') {
-        console.log('NOT ON ROPSTEN');
+    if ((await w3.networkId) === '1') {
+        console.log('Working on mainnet');
     }
-    expect((await w3.networkId)).toBe('3');
+    expect((await w3.networkId)).not.toBe('1');
 });
 
 xit('Storage: Could get storage for account', async () => {

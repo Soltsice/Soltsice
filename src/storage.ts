@@ -1,6 +1,6 @@
 import { W3 } from './W3';
 import { Storage, StorageFactory } from './contracts';
-import { ropstenStorageFactory, mainnetStorageFactory } from './constants';
+import { ropstenStorageFactory, rinkebyStorageFactory, mainnetStorageFactory } from './constants';
 
 export let storage: ((w3: W3, accountAddress: string, createOnMainNet?: boolean) => Promise<Storage>) = Object.assign(
     // tslint:disable-next-line:max-line-length
@@ -18,6 +18,8 @@ export let storage: ((w3: W3, accountAddress: string, createOnMainNet?: boolean)
             storageFactory = new StorageFactory(txDeploy, undefined, w3);
         } else if (nid === '3') {
             storageFactory = new StorageFactory(ropstenStorageFactory, undefined, w3);
+        }else if (nid === '4') {
+            storageFactory = new StorageFactory(rinkebyStorageFactory, undefined, w3);
         } else if (nid === '1') {
             storageFactory = new StorageFactory(mainnetStorageFactory, undefined, w3);
         } else {

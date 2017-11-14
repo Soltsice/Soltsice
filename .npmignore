@@ -2,6 +2,5 @@ tsconfig.json
 tslint.json
 truffle.js
 build
-contracts
 migrations
 /src
