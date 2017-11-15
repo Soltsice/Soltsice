@@ -1,5 +1,5 @@
 
-import { W3, storage } from '../';
+import { W3, getStorage } from '../';
 import { DummyContract } from '../contracts';
 // import { Storage } from '../contracts';
 
@@ -23,7 +23,7 @@ beforeEach(async () => {
 });
 
 xit('Storage: Could get storage for account', async () => {
-    let store = await storage(w3, activeAccount);
+    let store = await getStorage(w3, activeAccount);
     // console.log('STORAGE: ', storage);
     let key = W3.EthUtils.bufferToHex(W3.EthUtils.sha3('record'));
     console.log('KEY: ', key);
@@ -35,7 +35,7 @@ xit('Storage: Could get storage for account', async () => {
 });
 
 it('Storage: Could get contract hash', async () => {
-    let store = await storage(w3, activeAccount);
+    let store = await getStorage(w3, activeAccount);
     let hash = DummyContract.BytecodeHash;
     // console.log('HASH: ', hash);
     let manualHash = W3.sha3(JSON.stringify(DummyContract.Artifacts.bytecode));

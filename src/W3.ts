@@ -85,7 +85,7 @@ export class W3 {
     public web3;
 
     private globalWeb3;
-    private netId: Promise<string>;
+    private netId: string;
     private netNode: Promise<string>;
 
     public defaultAccount: string;
@@ -139,10 +139,13 @@ export class W3 {
     }
 
     /** Request netid string from ctor or after provider change */
-    private updateNetworkInfo(): void {
-        this.netId = new Promise((resolve, reject) =>
-            this.web3.version.getNetwork((error, result) => error ? reject(error) : resolve(result))
-        );
+    private updateNetworkInfo(netid?: string): void {
+        if (!netid) {
+            this.networkId.then(nid => this.netId = nid);
+        } else {
+            this.netId = netid;
+        }
+
         this.netNode = new Promise((resolve, reject) =>
             this.web3.version.getNode((error, result) => error ? reject(error) : resolve(result))
         );
@@ -172,7 +175,17 @@ export class W3 {
 
     /** Get network ID as a promise. */
     public get networkId(): Promise<string> {
-        return this.netId;
+        return new Promise((resolve, reject) =>
+            this.web3.version.getNetwork((error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                if (result + '' !== this.netId) {
+                    this.updateNetworkInfo(result + '');
+                }
+                return resolve(result);
+            })
+        );
     }
 
     public setProvider(provider: W3.Provider) {
