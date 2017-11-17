@@ -373,13 +373,17 @@ export namespace W3 {
             // non-hex string
             return W3.utf8ToHex(value, stripPrefix);
         }
+
+        // TODO
+        // tslint:disable-next-line:no-bitwise
+        let hex1 = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0)).replace('0x', '');
         // numbers, big numbers, and hex strings
         if (size) {
             // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + W3.leftPad(W3.toHex((value as any) >>> 0, true), size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
+            return (stripPrefix ? '' : '0x') + W3.leftPad(hex1, size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
         } else {
             // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + W3.toHex((value as any) >>> 0, true);
+            return (stripPrefix ? '' : '0x') + hex1;
         }
 
     }
@@ -442,8 +446,9 @@ export namespace W3 {
         let mb = W3.EthUtils.toBuffer(message);
         let sigObject = W3.EthUtils.fromRpcSig(signature);
         let personalHash = W3.EthUtils.hashPersonalMessage(mb);
-        let recoveredBuffer = W3.EthUtils.ecrecover(personalHash, sigObject.v, sigObject.r, sigObject.s);
-        let addr = W3.EthUtils.bufferToHex(recoveredBuffer);
+        let recoveredPubKeyBuffer = W3.EthUtils.ecrecover(personalHash, sigObject.v, sigObject.r, sigObject.s);
+        let recoveredAddress = W3.EthUtils.pubToAddress(recoveredPubKeyBuffer);
+        let addr = W3.EthUtils.bufferToHex(recoveredAddress);
         return addr;
     }
 
@@ -506,8 +511,8 @@ export namespace W3 {
             if (gasPrice && gasPrice > 40000000000) {
                 throw new Error(`Given gasPrice ${gasPrice} is above 40Gwei (our default is 2 Gwei, common value for fast transactions is 20Gwei), this could be costly. Construct txParams manually if you know what you are doing.`);
             }
-            if (gas && gas > 4500000) {
-                throw new Error(`Given gas ${gas} is too large and could exceed block size.`);
+            if (gas && gas > 500000) {
+                throw new Error(`Given gas ${gas} is too large for a normal transaction (>500k). Use txParamsDefaultDeploy or construct params manually.`);
             }
 
             return {
@@ -614,7 +619,7 @@ export namespace W3 {
         isValidSignature(v: number, r: Buffer, s: Buffer, homestead?: boolean): any;
 
         privateToAddress(privateKey: Buffer): Buffer;
-        pubToAddress(privateKey: Buffer, sanitize: boolean): Buffer;
+        pubToAddress(privateKey: Buffer, sanitize?: boolean): Buffer;
 
         sha256(a: Buffer | Array<any> | string | number): Buffer;
 

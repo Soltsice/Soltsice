@@ -9,12 +9,13 @@ describe('Signing tests', () => {
         console.log(acc);
         let isValid = W3.EthUtils.isValidPrivate(acc.privateKey);
         let publicKey = W3.EthUtils.privateToPublic(acc.privateKey);
-        let addr = W3.EthUtils.privateToAddress(acc.privateKey);
+        let addrBuffer = W3.EthUtils.privateToAddress(acc.privateKey);
+        let addr = W3.EthUtils.bufferToHex(addrBuffer);
 
         console.log('VALID: ', isValid);
         console.log('PRIVATE: ', W3.EthUtils.bufferToHex(acc.privateKey));
         console.log('PUBLIC: ', W3.EthUtils.bufferToHex(publicKey));
-        console.log('ADDRESS: ', W3.EthUtils.bufferToHex(addr));
+        console.log('ADDRESS: ', addr);
 
         // var keyObject = keythereum.dump('password', acc.privateKey, acc.salt, acc.iv);
         // console.log('KEY OBJECT', keyObject);
@@ -30,8 +31,9 @@ describe('Signing tests', () => {
 
             // 4400 per second without sign
             let recovered = W3.ecrecover(message, signature);
-            // console.log('RECOVERED: ', recovered);
-            expect(W3.EthUtils.bufferToHex(publicKey)).toBe(recovered);
+            console.log('ADDR: ', addrBuffer);
+            console.log('RECOVERED: ', recovered);
+            expect(addr).toBe(recovered);
         }
         // c.2k per second seign/recover/check
         console.timeEnd('sign/recover');
