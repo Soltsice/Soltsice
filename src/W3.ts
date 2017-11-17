@@ -635,6 +635,8 @@ export namespace W3 {
         toRpcSig(v: number, r: Buffer, s: Buffer): string;
 
         privateToPublic(privateKey: Buffer): Buffer;
+
+        zeros(bytes: number): Buffer;
     }
 
     export type Callback<T> = (error: Error, result: T) => void;
