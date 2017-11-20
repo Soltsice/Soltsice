@@ -243,6 +243,39 @@ export class SoltsiceContract {
         });
     }
 
+    public async waitTransactionReceipt(hashString: string): Promise<W3.TC.TransactionResult> {
+
+        return new Promise<W3.TC.TransactionResult>((accept, reject) => {
+            var timeout = 240000;
+            var start = new Date().getTime();
+            let makeAttempt = () => {
+                this.w3.web3.eth.getTransactionReceipt(hashString, async (err, receipt) => {
+                    if (err) { return reject(err); }
+
+                    if (receipt != null) {
+                        try {
+                            let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
+                            result.tx = receipt.transactionHash;
+                            result.receipt = receipt;
+                            result.logs = await this.parseReceipt(receipt);
+                            accept(result);
+                        } catch (e) {
+                            reject({ error: e, description: 'Unhandled exception' });
+                        }
+                    }
+
+                    if (timeout > 0 && new Date().getTime() - start > timeout) {
+                        return reject(new Error('Transaction ' + hashString + ' wasn\'t processed in ' + (timeout / 1000) + ' seconds!'));
+                    }
+
+                    setTimeout(makeAttempt, 1000);
+                });
+            };
+
+            makeAttempt();
+        });
+    }
+
     public async newFilter(fromBlock: number, toBlock?: number): Promise<number> {
         let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
         const id = 'W3:' + W3.NextCounter();

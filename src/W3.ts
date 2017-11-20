@@ -215,6 +215,31 @@ export class W3 {
         });
     }
 
+    public async waitTransactionReceipt(hashString: string): Promise<W3.TransactionReceipt> {
+
+        return new Promise<W3.TransactionReceipt>((accept, reject) => {
+            var timeout = 240000;
+            var start = new Date().getTime();
+            let makeAttempt = () => {
+                this.web3.eth.getTransactionReceipt(hashString, (err, receipt) => {
+                    if (err) { return reject(err); }
+
+                    if (receipt != null) {
+                        return accept(receipt);
+                    }
+
+                    if (timeout > 0 && new Date().getTime() - start > timeout) {
+                        return reject(new Error('Transaction ' + hashString + ' wasn\'t processed in ' + (timeout / 1000) + ' seconds!'));
+                    }
+
+                    setTimeout(makeAttempt, 1000);
+                });
+            };
+
+            makeAttempt();
+        });
+    }
+
     /** Returns the time of the last mined block in seconds. */
     public get latestTime(): Promise<number> {
         return new Promise((resolve, reject) => {

@@ -8,6 +8,7 @@ let w3 = new W3(TestRPC.provider({
     mnemonic: 'dbrainio',
     network_id: 314
 }));
+w3.defaultAccount = testAccounts[0];
 W3.Default = w3;
 
 beforeEach(async () => {
@@ -84,12 +85,14 @@ describe('DummyContract tests', () => {
         expect(value).toEqual(toBN(456));
     });
 
-    xit('Could send transaction and parse logs', async function () {
+    it('Could send transaction and parse logs', async function () {
         console.log(address);
         let dummy = new DummyContract(
             W3.TC.txParamsDefaultDeploy(testAccounts[0]),
             { _secret: toBN(123), _wellKnown: toBN(456) }
         );
+
+        await dummy.instance;
 
         let filter = await dummy.newFilter(0);
         console.log('FILTER: ', filter);
@@ -100,7 +103,7 @@ describe('DummyContract tests', () => {
             txResult = await dummy.setPrivate(42 + i);
         }
 
-        let parsedResult = await dummy.getTransactionResult(txResult.tx);
+        let parsedResult = await dummy.waitTransactionReceipt(txResult.tx);
         console.log('PARSED TX: ', parsedResult.receipt);
         expect(parsedResult).toEqual(txResult);
 
