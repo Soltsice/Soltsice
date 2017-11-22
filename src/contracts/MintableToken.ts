@@ -39,11 +39,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public mintingFinished(): Promise<boolean> {
+    public mintingFinished( txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.mintingFinished
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -101,11 +101,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber> {
+    public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -261,11 +261,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string): Promise<BigNumber> {
+    public balanceOf(_owner: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
-                    .call(_owner)
+                    .call(_owner, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -323,11 +323,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner(): Promise<string> {
+    public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -434,11 +434,11 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public allowance(_owner: string, _spender: string): Promise<BigNumber> {
+    public allowance(_owner: string, _spender: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.allowance
-                    .call(_owner, _spender)
+                    .call(_owner, _spender, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

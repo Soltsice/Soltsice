@@ -2,7 +2,6 @@
 // and https://github.com/0xProject/web3-typescript-typings
 import { JsonRPCRequest, JsonRPCResponse } from './jsonrpc';
 import { BigNumber } from 'bignumber.js'; // TODO change to BN
-import * as us from 'underscore';
 
 let Web3JS = require('web3');
 
@@ -585,8 +584,6 @@ export namespace W3 {
         isBigNumber(obj: any): boolean;
         isAddress(obj: any): boolean;
         isHex(obj: any): boolean;
-        // tslint:disable-next-line:member-ordering
-        _: us.UnderscoreStatic;
         asciiToHex(val: string): string;
         hexToAscii(val: string): string;
         bytesToHex(val: number[]): string;

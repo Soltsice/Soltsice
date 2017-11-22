@@ -38,11 +38,11 @@ export class Ownable extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner(): Promise<string> {
+    public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

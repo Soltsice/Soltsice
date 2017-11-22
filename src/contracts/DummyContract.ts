@@ -39,11 +39,11 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPublic(): Promise<BigNumber> {
+    public getPublic( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPublic
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -150,11 +150,11 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner(): Promise<string> {
+    public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -163,11 +163,11 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPrivate(): Promise<BigNumber> {
+    public getPrivate( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getPrivate
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -176,11 +176,11 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public wellKnown(): Promise<BigNumber> {
+    public wellKnown( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.wellKnown
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

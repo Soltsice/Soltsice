@@ -39,11 +39,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public mintingFinished(): Promise<boolean> {
+    public mintingFinished( txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.mintingFinished
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -52,11 +52,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public name(): Promise<string> {
+    public name( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.name
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -114,11 +114,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber> {
+    public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -176,11 +176,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public decimals(): Promise<BigNumber> {
+    public decimals( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.decimals
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -287,11 +287,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public multisig(): Promise<string> {
+    public multisig( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.multisig
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -300,11 +300,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public paused(): Promise<boolean> {
+    public paused( txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.paused
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -362,11 +362,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string): Promise<BigNumber> {
+    public balanceOf(_owner: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
-                    .call(_owner)
+                    .call(_owner, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -473,11 +473,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner(): Promise<string> {
+    public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -486,11 +486,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public symbol(): Promise<string> {
+    public symbol( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.symbol
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -597,11 +597,11 @@ export class DummyToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public allowance(_owner: string, _spender: string): Promise<BigNumber> {
+    public allowance(_owner: string, _spender: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.allowance
-                    .call(_owner, _spender)
+                    .call(_owner, _spender, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

@@ -166,11 +166,11 @@ export module soltsice {
                 `
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public ${name}(${inputsString}): Promise<${outputType}> {
+    public ${name}(${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.${name}
-                    .call(${inputsNamesString})
+                    .call(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

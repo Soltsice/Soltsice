@@ -39,11 +39,11 @@ export class BasicToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply(): Promise<BigNumber> {
+    public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.totalSupply
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -52,11 +52,11 @@ export class BasicToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string): Promise<BigNumber> {
+    public balanceOf(_owner: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.balanceOf
-                    .call(_owner)
+                    .call(_owner, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

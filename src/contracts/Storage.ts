@@ -39,11 +39,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getBooleanValue(record: string): Promise<boolean> {
+    public getBooleanValue(record: string, txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getBooleanValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -150,11 +150,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getBytesValue(record: string): Promise<string> {
+    public getBytesValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getBytesValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -163,11 +163,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getAddressValue(record: string): Promise<string> {
+    public getAddressValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getAddressValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -225,11 +225,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner(): Promise<string> {
+    public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.owner
-                    .call()
+                    .call( txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -238,11 +238,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getIntValue(record: string): Promise<BigNumber> {
+    public getIntValue(record: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getIntValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -251,11 +251,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getStringValue(record: string): Promise<string> {
+    public getStringValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getStringValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -313,11 +313,11 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getUIntValue(record: string): Promise<BigNumber> {
+    public getUIntValue(record: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.getUIntValue
-                    .call(record)
+                    .call(record, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });

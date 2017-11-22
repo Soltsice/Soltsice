@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
     "private": false,
-    "version": "0.9.7",
+    "version": "0.9.8",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -37,7 +37,6 @@
     "devDependencies": {
         "@types/jest": "^21.1.2",
         "@types/node": "^8.0.28",
-        "@types/underscore": "^1.8.2",
         "@types/utf8": "^2.1.6",
         "ethereumjs-testrpc": "^4.1.3",
         "jest": "^21.2.1",
@@ -59,9 +58,7 @@
         "web3": "^0.20.2"
     },
     "peerDependencies": {
-        "bignumber.js": "^4.0.0",
-        "truffle-contract": "^3.0.0",
-        "web3": "^0.20.1"
+        "bignumber.js": "^4.0.0"
     },
     "scripts": {
         "test": "jest --watch",

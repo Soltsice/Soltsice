@@ -38,11 +38,11 @@ export class StorageFactory extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public existingStorage(_0: string): Promise<string> {
+    public existingStorage(_0: string, txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.then((inst) => {
                 inst.existingStorage
-                    .call(_0)
+                    .call(_0, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
