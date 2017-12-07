@@ -23,13 +23,13 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
         let txDeploy = W3.TC.txParamsDefaultDeploy(accountAddress, 900000, 1000000000);
         let storageFactory: StorageFactory;
         if (await w3.isTestRPC) {
-            storageFactory = new StorageFactory(txDeploy, undefined, w3);
+            storageFactory = await StorageFactory.New(txDeploy, undefined, w3);
         } else if (nid === '3') {
-            storageFactory = new StorageFactory(ropstenStorageFactory, undefined, w3);
+            storageFactory = await StorageFactory.At(ropstenStorageFactory, w3);
         }else if (nid === '4') {
-            storageFactory = new StorageFactory(rinkebyStorageFactory, undefined, w3);
+            storageFactory = await StorageFactory.At(rinkebyStorageFactory, w3);
         } else if (nid === '1') {
-            storageFactory = new StorageFactory(mainnetStorageFactory, undefined, w3);
+            storageFactory = await StorageFactory.At(mainnetStorageFactory, w3);
         } else {
             throw new Error(`Storage on network id ${nid} is not supported.`);
         }
@@ -46,8 +46,7 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
                 throw new Error(`Cannot create new storage for ${accountAddress}`);
             }
         }
-        let s = new Storage(storageAddress, undefined, w3);
-        await s.instance;
+        let s = await Storage.At(storageAddress, w3);
         w3[accountAddress] = s;
         return s;
     }

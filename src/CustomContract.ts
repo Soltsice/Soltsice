@@ -23,7 +23,7 @@ export class CustomContract extends SoltsiceContract {
 
     totalSupply(): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
+            this._instancePromise.then((inst) => {
                 inst.totalSupply
                     .call()
                     .then((res) => resolve(res))

@@ -18,7 +18,20 @@ export class MultiSigWallet extends SoltsiceContract {
         return hash;
     }
 
-    constructor(
+    // tslint:disable-next-line:max-line-length
+    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {_owners: string[], _required: BigNumber | number}, w3?: W3, link?: SoltsiceContract[]): Promise<MultiSigWallet> {
+        let contract = new MultiSigWallet(deploymentParams, ctorParams, w3, link);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    static async At(address: string | object, w3?: W3): Promise<MultiSigWallet> {
+        let contract = new MultiSigWallet(address, undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_owners: string[], _required: BigNumber | number},
         w3?: W3,
@@ -41,12 +54,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public owners(_0: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.owners
-                    .call(_0, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.owners
+                .call(_0, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -56,11 +67,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.removeOwner(owner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.removeOwner(owner, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -68,11 +77,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.removeOwner.sendTransaction(owner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.removeOwner.sendTransaction(owner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -81,9 +88,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (owner: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.removeOwner.request(owner).params[0].data);
-                    });
+                    resolve(this._instance.removeOwner.request(owner).params[0].data);
                 });
             }
         },
@@ -92,9 +97,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (owner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.removeOwner.estimateGas(owner).then((g) => resolve(g));
-                    });
+                    this._instance.removeOwner.estimateGas(owner).then((g) => resolve(g));
                 });
             }
         });
@@ -105,11 +108,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.revokeConfirmation(transactionId, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.revokeConfirmation(transactionId, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -117,11 +118,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.revokeConfirmation.sendTransaction(transactionId, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.revokeConfirmation.sendTransaction(transactionId, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -130,9 +129,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (transactionId: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.revokeConfirmation.request(transactionId).params[0].data);
-                    });
+                    resolve(this._instance.revokeConfirmation.request(transactionId).params[0].data);
                 });
             }
         },
@@ -141,9 +138,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (transactionId: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.revokeConfirmation.estimateGas(transactionId).then((g) => resolve(g));
-                    });
+                    this._instance.revokeConfirmation.estimateGas(transactionId).then((g) => resolve(g));
                 });
             }
         });
@@ -152,12 +147,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public isOwner(_0: string, txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.isOwner
-                    .call(_0, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.isOwner
+                .call(_0, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -165,12 +158,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public confirmations(_0: BigNumber | number, _1: string, txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.confirmations
-                    .call(_0, _1, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.confirmations
+                .call(_0, _1, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -178,12 +169,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getTransactionCount(pending: boolean, executed: boolean, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getTransactionCount
-                    .call(pending, executed, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getTransactionCount
+                .call(pending, executed, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -193,11 +182,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (owner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.addOwner(owner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.addOwner(owner, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -205,11 +192,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (owner: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.addOwner.sendTransaction(owner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.addOwner.sendTransaction(owner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -218,9 +203,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (owner: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.addOwner.request(owner).params[0].data);
-                    });
+                    resolve(this._instance.addOwner.request(owner).params[0].data);
                 });
             }
         },
@@ -229,9 +212,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (owner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.addOwner.estimateGas(owner).then((g) => resolve(g));
-                    });
+                    this._instance.addOwner.estimateGas(owner).then((g) => resolve(g));
                 });
             }
         });
@@ -240,12 +221,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public isConfirmed(transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.isConfirmed
-                    .call(transactionId, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.isConfirmed
+                .call(transactionId, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -253,12 +232,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getConfirmationCount(transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getConfirmationCount
-                    .call(transactionId, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getConfirmationCount
+                .call(transactionId, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -266,12 +243,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public transactions(_0: BigNumber | number, txParams?: W3.TC.TxParams): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transactions
-                    .call(_0, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.transactions
+                .call(_0, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -279,12 +254,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getOwners( txParams?: W3.TC.TxParams): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getOwners
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getOwners
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -292,12 +265,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getTransactionIds
-                    .call(from, to, pending, executed, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getTransactionIds
+                .call(from, to, pending, executed, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -305,12 +276,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getConfirmations(transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getConfirmations
-                    .call(transactionId, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getConfirmations
+                .call(transactionId, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -318,12 +287,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public transactionCount( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.transactionCount
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.transactionCount
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -333,11 +300,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (_required: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.changeRequirement(_required, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.changeRequirement(_required, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -345,11 +310,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (_required: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.changeRequirement.sendTransaction(_required, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.changeRequirement.sendTransaction(_required, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -358,9 +321,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (_required: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.changeRequirement.request(_required).params[0].data);
-                    });
+                    resolve(this._instance.changeRequirement.request(_required).params[0].data);
                 });
             }
         },
@@ -369,9 +330,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_required: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.changeRequirement.estimateGas(_required).then((g) => resolve(g));
-                    });
+                    this._instance.changeRequirement.estimateGas(_required).then((g) => resolve(g));
                 });
             }
         });
@@ -382,11 +341,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.confirmTransaction(transactionId, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.confirmTransaction(transactionId, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -394,11 +351,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.confirmTransaction.sendTransaction(transactionId, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.confirmTransaction.sendTransaction(transactionId, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -407,9 +362,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (transactionId: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.confirmTransaction.request(transactionId).params[0].data);
-                    });
+                    resolve(this._instance.confirmTransaction.request(transactionId).params[0].data);
                 });
             }
         },
@@ -418,9 +371,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (transactionId: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.confirmTransaction.estimateGas(transactionId).then((g) => resolve(g));
-                    });
+                    this._instance.confirmTransaction.estimateGas(transactionId).then((g) => resolve(g));
                 });
             }
         });
@@ -431,11 +382,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (destination: string, value: BigNumber | number, data: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.submitTransaction(destination, value, data, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.submitTransaction(destination, value, data, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -443,11 +392,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (destination: string, value: BigNumber | number, data: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.submitTransaction.sendTransaction(destination, value, data, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.submitTransaction.sendTransaction(destination, value, data, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -456,9 +403,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (destination: string, value: BigNumber | number, data: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.submitTransaction.request(destination, value, data).params[0].data);
-                    });
+                    resolve(this._instance.submitTransaction.request(destination, value, data).params[0].data);
                 });
             }
         },
@@ -467,9 +412,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (destination: string, value: BigNumber | number, data: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.submitTransaction.estimateGas(destination, value, data).then((g) => resolve(g));
-                    });
+                    this._instance.submitTransaction.estimateGas(destination, value, data).then((g) => resolve(g));
                 });
             }
         });
@@ -478,12 +421,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public MAX_OWNER_COUNT( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.MAX_OWNER_COUNT
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.MAX_OWNER_COUNT
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -491,12 +432,10 @@ export class MultiSigWallet extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public required( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.required
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.required
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -506,11 +445,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.replaceOwner(owner, newOwner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.replaceOwner(owner, newOwner, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -518,11 +455,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (owner: string, newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.replaceOwner.sendTransaction(owner, newOwner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.replaceOwner.sendTransaction(owner, newOwner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -531,9 +466,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (owner: string, newOwner: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.replaceOwner.request(owner, newOwner).params[0].data);
-                    });
+                    resolve(this._instance.replaceOwner.request(owner, newOwner).params[0].data);
                 });
             }
         },
@@ -542,9 +475,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (owner: string, newOwner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.replaceOwner.estimateGas(owner, newOwner).then((g) => resolve(g));
-                    });
+                    this._instance.replaceOwner.estimateGas(owner, newOwner).then((g) => resolve(g));
                 });
             }
         });
@@ -555,11 +486,9 @@ export class MultiSigWallet extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.executeTransaction(transactionId, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.executeTransaction(transactionId, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -567,11 +496,9 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (transactionId: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.executeTransaction.sendTransaction(transactionId, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.executeTransaction.sendTransaction(transactionId, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -580,9 +507,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (transactionId: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.executeTransaction.request(transactionId).params[0].data);
-                    });
+                    resolve(this._instance.executeTransaction.request(transactionId).params[0].data);
                 });
             }
         },
@@ -591,9 +516,7 @@ export class MultiSigWallet extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (transactionId: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.executeTransaction.estimateGas(transactionId).then((g) => resolve(g));
-                    });
+                    this._instance.executeTransaction.estimateGas(transactionId).then((g) => resolve(g));
                 });
             }
         });

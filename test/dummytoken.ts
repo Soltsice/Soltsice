@@ -5,9 +5,9 @@ import * as assert from 'assert';
 
 W3.Default = new W3();
 
-contract('DummyToken', function (accounts) {
+contract('DummyToken', function (accounts: any) {
     it('Total supply should be 1400000 * 1e18', async function () {
-        var DummyContractInstance = new DummyToken(
+        var DummyContractInstance = await DummyToken.New(
             W3.TC.txParamsDefaultDeploy(testAccounts[0]), {_multisig: testAccounts[0]}
         );
         let value = await DummyContractInstance.totalSupply();
@@ -15,7 +15,7 @@ contract('DummyToken', function (accounts) {
 
         console.log('TX HASH: ', DummyContractInstance.transactionHash);
 
-        let deployed = new DummyToken(DummyContractInstance.address);
+        let deployed = await DummyToken.At(DummyContractInstance.address);
         await deployed.instance;
         console.log('TX HASH2: ', deployed.transactionHash);
         value = await deployed.totalSupply();

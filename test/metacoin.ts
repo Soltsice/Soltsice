@@ -1,11 +1,11 @@
 import './init';
 var MetaCoin = artifacts.require('./MetaCoin.sol');
-
-contract('MetaCoin', function (accounts) {
+// tslint:disable:typedef
+contract('MetaCoin', function (accounts: any) {
     it('should put 10000 MetaCoin in the first account', function () {
-        return MetaCoin.deployed().then(function (instance) {
+        return MetaCoin.deployed().then(function (instance: any) {
             return instance.getBalance.call(accounts[0]);
-        }).then(function (balance) {
+        }).then(function (balance: any) {
             assert.equal(balance.valueOf(), 10000, '10000 wasn\'t in the first account');
         });
     });
@@ -33,6 +33,7 @@ contract('MetaCoin', function (accounts) {
         var meta;
 
         // Get initial balances of first and second account.
+        // tslint:disable:variable-name
         var account_one = accounts[0];
         var account_two = accounts[1];
 

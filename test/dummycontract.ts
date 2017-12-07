@@ -4,13 +4,13 @@ import { BigNumber } from 'bignumber.js';
 
 var dummyContract = artifacts.require('./DummyContract.sol');
 
-contract('DummyContract', function (accounts) {
+contract('DummyContract', function (accounts: any) {
     it('should have initial private value from deployer', async function () {
 
         let instance = await dummyContract.deployed();
 
         // typed contract could be initiated with an instance supplied by Truffle
-        let dummy = new DummyContract(instance);
+        let dummy = await DummyContract.At(instance);
 
         console.log(dummy);
 
@@ -43,7 +43,7 @@ contract('DummyContract', function (accounts) {
     });
 
     it('should have initial public value from deployer', async function () {
-        let dummy = new DummyContract(await dummyContract.deployed());
+        let dummy = await DummyContract.At(await dummyContract.deployed());
         let value = await dummy.getPublic();
         assert.equal(value, 456, '456 wasn\'t in the public value');
     });

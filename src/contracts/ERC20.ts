@@ -18,7 +18,20 @@ export class ERC20 extends SoltsiceContract {
         return hash;
     }
 
-    constructor(
+    // tslint:disable-next-line:max-line-length
+    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<ERC20> {
+        let contract = new ERC20(deploymentParams, ctorParams, w3, link);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    static async At(address: string | object, w3?: W3): Promise<ERC20> {
+        let contract = new ERC20(address, undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         w3?: W3,
@@ -43,11 +56,9 @@ export class ERC20 extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (spender: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.approve(spender, value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.approve(spender, value, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -55,11 +66,9 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (spender: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.approve.sendTransaction(spender, value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.approve.sendTransaction(spender, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -68,9 +77,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (spender: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.approve.request(spender, value).params[0].data);
-                    });
+                    resolve(this._instance.approve.request(spender, value).params[0].data);
                 });
             }
         },
@@ -79,9 +86,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (spender: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.approve.estimateGas(spender, value).then((g) => resolve(g));
-                    });
+                    this._instance.approve.estimateGas(spender, value).then((g) => resolve(g));
                 });
             }
         });
@@ -90,12 +95,10 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.totalSupply
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.totalSupply
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -105,11 +108,9 @@ export class ERC20 extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (from: string, to: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.transferFrom(from, to, value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.transferFrom(from, to, value, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -117,11 +118,9 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (from: string, to: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferFrom.sendTransaction(from, to, value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.transferFrom.sendTransaction(from, to, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -130,9 +129,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (from: string, to: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.transferFrom.request(from, to, value).params[0].data);
-                    });
+                    resolve(this._instance.transferFrom.request(from, to, value).params[0].data);
                 });
             }
         },
@@ -141,9 +138,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (from: string, to: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferFrom.estimateGas(from, to, value).then((g) => resolve(g));
-                    });
+                    this._instance.transferFrom.estimateGas(from, to, value).then((g) => resolve(g));
                 });
             }
         });
@@ -152,12 +147,10 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public balanceOf(who: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.balanceOf
-                    .call(who, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.balanceOf
+                .call(who, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -167,11 +160,9 @@ export class ERC20 extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (to: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.transfer(to, value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.transfer(to, value, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -179,11 +170,9 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (to: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transfer.sendTransaction(to, value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.transfer.sendTransaction(to, value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -192,9 +181,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (to: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.transfer.request(to, value).params[0].data);
-                    });
+                    resolve(this._instance.transfer.request(to, value).params[0].data);
                 });
             }
         },
@@ -203,9 +190,7 @@ export class ERC20 extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (to: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transfer.estimateGas(to, value).then((g) => resolve(g));
-                    });
+                    this._instance.transfer.estimateGas(to, value).then((g) => resolve(g));
                 });
             }
         });
@@ -214,12 +199,10 @@ export class ERC20 extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public allowance(owner: string, spender: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.allowance
-                    .call(owner, spender, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.allowance
+                .call(owner, spender, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     

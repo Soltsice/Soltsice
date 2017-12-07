@@ -18,7 +18,20 @@ export class DummyContract extends SoltsiceContract {
         return hash;
     }
 
-    constructor(
+    // tslint:disable-next-line:max-line-length
+    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number}, w3?: W3, link?: SoltsiceContract[]): Promise<DummyContract> {
+        let contract = new DummyContract(deploymentParams, ctorParams, w3, link);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    static async At(address: string | object, w3?: W3): Promise<DummyContract> {
+        let contract = new DummyContract(address, undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number},
         w3?: W3,
@@ -41,12 +54,10 @@ export class DummyContract extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getPublic( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getPublic
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getPublic
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -56,11 +67,9 @@ export class DummyContract extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.setPublic(_newValue, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.setPublic(_newValue, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -68,11 +77,9 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.setPublic.sendTransaction(_newValue, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.setPublic.sendTransaction(_newValue, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -81,9 +88,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (_newValue: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.setPublic.request(_newValue).params[0].data);
-                    });
+                    resolve(this._instance.setPublic.request(_newValue).params[0].data);
                 });
             }
         },
@@ -92,9 +97,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_newValue: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.setPublic.estimateGas(_newValue).then((g) => resolve(g));
-                    });
+                    this._instance.setPublic.estimateGas(_newValue).then((g) => resolve(g));
                 });
             }
         });
@@ -105,11 +108,9 @@ export class DummyContract extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.setPrivate(_newValue, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.setPrivate(_newValue, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -117,11 +118,9 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.setPrivate.sendTransaction(_newValue, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.setPrivate.sendTransaction(_newValue, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -130,9 +129,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (_newValue: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.setPrivate.request(_newValue).params[0].data);
-                    });
+                    resolve(this._instance.setPrivate.request(_newValue).params[0].data);
                 });
             }
         },
@@ -141,9 +138,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_newValue: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.setPrivate.estimateGas(_newValue).then((g) => resolve(g));
-                    });
+                    this._instance.setPrivate.estimateGas(_newValue).then((g) => resolve(g));
                 });
             }
         });
@@ -152,12 +147,10 @@ export class DummyContract extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public owner( txParams?: W3.TC.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.owner
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.owner
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -165,12 +158,10 @@ export class DummyContract extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public getPrivate( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.getPrivate
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.getPrivate
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -178,12 +169,10 @@ export class DummyContract extends SoltsiceContract {
     // tslint:disable-next-line:variable-name
     public wellKnown( txParams?: W3.TC.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
-            this._instance.then((inst) => {
-                inst.wellKnown
-                    .call( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+            this._instance.wellKnown
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
         });
     }
     
@@ -193,11 +182,9 @@ export class DummyContract extends SoltsiceContract {
         // tslint:disable-next-line:variable-name
         (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.then((inst) => {
-                    inst.transferOwnership(newOwner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
+                this._instance.transferOwnership(newOwner, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
             });
         },
         {
@@ -205,11 +192,9 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             sendTransaction: (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
+                    this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
                 });
             }
         },
@@ -218,9 +203,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             data: (newOwner: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        resolve(inst.transferOwnership.request(newOwner).params[0].data);
-                    });
+                    resolve(this._instance.transferOwnership.request(newOwner).params[0].data);
                 });
             }
         },
@@ -229,9 +212,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (newOwner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.then((inst) => {
-                        inst.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
-                    });
+                    this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
                 });
             }
         });

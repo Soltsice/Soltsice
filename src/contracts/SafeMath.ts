@@ -17,7 +17,20 @@ export class SafeMath extends SoltsiceContract {
         return hash;
     }
 
-    constructor(
+    // tslint:disable-next-line:max-line-length
+    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<SafeMath> {
+        let contract = new SafeMath(deploymentParams, ctorParams, w3, link);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    static async At(address: string | object, w3?: W3): Promise<SafeMath> {
+        let contract = new SafeMath(address, undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
+    protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},
         w3?: W3,

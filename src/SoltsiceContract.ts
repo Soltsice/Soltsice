@@ -8,11 +8,11 @@ import SolidityCoder = require('web3/lib/solidity/coder.js');
 export class SoltsiceContract {
     public static Silent: boolean = false;
     public transactionHash: Promise<string>;
-    public artifactsHash: Promise<string>;
     public w3: W3;
     protected _Contract: any;
     /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
-    protected _instance: Promise<any>;
+    protected _instance: any;
+    protected _instancePromise: Promise<any>;
     protected _sendParams: W3.TC.TxParams;
 
     protected constructor(web3?: W3,
@@ -43,7 +43,7 @@ export class SoltsiceContract {
                 let network = +(await this.w3.networkId);
                 this._Contract.setNetwork(network);
                 link.forEach(async element => {
-                    let inst = await element._instance;
+                    let inst = await element._instancePromise;
                     this._Contract.link(element._Contract.contractName, inst.address);
                 });
                 resolve(true);
@@ -52,7 +52,7 @@ export class SoltsiceContract {
             }
         });
 
-        let instance = new Promise(async (resolve, reject) => {
+        let instance = new Promise<any>(async (resolve, reject) => {
             await linkage;
             if (this.w3.defaultAccount) {
                 this._sendParams = W3.TC.txParamsDefaultSend(this.w3.defaultAccount);
@@ -91,18 +91,17 @@ export class SoltsiceContract {
             }
         });
 
-        this._instance = instance;
+        this._instancePromise = instance.then(i => {
+            this._instance = i;
+            return i;
+        });
     }
 
-    public async link(libraryContract: SoltsiceContract) {
-        this._Contract.Link(await libraryContract.instance);
+    get address(): string {
+        return this._instance.address;
     }
 
-    get address(): Promise<string> {
-        return this._instance.then(i => i.address);
-    }
-
-    get instance(): Promise<any> {
+    get instance(): any {
         return this._instance;
     }
 

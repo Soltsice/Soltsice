@@ -22,7 +22,7 @@ describe('Signing tests', () => {
 
         console.time('sign/recover');
 
-        for (var i = 0; i < 1000; i++) {
+        for (var i = 0; i < 1; i++) {
             let message = 'my message' + 0;
 
             // 5700 per second without recover

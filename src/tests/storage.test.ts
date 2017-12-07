@@ -7,7 +7,7 @@ let w3 = new W3(new W3.providers.HttpProvider('http://localhost:8544'));
 let activeAccount = '0xc08d5fe987c2338d28fd020b771a423b68e665e4';
 w3.defaultAccount = activeAccount;
 let deployParams = W3.TC.txParamsDefaultDeploy(activeAccount);
-// let sendParams = W3.TC.txParamsDefaultSend(activeAccount);
+let sendParams = W3.TC.txParamsDefaultSend(activeAccount);
 
 beforeAll(async () => {
     await w3.unlockAccount(activeAccount, 'Ropsten1', 150000);
@@ -22,14 +22,14 @@ beforeEach(async () => {
     expect((await w3.networkId)).not.toBe('1');
 });
 
-xit('Storage: Could get storage for account', async () => {
+it('Storage: Could get storage for account', async () => {
     let store = await getStorage(w3, activeAccount);
     // console.log('STORAGE: ', storage);
     let key = W3.EthUtils.bufferToHex(W3.EthUtils.sha3('record'));
     console.log('KEY: ', key);
-    let tx = await store.setStringValue(key, 'record value');
+    let tx = await store.setStringValue(key, 'record value', sendParams);
     console.log('TX: ', tx);
-    let stored = await store.getStringValue(key);
+    let stored = await store.getStringValue(key, sendParams);
     console.log('STORED: ', stored);
     expect(stored).toBe('record value');
 });
@@ -50,12 +50,12 @@ it('Storage: Could get contract hash', async () => {
     let address = await store.getAddressValue(contractHash);
     console.log('STORED ADDRESS', address);
     if (address === W3.zeroAddress) {
-        dummy = new DummyContract(deployParams, ctorParams, w3);
+        dummy = await DummyContract.New(deployParams, ctorParams, w3);
         await dummy.instance;
         address = await dummy.address;
         await store.setAddressValue(contractHash, address);
     } else {
-        dummy = new DummyContract(address, undefined, w3);
+        dummy = await DummyContract.At(address,w3);
         dummy.getPublic();
     }
     // expect(await dummy.address).toBe(address);
