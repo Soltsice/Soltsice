@@ -382,32 +382,35 @@ export namespace W3 {
 
     export let Utf8: any = require('utf8');
 
-    export function isHex(value: any) {
-        return value.toString().startsWith('0x');
-    }
-
     /**
-     * Convert value to hex with optional left padding.
+     * Convert value to hex with optional left padding. If a string is already a hex it will be converted to lower case.
      * @param value Value to convert to hex
      * @param size Size of number in bits (8 for int8, 16 for uint16, etc)
      */
     export function toHex(value: number | string | BigNumber, stripPrefix?: boolean, size?: number): string {
         const HEX_CHAR_SIZE = 4;
-        if (typeof value === 'string' && !W3.isHex(value)) {
-            // non-hex string
-            return W3.utf8ToHex(value, stripPrefix);
+        if (typeof value === 'string') {
+            if (!value.startsWith('0x')) {
+                // non-hex string
+                return W3.utf8ToHex(value, stripPrefix);
+            } else {
+                let lowerCase = value.toLowerCase();
+                return stripPrefix ? lowerCase.slice(2) : lowerCase;
+            }
         }
 
-        // TODO
-        // tslint:disable-next-line:no-bitwise
-        let hex1 = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0)).replace('0x', '');
         // numbers, big numbers, and hex strings
         if (size) {
             // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + W3.leftPad(hex1, size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
+            let hexNoPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0)).slice(2);
+            // tslint:disable-next-line:no-bitwise
+            let leftPadded = W3.leftPad(hexNoPrefix, size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
+            return (stripPrefix ? leftPadded : '0x' + leftPadded);
         } else {
             // tslint:disable-next-line:no-bitwise
-            return (stripPrefix ? '' : '0x') + hex1;
+            let hexWithPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0));
+            // tslint:disable-next-line:no-bitwise
+            return (stripPrefix ? hexWithPrefix.slice(2) : hexWithPrefix);
         }
 
     }
@@ -444,7 +447,7 @@ export namespace W3 {
             // }
         }
 
-        return (stripPrefix ? '' : '0x') + hex;
+        return (stripPrefix ? hex : '0x' + hex);
     }
 
     export let EthUtils: W3.EthUtils = require('ethereumjs-util');
