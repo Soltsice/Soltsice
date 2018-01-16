@@ -31,6 +31,12 @@ export class ArrayTypesTest extends SoltsiceContract {
         return contract;
     }
 
+    static async Deployed(w3?: W3): Promise<ArrayTypesTest> {
+        let contract = new ArrayTypesTest('', undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
     protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {_array: BigNumber[] | number[]},

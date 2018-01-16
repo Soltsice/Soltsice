@@ -269,7 +269,7 @@ export class MultiSigWallet extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public getTransactionIds(from: BigNumber | number, to: BigNumber | number, pending: boolean, executed: boolean, txParams?: W3.TC.TxParams): Promise<BigNumber[]> {
         return new Promise((resolve, reject) => {
             this._instance.getTransactionIds
                 .call(from, to, pending, executed, txParams || this._sendParams)
