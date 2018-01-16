@@ -30,6 +30,12 @@ export class SafeMath extends SoltsiceContract {
         return contract;
     }
 
+    static async Deployed(w3?: W3): Promise<SafeMath> {
+        let contract = new SafeMath('', undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
     protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},

@@ -31,6 +31,12 @@ export class ERC20Basic extends SoltsiceContract {
         return contract;
     }
 
+    static async Deployed(w3?: W3): Promise<ERC20Basic> {
+        let contract = new ERC20Basic('', undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
     protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},

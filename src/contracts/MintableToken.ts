@@ -31,6 +31,12 @@ export class MintableToken extends SoltsiceContract {
         return contract;
     }
 
+    static async Deployed(w3?: W3): Promise<MintableToken> {
+        let contract = new MintableToken('', undefined, w3, undefined);
+        await contract._instancePromise;
+        return contract;
+    }
+
     protected constructor(
         deploymentParams: string | W3.TC.TxParams | object,
         ctorParams?: {},

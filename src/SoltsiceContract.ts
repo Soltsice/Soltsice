@@ -24,9 +24,7 @@ export class SoltsiceContract {
             web3 = W3.Default;
         }
         this.w3 = web3;
-        if (!deploymentParams) {
-            throw 'Generated classes must require deploymentParams in their ctor (TODO refactor this parent ctor)';
-        }
+
         if (typeof deploymentParams === 'string' && !W3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
         }
@@ -61,7 +59,21 @@ export class SoltsiceContract {
                 }
             }
 
-            let useDeployed = (address: string) => {
+            let useDeployed = async () => {
+                let network = +(await this.w3.networkId);
+                this._Contract.setNetwork(network);
+                this._Contract.deployed().then((inst) => {
+                    this.transactionHash = inst.transactionHash;
+                    if (!SoltsiceContract.Silent) {
+                        console.log('SOLTSICE: USING DEPLOYED CONTRACT', this.constructor.name, ' at ', deploymentParams!);
+                    }
+                    resolve(inst);
+                }).catch((err) => {
+                    reject(err);
+                });
+            };
+
+            let useExisting = (address: string) => {
                 if (!SoltsiceContract.Silent) {
                     console.log('SOLTSICE: USING EXISTING CONTRACT', this.constructor.name, ' at ', deploymentParams!);
                 }
@@ -73,8 +85,10 @@ export class SoltsiceContract {
                 });
             };
 
-            if (typeof deploymentParams === 'string') {
-                useDeployed(deploymentParams!);
+            if (!deploymentParams) {
+                useDeployed();
+            } else if (typeof deploymentParams === 'string') {
+                useExisting(deploymentParams!);
             } else if (instanceOfTxParams(deploymentParams)) {
                 this._Contract.new(...constructorParams!, deploymentParams).then((inst) => {
                     if (!SoltsiceContract.Silent) {
@@ -87,7 +101,7 @@ export class SoltsiceContract {
                 });
             } else if ((<any>deploymentParams).address && typeof (<any>deploymentParams).address === 'string') {
                 // support any object with address property
-                useDeployed((<any>deploymentParams).address);
+                useExisting((<any>deploymentParams).address);
             }
         });
 
