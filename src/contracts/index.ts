@@ -1,3 +1,4 @@
+export * from './ArrayTypesTest';
 export * from './BasicToken';
 export * from './DummyContract';
 export * from './DummyToken';
