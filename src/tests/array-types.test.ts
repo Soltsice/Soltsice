@@ -1,8 +1,8 @@
 import { ArrayTypesTest } from '../contracts';
 import { W3, testAccounts } from '../';
+import * as ganache from 'ganache-cli';
 
-var TestRPC = require('ethereumjs-testrpc');
-let w3 = new W3(TestRPC.provider({
+let w3 = new W3(ganache.provider({
     mnemonic: 'dbrainio',
     network_id: 314
 }));

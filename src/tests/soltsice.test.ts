@@ -1,13 +1,12 @@
 import { W3, testAccounts, toBN } from '../';
 import { DummyToken, DummyContract } from '../contracts';
-import * as TestRPC from 'ethereumjs-testrpc';
-// will resolve to localhost:8545 unless window['web3'] is set
+import * as ganache from 'ganache-cli';
 
-var TestRPC = require('ethereumjs-testrpc');
-let w3 = new W3(TestRPC.provider({
+let w3 = new W3(ganache.provider({
     mnemonic: 'dbrainio',
     network_id: 314
 }));
+
 w3.defaultAccount = testAccounts[0];
 W3.Default = w3;
 

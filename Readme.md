@@ -1,26 +1,31 @@
+[![Build Status](https://travis-ci.org/dbrainio/Soltsice.svg?branch=master)](https://travis-ci.org/dbrainio/Soltsice)
+
 # Soltsice
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
 ## Install
 
+You should have `truffle` and `copyfiles` installed globally:
+
+> npm install -g truffle copyfiles
+
+Install and save Soltsice:
+
 > npm install soltsice --save
 
-## Quick Start Guide
+## Build
+To build & test run the following commands:
 
-You need to have Node and Typescript compilers installed. 
-
-> npm install
-
-> npm run build:contracts
-
-> npm run soltsice
-
-> npm run testrpc
-
-> truffle migrate
-
-> truffle test
+```
+npm install
+npm run build:contracts
+npm run soltsice
+npm run testrpc
+truffle migrate
+truffle test
+npm test
+```
 
 ## Usage
 
@@ -74,10 +79,10 @@ TypeScript wrappers over contracts allow to use powerful intellisense feature of
 
 ### Workflow
 
-* Edit Solidity contracts, run `truffle compile`, run tests on Truffle stack (solidity or js)
+* Edit Solidity contracts, run `truffle compile`, run tests on Truffle stack (solidity or js, if any)
 * Run Soltsice command `soltsice ./src ./dest`, all TypeScript contracts will be updated, any API changes will block subsequent TS compilation
   (except for rare edge cases such as multiple return parameters which are returned as an array and we use `any` TS type for them)
-* Adjust React components & stores to the changes.
+* Adjust you code to the changes.
 
 ## Contributing
 
