@@ -501,9 +501,9 @@ export namespace W3 {
     export namespace TC {
         export interface TxParams {
             from: address;
-            gas: number;
-            gasPrice: number;
-            value: number;
+            gas: number | BigNumber;
+            gasPrice: number | BigNumber;
+            value: number | BigNumber;
         }
 
         export type ContractDataType = BigNumber | number | string | boolean | BigNumber[] | number[] | string[];
