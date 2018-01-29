@@ -86,9 +86,9 @@ export module soltsice {
         if (!abiType) {
             outputType = ['void'];
         } else {
-            arrayPosition = abiType.indexOf('[')
-            if(arrayPosition >= 0){
-                abiType = abiType.substring(0, arrayPosition)
+            arrayPosition = abiType.indexOf('[');
+            if (arrayPosition >= 0) {
+                abiType = abiType.substring(0, arrayPosition);
             }
 
             if (abiType.startsWith('uint') || abiType.startsWith('int')) {
@@ -114,8 +114,8 @@ export module soltsice {
             }
         }
 
-        if(arrayPosition >= 0){
-            outputType = outputType.map(x => x + '[]')
+        if (arrayPosition >= 0) {
+            outputType = outputType.map(x => x + '[]');
         }
 
         return outputType.join(' | ');
