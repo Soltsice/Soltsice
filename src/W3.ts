@@ -214,31 +214,6 @@ export class W3 {
         });
     }
 
-    public async waitTransactionReceipt(hashString: string): Promise<W3.TransactionReceipt> {
-
-        return new Promise<W3.TransactionReceipt>((accept, reject) => {
-            var timeout = 240000;
-            var start = new Date().getTime();
-            let makeAttempt = () => {
-                this.web3.eth.getTransactionReceipt(hashString, (err, receipt) => {
-                    if (err) { return reject(err); }
-
-                    if (receipt != null) {
-                        return accept(receipt);
-                    }
-
-                    if (timeout > 0 && new Date().getTime() - start > timeout) {
-                        return reject(new Error('Transaction ' + hashString + ' wasn\'t processed in ' + (timeout / 1000) + ' seconds!'));
-                    }
-
-                    setTimeout(makeAttempt, 1000);
-                });
-            };
-
-            makeAttempt();
-        });
-    }
-
     /** Returns the time of the last mined block in seconds. */
     public get latestTime(): Promise<number> {
         return new Promise((resolve, reject) => {
@@ -382,8 +357,80 @@ export class W3 {
                     reject(e);
                 } else {
                     resolve(r);
-               }
+                }
             });
+        });
+    }
+
+    /** Sends a raw signed transaction and returns tx hash. Use waitTransactionReceipt method on w3 or a contract to get a tx receipt. */
+    public async sendSignedTransaction(to: string, privateKey: string, data?: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> {
+        if (!this.isPre1API) {
+            throw new Error('Web3.js v.1.0 is not supported yet');
+        }
+        if (!to || !W3.isValidAddress(to)) {
+            throw new Error('To address is not set in sendSignedTransaction');
+        }
+        if (!privateKey) {
+            throw new Error('PrivateKey is not set in sendSignedTransaction');
+        }
+
+        txParams = txParams || W3.TX.txParamsDefaultSend(this.defaultAccount);
+
+        nonce = nonce || await this.getTransactionCount(txParams.from);
+
+        let EthereumTx = W3.TX.getEthereumjsTx();
+
+        let pb = W3.EthUtils.toBuffer(privateKey);
+
+        let nid = +(this.netId || await this.networkId);
+
+        const signedTxParams = {
+            nonce: W3.toHex(nonce),
+            gasPrice: W3.toHex(txParams.gasPrice),
+            gasLimit: W3.toHex(txParams.gas),
+            to: to,
+            value: W3.toHex(txParams.value),
+            data: data,
+            chainId: nid
+        };
+        const tx = new EthereumTx(signedTxParams);
+        tx.sign(pb);
+        const serializedTx = tx.serialize();
+        const raw = `0x${serializedTx.toString('hex')}`;
+
+        return new Promise<string>((resolve, reject) => {
+            this.web3.eth.sendRawTransaction(raw, (e, r) => {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(r);
+                }
+            });
+        });
+    }
+
+    public async waitTransactionReceipt(hashString: string): Promise<W3.TransactionReceipt> {
+
+        return new Promise<W3.TransactionReceipt>((accept, reject) => {
+            var timeout = 240000;
+            var start = new Date().getTime();
+            let makeAttempt = () => {
+                this.web3.eth.getTransactionReceipt(hashString, (err, receipt) => {
+                    if (err) { return reject(err); }
+
+                    if (receipt != null) {
+                        return accept(receipt);
+                    }
+
+                    if (timeout > 0 && new Date().getTime() - start > timeout) {
+                        return reject(new Error('Transaction ' + hashString + ' wasn\'t processed in ' + (timeout / 1000) + ' seconds!'));
+                    }
+
+                    setTimeout(makeAttempt, 1000);
+                });
+            };
+
+            makeAttempt();
         });
     }
 }
@@ -565,6 +612,21 @@ export namespace W3 {
                 gasPrice: gasPrice || 2000000000, // 2 Gwei, not 20
                 value: 0
             };
+        }
+
+        let _ethereumjsTx: any;
+        export function getEthereumjsTx() {
+            if (_ethereumjsTx) {
+                return _ethereumjsTx;
+            }
+            // tslint:disable-next-line:no-string-literal
+            if (typeof window !== 'undefined' && typeof window['ethereumjs-tx'] !== 'undefined') {
+                // tslint:disable-next-line:no-string-literal
+                _keythereum = window['ethereumjs-tx'];
+            } else {
+                _keythereum = require('ethereumjs-tx');
+            }
+            return _keythereum;
         }
     }
 
