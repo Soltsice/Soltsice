@@ -201,13 +201,22 @@ export module soltsice {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            }
+            sendTransaction: Object.assign((${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: (${inputsString === '' ? '' : inputsString + ','} privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.${name}.request(${inputsNamesString}).params[0].data, txParams, nonce);
+                    }
+                }
+            )
         },
         {
             // tslint:disable-next-line:max-line-length

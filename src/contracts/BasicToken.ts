@@ -92,13 +92,22 @@ export class BasicToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.transfer.sendTransaction(_to, _value, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
-                });
-            }
+            sendTransaction: Object.assign((_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.transfer.sendTransaction(_to, _value, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: (_to: string, _value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams, nonce);
+                    }
+                }
+            )
         },
         {
             // tslint:disable-next-line:max-line-length

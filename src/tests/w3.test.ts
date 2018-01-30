@@ -56,7 +56,9 @@ describe('W3 tests', () => {
 
         let dummy = await DummyContract.At(dummyAddress);
 
-        let txHash = await w3.sendSignedTransaction(dummy.address, privateKey, await dummy.setPublic.data(newPublic), W3.TX.txParamsDefaultSend(w3.defaultAccount), nonce);
+        let txParams = W3.TX.txParamsDefaultSend(w3.defaultAccount);
+
+        let txHash = await w3.sendSignedTransaction(dummy.address, privateKey, await dummy.setPublic.data(newPublic), txParams, nonce);
 
         console.log('TX HASH', txHash);
 
@@ -69,6 +71,21 @@ describe('W3 tests', () => {
         let newPublic1 = (await dummy.getPublic()).toNumber();
 
         expect(newPublic1).toEqual(newPublic);
+
+        let newPublic2 = 789123;
+
+        txHash = await dummy.setPublic.sendTransaction.sendSigned(newPublic2, privateKey, txParams);
+
+        let tx3 = await dummy.waitTransactionReceipt(txHash);
+        console.log('TX FROM CONTRACT', tx3);
+
+        let newPublic3 = (await dummy.getPublic()).toNumber();
+
+        expect(newPublic3).toEqual(newPublic2);
+
+        let nonce2 = await w3.getTransactionCount();
+
+        expect(nonce2).toBe(nonce + 2);
 
     });
 });
