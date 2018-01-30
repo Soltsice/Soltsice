@@ -1,6 +1,6 @@
 pragma solidity ^0.4.15;
 
-import '../node_modules/zeppelin-solidity/contracts/token/MintableToken.sol';
+import '../node_modules/zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
 import '../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
 contract DummyToken is MintableToken, Pausable {
@@ -30,7 +30,7 @@ contract DummyToken is MintableToken, Pausable {
 
     function DummyToken(address _multisig) {
         multisig = _multisig;
-        totalSupply = INITIAL_SUPPLY;
+        totalSupply_ = INITIAL_SUPPLY;
         balances[msg.sender] = INITIAL_SUPPLY; // TODO temp, set pool to owner, later will move this logic to crowdsale
     }
 
