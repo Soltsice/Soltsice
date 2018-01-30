@@ -19,7 +19,7 @@ export class DummyContract extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number}, w3?: W3, link?: SoltsiceContract[]): Promise<DummyContract> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number}, w3?: W3, link?: SoltsiceContract[]): Promise<DummyContract> {
         let contract = new DummyContract(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -38,7 +38,7 @@ export class DummyContract extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -58,7 +58,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPublic( txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public getPublic( txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.getPublic
                 .call( txParams || this._sendParams)
@@ -71,7 +71,7 @@ export class DummyContract extends SoltsiceContract {
     public setPublic = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setPublic(_newValue, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -81,7 +81,7 @@ export class DummyContract extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setPublic.sendTransaction(_newValue, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -112,7 +112,7 @@ export class DummyContract extends SoltsiceContract {
     public setPrivate = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setPrivate(_newValue, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -122,7 +122,7 @@ export class DummyContract extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setPrivate.sendTransaction(_newValue, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -151,7 +151,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner( txParams?: W3.TC.TxParams): Promise<string> {
+    public owner( txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
@@ -162,7 +162,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getPrivate( txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public getPrivate( txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.getPrivate
                 .call( txParams || this._sendParams)
@@ -173,7 +173,7 @@ export class DummyContract extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public wellKnown( txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public wellKnown( txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.wellKnown
                 .call( txParams || this._sendParams)
@@ -186,7 +186,7 @@ export class DummyContract extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transferOwnership(newOwner, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -196,7 +196,7 @@ export class DummyContract extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
                         .then((res) => resolve(res))

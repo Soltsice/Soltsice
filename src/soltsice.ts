@@ -176,7 +176,7 @@ export module soltsice {
                 `
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public ${name}(${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<${outputType}> {
+    public ${name}(${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<${outputType}> {
         return new Promise((resolve, reject) => {
             this._instance.${name}
                 .call(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
@@ -191,7 +191,7 @@ export module soltsice {
     public ${name} = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -201,7 +201,7 @@ export module soltsice {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -286,7 +286,7 @@ export class ${contractName} extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[]): Promise<${contractName}> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[]): Promise<${contractName}> {
         let contract = new ${contractName}(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -305,7 +305,7 @@ export class ${contractName} extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {${ctorParams.typesNames}},
         w3?: W3,
         link?: SoltsiceContract[]

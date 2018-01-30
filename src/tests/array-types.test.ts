@@ -16,7 +16,7 @@ describe('ArrayTypes', () => {
 
     beforeAll(async () => {
         arrayTypesContract = await ArrayTypesTest.New(
-            W3.TC.txParamsDefaultDeploy(testAccounts[0]),
+            W3.TX.txParamsDefaultDeploy(testAccounts[0]),
             { _array: arrayInt }
         );
     });

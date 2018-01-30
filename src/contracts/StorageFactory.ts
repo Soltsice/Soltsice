@@ -18,7 +18,7 @@ export class StorageFactory extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<StorageFactory> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<StorageFactory> {
         let contract = new StorageFactory(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -37,7 +37,7 @@ export class StorageFactory extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -57,7 +57,7 @@ export class StorageFactory extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public existingStorage(_0: string, txParams?: W3.TC.TxParams): Promise<string> {
+    public existingStorage(_0: string, txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.existingStorage
                 .call(_0, txParams || this._sendParams)
@@ -70,7 +70,7 @@ export class StorageFactory extends SoltsiceContract {
     public produce = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.produce( txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -80,7 +80,7 @@ export class StorageFactory extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: ( txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: ( txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.produce.sendTransaction( txParams || this._sendParams)
                         .then((res) => resolve(res))

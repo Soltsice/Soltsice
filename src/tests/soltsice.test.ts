@@ -18,7 +18,7 @@ describe('DummyToken tests', () => {
 
     it('DummyToken total supply should be 1400000 * 1e18', async function () {
         var token = await DummyToken.New(
-            W3.TC.txParamsDefaultDeploy(testAccounts[0]), { _multisig: testAccounts[0] }
+            W3.TX.txParamsDefaultDeploy(testAccounts[0]), { _multisig: testAccounts[0] }
         );
         let value = await token.totalSupply();
         expect(value).toEqual(w3.toBigNumber(1400000 * 1e18));
@@ -35,7 +35,7 @@ describe('DummyContract tests', () => {
 
     it('Could deploy DummyContract', async function () {
         let dummy = await DummyContract.New(
-            W3.TC.txParamsDefaultDeploy(testAccounts[0]),
+            W3.TX.txParamsDefaultDeploy(testAccounts[0]),
             { _secret: toBN(123), _wellKnown: toBN(456) }
         );
         await dummy.instance;
@@ -88,7 +88,7 @@ describe('DummyContract tests', () => {
     xit('Could send transaction and parse logs', async function () {
         console.log(address);
         let dummy = await DummyContract.New(
-            W3.TC.txParamsDefaultDeploy(testAccounts[0]),
+            W3.TX.txParamsDefaultDeploy(testAccounts[0]),
             { _secret: toBN(123), _wellKnown: toBN(456) }
         );
 

@@ -1,5 +1,16 @@
-import { W3 } from '../';
+import { W3, testAccounts, DummyContract, toBN } from '../';
 import { BigNumber } from 'bignumber.js';
+import * as ganache from 'ganache-cli';
+
+let w3: W3 = new W3(ganache.provider({
+    network_id: 314,
+    accounts: [
+        { balance: '0xD3C21BCECCEDA1000000', secretKey: '0x1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce' }
+    ]
+}));
+
+w3.defaultAccount = testAccounts[0];
+W3.Default = w3;
 
 describe('W3 tests', () => {
 
@@ -15,4 +26,20 @@ describe('W3 tests', () => {
         console.log('1234567 hex', hexNumber);
     });
 
+    it('Should return tx number', async function () {
+        let nonce = await w3.getTransactionCount();
+        expect(nonce).toBe(0);
+
+        let dummy = await DummyContract.New(
+            W3.TX.txParamsDefaultDeploy(testAccounts[0]),
+            { _secret: toBN(123), _wellKnown: toBN(456) }
+        );
+        nonce = await w3.getTransactionCount();
+        expect(nonce).toBe(1);
+
+        let tx = await dummy.setPublic(123);
+        console.log('TX:', tx);
+        nonce = await w3.getTransactionCount();
+        expect(nonce).toBe(2);
+    });
 });

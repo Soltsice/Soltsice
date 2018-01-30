@@ -1,12 +1,12 @@
 import { BigNumber } from 'bignumber.js';
 import { W3 } from './W3';
-import { SoltsiceContract } from './SoltsiceContract'
+import { SoltsiceContract } from './SoltsiceContract';
 
 /**
  * CustomContract API
  */
 export class CustomContract extends SoltsiceContract {
-    constructor(deploymentParams: string | W3.TC.TxParams | object,
+    constructor(deploymentParams: string | W3.TX.TxParams | object,
                 web3?: W3,
                 ctorParams?: { str: string }) {
         super(

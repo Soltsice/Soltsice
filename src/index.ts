@@ -20,7 +20,7 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
         }
 
         let nid = await w3.networkId;
-        let txDeploy = W3.TC.txParamsDefaultDeploy(accountAddress, 900000, 1000000000);
+        let txDeploy = W3.TX.txParamsDefaultDeploy(accountAddress, 900000, 1000000000);
         let storageFactory: StorageFactory;
         if (await w3.isTestRPC) {
             storageFactory = await StorageFactory.New(txDeploy, undefined, w3);

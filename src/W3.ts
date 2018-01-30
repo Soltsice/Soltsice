@@ -288,6 +288,7 @@ export class W3 {
             return <boolean>r.result;
         });
     }
+
     public async getBalance(address: string): Promise<BigNumber> {
         return new Promise<BigNumber>((resolve, reject) => {
             this.web3.eth.getBalance(address, (error, result) => {
@@ -369,6 +370,22 @@ export class W3 {
         }
     }
 
+    public async getTransactionCount(account?: string, defaultBlock?: number | string): Promise<number> {
+        account = account || this.defaultAccount;
+        if (!account) {
+            throw new Error('No default account set to call getTransactionCount without a given account address');
+        }
+
+        return new Promise<number>((resolve, reject) => {
+            this.web3.eth.getTransactionCount(account, defaultBlock, (e, r) => {
+                if (e) {
+                    reject(e);
+                } else {
+                    resolve(r);
+               }
+            });
+        });
+    }
 }
 
 export namespace W3 {
@@ -498,7 +515,7 @@ export namespace W3 {
     }
 
     /** Truffle Contract */
-    export namespace TC {
+    export namespace TX {
         export interface TxParams {
             from: address;
             gas: number | BigNumber;

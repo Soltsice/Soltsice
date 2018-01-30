@@ -19,7 +19,7 @@ export class MintableToken extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<MintableToken> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<MintableToken> {
         let contract = new MintableToken(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -38,7 +38,7 @@ export class MintableToken extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -58,7 +58,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public mintingFinished( txParams?: W3.TC.TxParams): Promise<boolean> {
+    public mintingFinished( txParams?: W3.TX.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.mintingFinished
                 .call( txParams || this._sendParams)
@@ -71,7 +71,7 @@ export class MintableToken extends SoltsiceContract {
     public approve = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_spender: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.approve(_spender, _value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -81,7 +81,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_spender: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.approve.sendTransaction(_spender, _value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -110,7 +110,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public totalSupply( txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.totalSupply
                 .call( txParams || this._sendParams)
@@ -123,7 +123,7 @@ export class MintableToken extends SoltsiceContract {
     public transferFrom = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transferFrom(_from, _to, _value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -133,7 +133,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferFrom.sendTransaction(_from, _to, _value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -164,7 +164,7 @@ export class MintableToken extends SoltsiceContract {
     public mint = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_to: string, _amount: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.mint(_to, _amount, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -174,7 +174,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _amount: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.mint.sendTransaction(_to, _amount, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -205,7 +205,7 @@ export class MintableToken extends SoltsiceContract {
     public decreaseApproval = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.decreaseApproval(_spender, _subtractedValue, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -215,7 +215,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.decreaseApproval.sendTransaction(_spender, _subtractedValue, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -244,7 +244,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public balanceOf(_owner: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.balanceOf
                 .call(_owner, txParams || this._sendParams)
@@ -257,7 +257,7 @@ export class MintableToken extends SoltsiceContract {
     public finishMinting = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.finishMinting( txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -267,7 +267,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: ( txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: ( txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.finishMinting.sendTransaction( txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -296,7 +296,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner( txParams?: W3.TC.TxParams): Promise<string> {
+    public owner( txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
@@ -309,7 +309,7 @@ export class MintableToken extends SoltsiceContract {
     public transfer = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transfer(_to, _value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -319,7 +319,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transfer.sendTransaction(_to, _value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -350,7 +350,7 @@ export class MintableToken extends SoltsiceContract {
     public increaseApproval = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.increaseApproval(_spender, _addedValue, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -360,7 +360,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.increaseApproval.sendTransaction(_spender, _addedValue, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -389,7 +389,7 @@ export class MintableToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public allowance(_owner: string, _spender: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public allowance(_owner: string, _spender: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.allowance
                 .call(_owner, _spender, txParams || this._sendParams)
@@ -402,7 +402,7 @@ export class MintableToken extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transferOwnership(newOwner, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -412,7 +412,7 @@ export class MintableToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
                         .then((res) => resolve(res))

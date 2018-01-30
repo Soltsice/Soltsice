@@ -6,8 +6,8 @@ import { DummyContract } from '../contracts';
 let w3 = new W3(new W3.providers.HttpProvider('http://localhost:8544'));
 let activeAccount = '0xc08d5fe987c2338d28fd020b771a423b68e665e4';
 w3.defaultAccount = activeAccount;
-let deployParams = W3.TC.txParamsDefaultDeploy(activeAccount);
-let sendParams = W3.TC.txParamsDefaultSend(activeAccount);
+let deployParams = W3.TX.txParamsDefaultDeploy(activeAccount);
+let sendParams = W3.TX.txParamsDefaultSend(activeAccount);
 
 beforeAll(async () => {
     await w3.unlockAccount(activeAccount, 'Ropsten1', 150000);
@@ -55,7 +55,7 @@ it('Storage: Could get contract hash', async () => {
         address = await dummy.address;
         await store.setAddressValue(contractHash, address);
     } else {
-        dummy = await DummyContract.At(address,w3);
+        dummy = await DummyContract.At(address, w3);
         dummy.getPublic();
     }
     // expect(await dummy.address).toBe(address);

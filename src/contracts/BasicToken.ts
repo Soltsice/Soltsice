@@ -19,7 +19,7 @@ export class BasicToken extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<BasicToken> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<BasicToken> {
         let contract = new BasicToken(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -38,7 +38,7 @@ export class BasicToken extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -58,7 +58,7 @@ export class BasicToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public totalSupply( txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public totalSupply( txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.totalSupply
                 .call( txParams || this._sendParams)
@@ -69,7 +69,7 @@ export class BasicToken extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public balanceOf(_owner: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.balanceOf
                 .call(_owner, txParams || this._sendParams)
@@ -82,7 +82,7 @@ export class BasicToken extends SoltsiceContract {
     public transfer = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transfer(_to, _value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -92,7 +92,7 @@ export class BasicToken extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transfer.sendTransaction(_to, _value, txParams || this._sendParams)
                         .then((res) => resolve(res))

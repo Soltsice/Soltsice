@@ -19,7 +19,7 @@ export class Storage extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Storage> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Storage> {
         let contract = new Storage(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -38,7 +38,7 @@ export class Storage extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -58,7 +58,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getBooleanValue(record: string, txParams?: W3.TC.TxParams): Promise<boolean> {
+    public getBooleanValue(record: string, txParams?: W3.TX.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.getBooleanValue
                 .call(record, txParams || this._sendParams)
@@ -71,7 +71,7 @@ export class Storage extends SoltsiceContract {
     public setUIntValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setUIntValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -81,7 +81,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setUIntValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -112,7 +112,7 @@ export class Storage extends SoltsiceContract {
     public setBooleanValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: boolean, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setBooleanValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -122,7 +122,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: boolean, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setBooleanValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -151,7 +151,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getBytesValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
+    public getBytesValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.getBytesValue
                 .call(record, txParams || this._sendParams)
@@ -162,7 +162,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getAddressValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
+    public getAddressValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.getAddressValue
                 .call(record, txParams || this._sendParams)
@@ -175,7 +175,7 @@ export class Storage extends SoltsiceContract {
     public setAddressValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setAddressValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -185,7 +185,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setAddressValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -214,7 +214,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner( txParams?: W3.TC.TxParams): Promise<string> {
+    public owner( txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
@@ -225,7 +225,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getIntValue(record: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public getIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.getIntValue
                 .call(record, txParams || this._sendParams)
@@ -236,7 +236,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getStringValue(record: string, txParams?: W3.TC.TxParams): Promise<string> {
+    public getStringValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.getStringValue
                 .call(record, txParams || this._sendParams)
@@ -249,7 +249,7 @@ export class Storage extends SoltsiceContract {
     public setIntValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setIntValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -259,7 +259,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setIntValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -288,7 +288,7 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getUIntValue(record: string, txParams?: W3.TC.TxParams): Promise<BigNumber> {
+    public getUIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this._instance.getUIntValue
                 .call(record, txParams || this._sendParams)
@@ -301,7 +301,7 @@ export class Storage extends SoltsiceContract {
     public setBytesValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setBytesValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -311,7 +311,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setBytesValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -342,7 +342,7 @@ export class Storage extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transferOwnership(newOwner, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -352,7 +352,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -383,7 +383,7 @@ export class Storage extends SoltsiceContract {
     public setStringValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (record: string, value: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.setStringValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -393,7 +393,7 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (record: string, value: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (record: string, value: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.setStringValue.sendTransaction(record, value, txParams || this._sendParams)
                         .then((res) => resolve(res))

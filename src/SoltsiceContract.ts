@@ -13,12 +13,12 @@ export class SoltsiceContract {
     /** Truffle-contract instance. Use it if Soltsice doesn't support some features yet */
     protected _instance: any;
     protected _instancePromise: Promise<any>;
-    protected _sendParams: W3.TC.TxParams;
+    protected _sendParams: W3.TX.TxParams;
 
     protected constructor(web3?: W3,
         tokenArtifacts?: any,
-        constructorParams?: W3.TC.ContractDataType[],
-        deploymentParams?: string | W3.TC.TxParams | object,
+        constructorParams?: W3.TX.ContractDataType[],
+        deploymentParams?: string | W3.TX.TxParams | object,
         link?: SoltsiceContract[]) {
         if (!web3) {
             web3 = W3.Default;
@@ -32,7 +32,7 @@ export class SoltsiceContract {
         this._Contract = contract(tokenArtifacts);
         this._Contract.setProvider(web3.currentProvider);
 
-        function instanceOfTxParams(obj: any): obj is W3.TC.TxParams {
+        function instanceOfTxParams(obj: any): obj is W3.TX.TxParams {
             return 'from' in obj && 'gas' in obj && 'gasPrice' in obj && 'value' in obj;
         }
 
@@ -53,7 +53,7 @@ export class SoltsiceContract {
         let instance = new Promise<any>(async (resolve, reject) => {
             await linkage;
             if (this.w3.defaultAccount) {
-                this._sendParams = W3.TC.txParamsDefaultSend(this.w3.defaultAccount);
+                this._sendParams = W3.TX.txParamsDefaultSend(this.w3.defaultAccount);
                 if (await this.w3.networkId !== '1') {
                     this._sendParams.gasPrice = 20000000000; // 20 Gwei, tests are too slow with the 2 Gwei default one
                 }
@@ -124,7 +124,7 @@ export class SoltsiceContract {
     }
 
     /** Send a transaction to the fallback function */
-    public async sendTransaction(txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> {
+    public async sendTransaction(txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> {
         txParams = txParams || this._sendParams;
         if (!txParams) {
             throw new Error('Default tx parameters are not set.');
@@ -232,8 +232,8 @@ export class SoltsiceContract {
     }
 
     /** Get transaction result by hash. Returns receipt + parsed logs. */
-    public getTransactionResult(txHash: string): Promise<W3.TC.TransactionResult> {
-        return new Promise<W3.TC.TransactionResult>((resolve, reject) => {
+    public getTransactionResult(txHash: string): Promise<W3.TX.TransactionResult> {
+        return new Promise<W3.TX.TransactionResult>((resolve, reject) => {
             this.w3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
                 if (err) {
                     reject(err);
@@ -242,7 +242,7 @@ export class SoltsiceContract {
                         reject('Receipt is falsy, transaction does not exists or was not mined yet.');
                     } else {
                         try {
-                            let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
+                            let result: W3.TX.TransactionResult = {} as W3.TX.TransactionResult;
                             result.tx = receipt.transactionHash;
                             result.receipt = receipt;
                             result.logs = await this.parseReceipt(receipt);
@@ -256,9 +256,9 @@ export class SoltsiceContract {
         });
     }
 
-    public async waitTransactionReceipt(hashString: string): Promise<W3.TC.TransactionResult> {
+    public async waitTransactionReceipt(hashString: string): Promise<W3.TX.TransactionResult> {
 
-        return new Promise<W3.TC.TransactionResult>((accept, reject) => {
+        return new Promise<W3.TX.TransactionResult>((accept, reject) => {
             var timeout = 240000;
             var start = new Date().getTime();
             let makeAttempt = () => {
@@ -267,7 +267,7 @@ export class SoltsiceContract {
 
                     if (receipt != null) {
                         try {
-                            let result: W3.TC.TransactionResult = {} as W3.TC.TransactionResult;
+                            let result: W3.TX.TransactionResult = {} as W3.TX.TransactionResult;
                             result.tx = receipt.transactionHash;
                             result.receipt = receipt;
                             result.logs = await this.parseReceipt(receipt);

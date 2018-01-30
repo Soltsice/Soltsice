@@ -18,7 +18,7 @@ export class Pausable extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TC.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Pausable> {
+    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Pausable> {
         let contract = new Pausable(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
@@ -37,7 +37,7 @@ export class Pausable extends SoltsiceContract {
     }
 
     protected constructor(
-        deploymentParams: string | W3.TC.TxParams | object,
+        deploymentParams: string | W3.TX.TxParams | object,
         ctorParams?: {},
         w3?: W3,
         link?: SoltsiceContract[]
@@ -59,7 +59,7 @@ export class Pausable extends SoltsiceContract {
     public unpause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.unpause( txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -69,7 +69,7 @@ export class Pausable extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: ( txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: ( txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.unpause.sendTransaction( txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -98,7 +98,7 @@ export class Pausable extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public paused( txParams?: W3.TC.TxParams): Promise<boolean> {
+    public paused( txParams?: W3.TX.TxParams): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._instance.paused
                 .call( txParams || this._sendParams)
@@ -111,7 +111,7 @@ export class Pausable extends SoltsiceContract {
     public pause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.pause( txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -121,7 +121,7 @@ export class Pausable extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: ( txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: ( txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.pause.sendTransaction( txParams || this._sendParams)
                         .then((res) => resolve(res))
@@ -150,7 +150,7 @@ export class Pausable extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner( txParams?: W3.TC.TxParams): Promise<string> {
+    public owner( txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
@@ -163,7 +163,7 @@ export class Pausable extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TC.TxParams): Promise<W3.TC.TransactionResult> => {
+        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
                 this._instance.transferOwnership(newOwner, txParams || this._sendParams)
                     .then((res) => resolve(res))
@@ -173,7 +173,7 @@ export class Pausable extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: (newOwner: string, txParams?: W3.TC.TxParams): Promise<string> => {
+            sendTransaction: (newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
                         .then((res) => resolve(res))
