@@ -4,9 +4,6 @@
 /tmp
 /package-lock.json
 /src/artifacts
-/src/lib/W3/*.js
-/soltsice.js
-/contracts/zeppelin
 
 /nbproject
 /.idea

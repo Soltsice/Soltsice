@@ -115,6 +115,10 @@ export class SoltsiceContract {
         return this._instance.address;
     }
 
+    get _1(): any {
+        return this._instance;
+    }
+
     get instance(): any {
         return this._instance;
     }

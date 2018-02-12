@@ -179,56 +179,6 @@ export class MintableToken extends SoltsiceContract {
         });
     
     // tslint:disable-next-line:member-ordering
-    public mint = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.mint(_to, _amount, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign((_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
-                    return new Promise((resolve, reject) => {
-                        this._instance.mint.sendTransaction(_to, _amount, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                },
-                {
-                    // tslint:disable-next-line:max-line-length
-                    // tslint:disable-next-line:variable-name
-                    sendSigned: (_to: string, _amount: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
-                        // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.mint.request(_to, _amount).params[0].data, txParams, nonce);
-                    }
-                }
-            )
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (_to: string, _amount: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    resolve(this._instance.mint.request(_to, _amount).params[0].data);
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (_to: string, _amount: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.mint.estimateGas(_to, _amount).then((g) => resolve(g));
-                });
-            }
-        });
-    
-    // tslint:disable-next-line:member-ordering
     public decreaseApproval = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
@@ -288,56 +238,6 @@ export class MintableToken extends SoltsiceContract {
                 .catch((err) => reject(err));
         });
     }
-    
-    // tslint:disable-next-line:member-ordering
-    public finishMinting = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.finishMinting( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign(( txParams?: W3.TX.TxParams): Promise<string> => {
-                    return new Promise((resolve, reject) => {
-                        this._instance.finishMinting.sendTransaction( txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                },
-                {
-                    // tslint:disable-next-line:max-line-length
-                    // tslint:disable-next-line:variable-name
-                    sendSigned: ( privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
-                        // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.finishMinting.request().params[0].data, txParams, nonce);
-                    }
-                }
-            )
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    resolve(this._instance.finishMinting.request().params[0].data);
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.finishMinting.estimateGas().then((g) => resolve(g));
-                });
-            }
-        });
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
@@ -507,6 +407,106 @@ export class MintableToken extends SoltsiceContract {
             estimateGas: (newOwner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:member-ordering
+    public mint = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.mint(_to, _amount, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: Object.assign((_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.mint.sendTransaction(_to, _amount, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: (_to: string, _amount: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.mint.request(_to, _amount).params[0].data, txParams, nonce);
+                    }
+                }
+            )
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (_to: string, _amount: BigNumber | number): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    resolve(this._instance.mint.request(_to, _amount).params[0].data);
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (_to: string, _amount: BigNumber | number): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.mint.estimateGas(_to, _amount).then((g) => resolve(g));
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:member-ordering
+    public finishMinting = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.finishMinting( txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: Object.assign(( txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.finishMinting.sendTransaction( txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: ( privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.finishMinting.request().params[0].data, txParams, nonce);
+                    }
+                }
+            )
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    resolve(this._instance.finishMinting.request().params[0].data);
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.finishMinting.estimateGas().then((g) => resolve(g));
                 });
             }
         });

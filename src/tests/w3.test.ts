@@ -1,4 +1,5 @@
-import { W3, testAccounts, DummyContract, toBN } from '../';
+import { W3, testAccounts, toBN } from '../';
+import { DummyContract } from '../contracts';
 import { BigNumber } from 'bignumber.js';
 import * as ganache from 'ganache-cli';
 

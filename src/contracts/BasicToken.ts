@@ -67,17 +67,6 @@ export class BasicToken extends SoltsiceContract {
         });
     }
     
-    // tslint:disable-next-line:max-line-length
-    // tslint:disable-next-line:variable-name
-    public balanceOf(_owner: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.balanceOf
-                .call(_owner, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
-        });
-    }
-    
     // tslint:disable-next-line:member-ordering
     public transfer = Object.assign(
         // tslint:disable-next-line:max-line-length
@@ -127,5 +116,16 @@ export class BasicToken extends SoltsiceContract {
                 });
             }
         });
+    
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public balanceOf(_owner: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this._instance.balanceOf
+                .call(_owner, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
     
 }

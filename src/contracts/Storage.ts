@@ -58,9 +58,70 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public getBooleanValue(record: string, txParams?: W3.TX.TxParams): Promise<boolean> {
+    public owner( txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
-            this._instance.getBooleanValue
+            this._instance.owner
+                .call( txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
+    
+    // tslint:disable-next-line:member-ordering
+    public transferOwnership = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+            return new Promise((resolve, reject) => {
+                this._instance.transferOwnership(newOwner, txParams || this._sendParams)
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err));
+            });
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: Object.assign((newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: (newOwner: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, nonce);
+                    }
+                }
+            )
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (newOwner: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    resolve(this._instance.transferOwnership.request(newOwner).params[0].data);
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (newOwner: string): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getUIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this._instance.getUIntValue
                 .call(record, txParams || this._sendParams)
                 .then((res) => resolve(res))
                 .catch((err) => reject(err));
@@ -117,13 +178,24 @@ export class Storage extends SoltsiceContract {
             }
         });
     
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getStringValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this._instance.getStringValue
+                .call(record, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
+    
     // tslint:disable-next-line:member-ordering
-    public setBooleanValue = Object.assign(
+    public setStringValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+        (record: string, value: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.setBooleanValue(record, value, txParams || this._sendParams)
+                this._instance.setStringValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -131,9 +203,9 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign((record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<string> => {
+            sendTransaction: Object.assign((record: string, value: string, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
-                        this._instance.setBooleanValue.sendTransaction(record, value, txParams || this._sendParams)
+                        this._instance.setStringValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -141,9 +213,9 @@ export class Storage extends SoltsiceContract {
                 {
                     // tslint:disable-next-line:max-line-length
                     // tslint:disable-next-line:variable-name
-                    sendSigned: (record: string, value: boolean, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                    sendSigned: (record: string, value: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setBooleanValue.request(record, value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setStringValue.request(record, value).params[0].data, txParams, nonce);
                     }
                 }
             )
@@ -151,32 +223,21 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (record: string, value: boolean): Promise<string> => {
+            data: (record: string, value: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    resolve(this._instance.setBooleanValue.request(record, value).params[0].data);
+                    resolve(this._instance.setStringValue.request(record, value).params[0].data);
                 });
             }
         },
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (record: string, value: boolean): Promise<number> => {
+            estimateGas: (record: string, value: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.setBooleanValue.estimateGas(record, value).then((g) => resolve(g));
+                    this._instance.setStringValue.estimateGas(record, value).then((g) => resolve(g));
                 });
             }
         });
-    
-    // tslint:disable-next-line:max-line-length
-    // tslint:disable-next-line:variable-name
-    public getBytesValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this._instance.getBytesValue
-                .call(record, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
-        });
-    }
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
@@ -241,92 +302,9 @@ export class Storage extends SoltsiceContract {
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    public owner( txParams?: W3.TX.TxParams): Promise<string> {
+    public getBytesValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
         return new Promise((resolve, reject) => {
-            this._instance.owner
-                .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
-        });
-    }
-    
-    // tslint:disable-next-line:max-line-length
-    // tslint:disable-next-line:variable-name
-    public getIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.getIntValue
-                .call(record, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
-        });
-    }
-    
-    // tslint:disable-next-line:max-line-length
-    // tslint:disable-next-line:variable-name
-    public getStringValue(record: string, txParams?: W3.TX.TxParams): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this._instance.getStringValue
-                .call(record, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
-        });
-    }
-    
-    // tslint:disable-next-line:member-ordering
-    public setIntValue = Object.assign(
-        // tslint:disable-next-line:max-line-length
-        // tslint:disable-next-line:variable-name
-        (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.setIntValue(record, value, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign((record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
-                    return new Promise((resolve, reject) => {
-                        this._instance.setIntValue.sendTransaction(record, value, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
-                    });
-                },
-                {
-                    // tslint:disable-next-line:max-line-length
-                    // tslint:disable-next-line:variable-name
-                    sendSigned: (record: string, value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
-                        // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setIntValue.request(record, value).params[0].data, txParams, nonce);
-                    }
-                }
-            )
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            data: (record: string, value: BigNumber | number): Promise<string> => {
-                return new Promise((resolve, reject) => {
-                    resolve(this._instance.setIntValue.request(record, value).params[0].data);
-                });
-            }
-        },
-        {
-            // tslint:disable-next-line:max-line-length
-            // tslint:disable-next-line:variable-name
-            estimateGas: (record: string, value: BigNumber | number): Promise<number> => {
-                return new Promise((resolve, reject) => {
-                    this._instance.setIntValue.estimateGas(record, value).then((g) => resolve(g));
-                });
-            }
-        });
-    
-    // tslint:disable-next-line:max-line-length
-    // tslint:disable-next-line:variable-name
-    public getUIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
-        return new Promise((resolve, reject) => {
-            this._instance.getUIntValue
+            this._instance.getBytesValue
                 .call(record, txParams || this._sendParams)
                 .then((res) => resolve(res))
                 .catch((err) => reject(err));
@@ -383,13 +361,24 @@ export class Storage extends SoltsiceContract {
             }
         });
     
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getBooleanValue(record: string, txParams?: W3.TX.TxParams): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this._instance.getBooleanValue
+                .call(record, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
+    
     // tslint:disable-next-line:member-ordering
-    public transferOwnership = Object.assign(
+    public setBooleanValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+        (record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.transferOwnership(newOwner, txParams || this._sendParams)
+                this._instance.setBooleanValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -397,9 +386,9 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign((newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
+            sendTransaction: Object.assign((record: string, value: boolean, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
-                        this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
+                        this._instance.setBooleanValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -407,9 +396,9 @@ export class Storage extends SoltsiceContract {
                 {
                     // tslint:disable-next-line:max-line-length
                     // tslint:disable-next-line:variable-name
-                    sendSigned: (newOwner: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                    sendSigned: (record: string, value: boolean, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setBooleanValue.request(record, value).params[0].data, txParams, nonce);
                     }
                 }
             )
@@ -417,29 +406,40 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (newOwner: string): Promise<string> => {
+            data: (record: string, value: boolean): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    resolve(this._instance.transferOwnership.request(newOwner).params[0].data);
+                    resolve(this._instance.setBooleanValue.request(record, value).params[0].data);
                 });
             }
         },
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (newOwner: string): Promise<number> => {
+            estimateGas: (record: string, value: boolean): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                    this._instance.setBooleanValue.estimateGas(record, value).then((g) => resolve(g));
                 });
             }
         });
     
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public getIntValue(record: string, txParams?: W3.TX.TxParams): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this._instance.getIntValue
+                .call(record, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
+    
     // tslint:disable-next-line:member-ordering
-    public setStringValue = Object.assign(
+    public setIntValue = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (record: string, value: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
+        (record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
             return new Promise((resolve, reject) => {
-                this._instance.setStringValue(record, value, txParams || this._sendParams)
+                this._instance.setIntValue(record, value, txParams || this._sendParams)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err));
             });
@@ -447,9 +447,9 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            sendTransaction: Object.assign((record: string, value: string, txParams?: W3.TX.TxParams): Promise<string> => {
+            sendTransaction: Object.assign((record: string, value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
-                        this._instance.setStringValue.sendTransaction(record, value, txParams || this._sendParams)
+                        this._instance.setIntValue.sendTransaction(record, value, txParams || this._sendParams)
                             .then((res) => resolve(res))
                             .catch((err) => reject(err));
                     });
@@ -457,9 +457,9 @@ export class Storage extends SoltsiceContract {
                 {
                     // tslint:disable-next-line:max-line-length
                     // tslint:disable-next-line:variable-name
-                    sendSigned: (record: string, value: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                    sendSigned: (record: string, value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setStringValue.request(record, value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setIntValue.request(record, value).params[0].data, txParams, nonce);
                     }
                 }
             )
@@ -467,18 +467,18 @@ export class Storage extends SoltsiceContract {
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            data: (record: string, value: string): Promise<string> => {
+            data: (record: string, value: BigNumber | number): Promise<string> => {
                 return new Promise((resolve, reject) => {
-                    resolve(this._instance.setStringValue.request(record, value).params[0].data);
+                    resolve(this._instance.setIntValue.request(record, value).params[0].data);
                 });
             }
         },
         {
             // tslint:disable-next-line:max-line-length
             // tslint:disable-next-line:variable-name
-            estimateGas: (record: string, value: string): Promise<number> => {
+            estimateGas: (record: string, value: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.setStringValue.estimateGas(record, value).then((g) => resolve(g));
+                    this._instance.setIntValue.estimateGas(record, value).then((g) => resolve(g));
                 });
             }
         });
