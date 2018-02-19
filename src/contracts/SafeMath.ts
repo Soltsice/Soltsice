@@ -18,10 +18,20 @@ export class SafeMath extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<SafeMath> {
-        let contract = new SafeMath(deploymentParams, ctorParams, w3, link);
-        await contract._instancePromise;
-        return contract;
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<SafeMath> {
+        w3 = w3 || W3.Default;
+        if (!privateKey) {
+            let contract = new SafeMath(deploymentParams, ctorParams, w3, link);
+            await contract._instancePromise;
+            return contract;
+        } else {
+            let data = SafeMath.NewData(ctorParams, w3);
+            let txHash = await w3.sendSignedTransaction(W3.zeroAddress, privateKey, data, deploymentParams);
+            let txReceipt = await w3.waitTransactionReceipt(txHash);
+            let rawAddress = txReceipt.contractAddress;
+            let contract = await SafeMath.At(rawAddress, w3);
+            return contract;
+        }
     }
 
     public static async At(address: string | object, w3?: W3): Promise<SafeMath> {

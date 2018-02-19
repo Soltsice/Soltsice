@@ -19,10 +19,20 @@ export class Storage extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Storage> {
-        let contract = new Storage(deploymentParams, ctorParams, w3, link);
-        await contract._instancePromise;
-        return contract;
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<Storage> {
+        w3 = w3 || W3.Default;
+        if (!privateKey) {
+            let contract = new Storage(deploymentParams, ctorParams, w3, link);
+            await contract._instancePromise;
+            return contract;
+        } else {
+            let data = Storage.NewData(ctorParams, w3);
+            let txHash = await w3.sendSignedTransaction(W3.zeroAddress, privateKey, data, deploymentParams);
+            let txReceipt = await w3.waitTransactionReceipt(txHash);
+            let rawAddress = txReceipt.contractAddress;
+            let contract = await Storage.At(rawAddress, w3);
+            return contract;
+        }
     }
 
     public static async At(address: string | object, w3?: W3): Promise<Storage> {

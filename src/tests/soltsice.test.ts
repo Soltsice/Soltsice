@@ -44,7 +44,7 @@ describe('DummyContract tests', () => {
 
     it('Could get NewData for DummyContract and deploy via SendRaw', async function () {
         let originalValue = 789;
-        let data = await DummyContract.NewData(
+        let data = DummyContract.NewData(
             { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
             w3
         );
@@ -56,6 +56,18 @@ describe('DummyContract tests', () => {
         let rawAddress = txReceipt.contractAddress;
         console.log('RAW DEPLOYMENT ADDRESS', rawAddress);
         let dc = await DummyContract.At(rawAddress);
+        let publicValue = await dc.getPublic();
+        expect(publicValue.toNumber()).toEqual(originalValue);
+    });
+
+    it('Could deploy DummyContract with private key', async function () {
+        let originalValue = 789;
+        let dc = await DummyContract.New(W3.TX.txParamsDefaultDeploy(testAccounts[0]),
+            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
+            w3,
+            undefined,
+            privateKey
+        );
         let publicValue = await dc.getPublic();
         expect(publicValue.toNumber()).toEqual(originalValue);
     });
