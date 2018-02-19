@@ -282,9 +282,9 @@ import { W3, SoltsiceContract } from '${importPath}';
  * ${contractName} API
  */
 export class ${contractName} extends SoltsiceContract {
-    static get Artifacts() { return require('${artifactRelPath}'); }
+    public static get Artifacts() { return require('${artifactRelPath}'); }
 
-    static get BytecodeHash() {
+    public static get BytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
         let artifacts = ${contractName}.Artifacts;
         if (!artifacts || !artifacts.bytecode) {
@@ -295,22 +295,29 @@ export class ${contractName} extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[]): Promise<${contractName}> {
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[]): Promise<${contractName}> {
         let contract = new ${contractName}(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
     }
 
-    static async At(address: string | object, w3?: W3): Promise<${contractName}> {
+    public static async At(address: string | object, w3?: W3): Promise<${contractName}> {
         let contract = new ${contractName}(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    static async Deployed(w3?: W3): Promise<${contractName}> {
+    public static async Deployed(w3?: W3): Promise<${contractName}> {
         let contract = new ${contractName}('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public static NewData(ctorParams?: {${ctorParams.typesNames}}, w3?: W3): string {
+        // tslint:disable-next-line:max-line-length
+        let data = SoltsiceContract.NewDataImpl(w3, ${contractName}.Artifacts, ctorParams ? [${ctorParams.names}] : []);
+        return data;
     }
 
     protected constructor(

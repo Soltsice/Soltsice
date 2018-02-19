@@ -6,9 +6,9 @@ import { W3, SoltsiceContract } from '..';
  * DummyToken API
  */
 export class DummyToken extends SoltsiceContract {
-    static get Artifacts() { return require('../artifacts/DummyToken.json'); }
+    public static get Artifacts() { return require('../artifacts/DummyToken.json'); }
 
-    static get BytecodeHash() {
+    public static get BytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
         let artifacts = DummyToken.Artifacts;
         if (!artifacts || !artifacts.bytecode) {
@@ -19,22 +19,29 @@ export class DummyToken extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {_multisig: string}, w3?: W3, link?: SoltsiceContract[]): Promise<DummyToken> {
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {_multisig: string}, w3?: W3, link?: SoltsiceContract[]): Promise<DummyToken> {
         let contract = new DummyToken(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
     }
 
-    static async At(address: string | object, w3?: W3): Promise<DummyToken> {
+    public static async At(address: string | object, w3?: W3): Promise<DummyToken> {
         let contract = new DummyToken(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    static async Deployed(w3?: W3): Promise<DummyToken> {
+    public static async Deployed(w3?: W3): Promise<DummyToken> {
         let contract = new DummyToken('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public static NewData(ctorParams?: {_multisig: string}, w3?: W3): string {
+        // tslint:disable-next-line:max-line-length
+        let data = SoltsiceContract.NewDataImpl(w3, DummyToken.Artifacts, ctorParams ? [ctorParams!._multisig] : []);
+        return data;
     }
 
     protected constructor(

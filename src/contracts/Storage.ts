@@ -6,9 +6,9 @@ import { W3, SoltsiceContract } from '..';
  * Storage API
  */
 export class Storage extends SoltsiceContract {
-    static get Artifacts() { return require('../artifacts/Storage.json'); }
+    public static get Artifacts() { return require('../artifacts/Storage.json'); }
 
-    static get BytecodeHash() {
+    public static get BytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
         let artifacts = Storage.Artifacts;
         if (!artifacts || !artifacts.bytecode) {
@@ -19,22 +19,29 @@ export class Storage extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Storage> {
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<Storage> {
         let contract = new Storage(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
     }
 
-    static async At(address: string | object, w3?: W3): Promise<Storage> {
+    public static async At(address: string | object, w3?: W3): Promise<Storage> {
         let contract = new Storage(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    static async Deployed(w3?: W3): Promise<Storage> {
+    public static async Deployed(w3?: W3): Promise<Storage> {
         let contract = new Storage('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public static NewData(ctorParams?: {}, w3?: W3): string {
+        // tslint:disable-next-line:max-line-length
+        let data = SoltsiceContract.NewDataImpl(w3, Storage.Artifacts, ctorParams ? [] : []);
+        return data;
     }
 
     protected constructor(

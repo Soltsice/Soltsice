@@ -383,7 +383,14 @@ export class W3 {
         });
     }
 
-    /** Sends a raw signed transaction and returns tx hash. Use waitTransactionReceipt method on w3 or a contract to get a tx receipt. */
+    /**
+     * Sends a raw signed transaction and returns tx hash. Use waitTransactionReceipt method on w3 or a contract to get a tx receipt.
+     * @param to Target contract address or zero address (W3.zeroAddress) to deploy a new contract.
+     * @param privateKey Private key hex string prefixed with 0x.
+     * @param data Payload data.
+     * @param txParams Tx parameters.
+     * @param nonce Nonce override if needed to replace a pending transaction.
+     */
     public async sendSignedTransaction(to: string, privateKey: string, data?: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> {
         if (!this.isPre1API) {
             throw new Error('Web3.js v.1.0 is not supported yet');
@@ -414,6 +421,11 @@ export class W3 {
             data: data,
             chainId: nid
         };
+
+        if (W3.zeroAddress === to) {
+            delete signedTxParams.to;
+        }
+
         const tx = new EthereumTx(signedTxParams);
         tx.sign(pb);
         const serializedTx = tx.serialize();

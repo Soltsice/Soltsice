@@ -6,9 +6,9 @@ import { W3, SoltsiceContract } from '..';
  * BasicToken API
  */
 export class BasicToken extends SoltsiceContract {
-    static get Artifacts() { return require('../artifacts/BasicToken.json'); }
+    public static get Artifacts() { return require('../artifacts/BasicToken.json'); }
 
-    static get BytecodeHash() {
+    public static get BytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
         let artifacts = BasicToken.Artifacts;
         if (!artifacts || !artifacts.bytecode) {
@@ -19,22 +19,29 @@ export class BasicToken extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<BasicToken> {
+    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {}, w3?: W3, link?: SoltsiceContract[]): Promise<BasicToken> {
         let contract = new BasicToken(deploymentParams, ctorParams, w3, link);
         await contract._instancePromise;
         return contract;
     }
 
-    static async At(address: string | object, w3?: W3): Promise<BasicToken> {
+    public static async At(address: string | object, w3?: W3): Promise<BasicToken> {
         let contract = new BasicToken(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    static async Deployed(w3?: W3): Promise<BasicToken> {
+    public static async Deployed(w3?: W3): Promise<BasicToken> {
         let contract = new BasicToken('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public static NewData(ctorParams?: {}, w3?: W3): string {
+        // tslint:disable-next-line:max-line-length
+        let data = SoltsiceContract.NewDataImpl(w3, BasicToken.Artifacts, ctorParams ? [] : []);
+        return data;
     }
 
     protected constructor(

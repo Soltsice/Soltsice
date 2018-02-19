@@ -15,6 +15,17 @@ export class SoltsiceContract {
     protected _instancePromise: Promise<any>;
     protected _sendParams: W3.TX.TxParams;
 
+    protected static NewDataImpl(w3?: W3, tokenArtifacts?: any, constructorParams?: W3.TX.ContractDataType[]): string {
+        if (!w3) {
+            w3 = W3.Default;
+        }
+        let ct = w3.web3.eth.contract(tokenArtifacts.abi);
+        console.log('CT:', ct);
+        // ct.setProvider(web3.currentProvider);
+        let data = ct.new.getData(...constructorParams!, {data: tokenArtifacts.bytecode});
+        return data;
+    }
+
     protected constructor(web3?: W3,
         tokenArtifacts?: any,
         constructorParams?: W3.TX.ContractDataType[],
@@ -25,7 +36,7 @@ export class SoltsiceContract {
         }
         this.w3 = web3;
 
-        if (typeof deploymentParams === 'string' && !W3.isValidAddress(deploymentParams as string)) {
+        if (typeof deploymentParams === 'string' && deploymentParams !== '' && !W3.isValidAddress(deploymentParams as string)) {
             throw 'Invalid deployed contract address';
         }
 
@@ -113,10 +124,6 @@ export class SoltsiceContract {
 
     get address(): string {
         return this._instance.address;
-    }
-
-    get _1(): any {
-        return this._instance;
     }
 
     get instance(): any {

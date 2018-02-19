@@ -1,11 +1,20 @@
-import { W3, testAccounts, toBN } from '../';
+import { W3, testAccounts, testPrivateKeys, toBN } from '../';
 import { DummyToken, DummyContract } from '../contracts';
 import * as ganache from 'ganache-cli';
 
-let w3 = new W3(ganache.provider({
-    mnemonic: 'dbrainio',
-    network_id: 314
+let privateKey = '0x' + testPrivateKeys[0]; // '0x1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce';
+
+let w3: W3 = new W3(ganache.provider({
+    network_id: 314,
+    accounts: [
+        { balance: '0xD3C21BCECCEDA1000000', secretKey: privateKey }
+    ]
 }));
+
+// let w3 = new W3(ganache.provider({
+//     mnemonic: 'dbrainio',
+//     network_id: 314
+// }));
 
 w3.defaultAccount = testAccounts[0];
 W3.Default = w3;
@@ -32,6 +41,24 @@ describe('DummyToken tests', () => {
 let address: string;
 
 describe('DummyContract tests', () => {
+
+    it('Could get NewData for DummyContract and deploy via SendRaw', async function () {
+        let originalValue = 789;
+        let data = await DummyContract.NewData(
+            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
+            w3
+        );
+        console.log('RAW NEW DATA', data);
+        let txHash = await w3.sendSignedTransaction(W3.zeroAddress, privateKey, data, W3.TX.txParamsDefaultDeploy(testAccounts[0]));
+        console.log('RAW TX HASH', txHash);
+        let txReceipt = await w3.waitTransactionReceipt(txHash);
+        console.log('RAW TX RECEIPT', txReceipt);
+        let rawAddress = txReceipt.contractAddress;
+        console.log('RAW DEPLOYMENT ADDRESS', rawAddress);
+        let dc = await DummyContract.At(rawAddress);
+        let publicValue = await dc.getPublic();
+        expect(publicValue.toNumber()).toEqual(originalValue);
+    });
 
     it('Could deploy DummyContract', async function () {
         let dummy = await DummyContract.New(
