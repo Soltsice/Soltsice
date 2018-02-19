@@ -63,8 +63,12 @@ export class W3 {
     } = Web3JS.modules;
 
     get currentProvider(): W3.Provider { return this.web3 ? this.web3.currentProvider : undefined; }
+
+    /** @deprecated Access this property via w3.web3.eth */
     get eth(): W3.Eth { return this.web3.eth; }
+    /** @deprecated Access this property via w3.web3.version */
     get version(): W3.Version0 { return this.web3.version; }
+    /** @deprecated Access this property via w3.web3.utils */
     get utils(): W3.Utils {
         return this.web3.utils;
     }
@@ -83,11 +87,21 @@ export class W3 {
      */
     public web3;
 
+    // TODO rename with _ prefix for private methods
     private globalWeb3;
     private netId: string;
     private netNode: Promise<string>;
 
-    public defaultAccount: string;
+    private _defaultAccount: string;
+
+    public get defaultAccount(): string {
+        return this._defaultAccount;
+    }
+
+    public set defaultAccount(defaultAccount: string) {
+        this._defaultAccount = defaultAccount;
+        this.web3.defaultAccount = defaultAccount;
+    }
 
     /**
      * Create a default Web3 instance - resolves to a global window['web3'] injected my MIST, MetaMask, etc
@@ -100,9 +114,7 @@ export class W3 {
      */
     constructor(provider?: W3.Provider)
     constructor(provider?: W3.Provider, defaultAccount?: string) {
-        if (defaultAccount) {
-            this.defaultAccount = defaultAccount;
-        }
+
         let tmpWeb3;
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
@@ -132,6 +144,15 @@ export class W3 {
             throw 'Only web3 0.20.xx package is currently supported';
         }
         this.web3 = tmpWeb3;
+
+        // set and override eth's default account with a given value or use eth's one if it is set
+        if (defaultAccount) {
+            // set property, that will also set this.web3.defaultAccount
+            this.defaultAccount = defaultAccount;
+        } else if (this.web3.defaultAccount) {
+            // set private field directly
+            this._defaultAccount = this.web3.defaultAccount;
+        }
 
         this.updateNetworkInfo();
 

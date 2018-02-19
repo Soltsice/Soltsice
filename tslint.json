@@ -94,6 +94,7 @@
             "check-operator",
             "check-separator",
             "check-type"
-        ]
+        ],
+        "deprecation": true
     }
 }
