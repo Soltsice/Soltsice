@@ -655,11 +655,11 @@ export namespace W3 {
             // tslint:disable-next-line:no-string-literal
             if (typeof window !== 'undefined' && typeof window['ethereumjs-tx'] !== 'undefined') {
                 // tslint:disable-next-line:no-string-literal
-                _keythereum = window['ethereumjs-tx'];
+                _ethereumjsTx = window['ethereumjs-tx'];
             } else {
-                _keythereum = require('ethereumjs-tx');
+                _ethereumjsTx = require('ethereumjs-tx');
             }
-            return _keythereum;
+            return _ethereumjsTx;
         }
     }
 
