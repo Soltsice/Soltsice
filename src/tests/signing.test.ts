@@ -1,4 +1,7 @@
 import { W3 } from '../';
+import { soltsice } from '../';
+import * as fs from 'fs';
+import * as path from 'path';
 
 describe('Signing tests', () => {
 
@@ -39,4 +42,21 @@ describe('Signing tests', () => {
         console.timeEnd('sign/recover');
     });
 
+    it('Could getLocalPrivateKeyAndAddress', async function () {
+
+        let filepath = path.join(__dirname, 'dummy.key');
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+        }
+
+        // idempotent call, must remain constant after initial creation
+        let pkAddress = soltsice.getLocalPrivateKeyAndAddress(filepath, 'DummyP@55');
+        let pkAddress2 = soltsice.getLocalPrivateKeyAndAddress(filepath, 'DummyP@55');
+
+        expect(pkAddress.privateKey).toEqual(pkAddress2.privateKey);
+        expect(pkAddress.address).toEqual(pkAddress2.address);
+
+        expect(fs.existsSync(filepath)).toBe(true);
+        fs.unlinkSync(filepath);
+    });
 });

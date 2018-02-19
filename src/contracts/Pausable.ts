@@ -98,12 +98,20 @@ export class Pausable extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.transferOwnership(newOwner, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (newOwner: string, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.transferOwnership(newOwner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -148,12 +156,20 @@ export class Pausable extends SoltsiceContract {
     public pause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.pause( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        ( txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.pause( txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -198,12 +214,20 @@ export class Pausable extends SoltsiceContract {
     public unpause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.unpause( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        ( txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.unpause( txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length

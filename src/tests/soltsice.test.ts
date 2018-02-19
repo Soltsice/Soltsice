@@ -62,7 +62,8 @@ describe('DummyContract tests', () => {
 
     it('Could deploy DummyContract with private key', async function () {
         let originalValue = 789;
-        let dc = await DummyContract.New(W3.TX.txParamsDefaultDeploy(testAccounts[0]),
+        let txParams = W3.TX.txParamsDefaultDeploy(testAccounts[0]);
+        let dc = await DummyContract.New(txParams,
             { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
             w3,
             undefined,
@@ -70,6 +71,14 @@ describe('DummyContract tests', () => {
         );
         let publicValue = await dc.getPublic();
         expect(publicValue.toNumber()).toEqual(originalValue);
+
+        let newValue = 147258;
+        let tx = await dc.setPublic(newValue, txParams, privateKey);
+        console.log('RAW SIGNED TX SHORTCUT', tx);
+
+        publicValue = await dc.getPublic();
+        expect(publicValue.toNumber()).toEqual(newValue);
+
     });
 
     it('Could deploy DummyContract', async function () {

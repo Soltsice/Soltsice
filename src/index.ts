@@ -5,6 +5,7 @@ export * from './SoltsiceContract';
 export * from './contracts';
 export * from './TestRPC';
 export * from './jsonrpc';
+export * from './soltsice';
 
 import { W3 } from './W3';
 import { Storage, StorageFactory } from './contracts';

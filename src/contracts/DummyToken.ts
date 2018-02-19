@@ -99,12 +99,20 @@ export class DummyToken extends SoltsiceContract {
     public approve = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.approve(_spender, _value, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_spender: string, _value: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.approve(_spender, _value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.approve.request(_spender, _value).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -171,12 +179,20 @@ export class DummyToken extends SoltsiceContract {
     public unpause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.unpause( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        ( txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.unpause( txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -221,12 +237,20 @@ export class DummyToken extends SoltsiceContract {
     public mint = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.mint(_to, _amount, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_to: string, _amount: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.mint(_to, _amount, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.mint.request(_to, _amount).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -293,12 +317,20 @@ export class DummyToken extends SoltsiceContract {
     public decreaseApproval = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.decreaseApproval(_spender, _subtractedValue, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_spender: string, _subtractedValue: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.decreaseApproval(_spender, _subtractedValue, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.decreaseApproval.request(_spender, _subtractedValue).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -354,12 +386,20 @@ export class DummyToken extends SoltsiceContract {
     public finishMinting = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.finishMinting( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        ( txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.finishMinting( txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.finishMinting.request().params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -404,12 +444,20 @@ export class DummyToken extends SoltsiceContract {
     public pause = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        ( txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.pause( txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        ( txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.pause( txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -476,12 +524,20 @@ export class DummyToken extends SoltsiceContract {
     public increaseApproval = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.increaseApproval(_spender, _addedValue, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_spender: string, _addedValue: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.increaseApproval(_spender, _addedValue, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.increaseApproval.request(_spender, _addedValue).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -537,12 +593,20 @@ export class DummyToken extends SoltsiceContract {
     public transferOwnership = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (newOwner: string, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.transferOwnership(newOwner, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (newOwner: string, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.transferOwnership(newOwner, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -587,12 +651,20 @@ export class DummyToken extends SoltsiceContract {
     public transfer = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.transfer(_to, _value, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.transfer(_to, _value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -637,12 +709,20 @@ export class DummyToken extends SoltsiceContract {
     public transferFrom = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.transferFrom(_from, _to, _value, txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (_from: string, _to: string, _value: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.transferFrom(_from, _to, _value, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferFrom.request(_from, _to, _value).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length

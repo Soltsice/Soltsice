@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
     "private": false,
-    "version": "0.10.6",
+    "version": "0.10.7",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -64,11 +64,11 @@
         "build:contracts": "truffle compile",
         "testrpc": "testrpc -v -m dbrainio -i 314 --account=\"0x1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce,1000000000000000000000000\" --account=\"0x058f98c376f9bf8e3bf167821ceabfdb15202408bc9a288c30a2339152341a27,1000000000000000000000000\" --account=\"0x98295a1bbe25893261d962e56419da5064a45af2864052612498ef01346a5cd2,1000000000000000000000000\" --account=\"0xb11ca488b6881322b141510bc2568a9434b74c25b5a315ac3699bcb6d4677eac,1000000000000000000000000\" --account=\"0xcebd6eb5764cb4dbaa42ddf62db0834bc58a9fb93f5776bff32d2f97544bc500,1000000000000000000000000\" ",
         "soltsice": "tsc && copyfiles -u 2 build/contracts/**/* src/artifacts && copyfiles -u 2 build/contracts/**/* dist/src/artifacts && npm run soltsice:gen && tsc",
-        "soltsice:gen": "copyfiles -u 2 build/contracts/**/* src/artifacts && node ./dist/src/soltsice.js ./src/artifacts ./src/contracts .. ",
+        "soltsice:gen": "copyfiles -u 2 build/contracts/**/* src/artifacts && node ./dist/src/soltsice.bin.js ./src/artifacts ./src/contracts .. ",
         "travis": "npm run build:contracts && npm run soltsice && jest"
     },
     "bin": {
-        "soltsice": "dist/src/soltsice.js"
+        "soltsice": "dist/src/soltsice.bin.js"
     },
     "jest": {
         "transform": {

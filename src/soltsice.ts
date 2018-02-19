@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import * as fs from 'fs';
 import * as path from 'path';
 import { W3 } from './W3';
@@ -7,14 +5,6 @@ import { W3 } from './W3';
 // tslint:disable:max-line-length
 
 export module soltsice {
-    var endOfLine = require('os').EOL;
-
-    // Makes the script crash on unhandled rejections instead of silently
-    // ignoring them. In the future, promise rejections that are not handled will
-    // terminate the Node.js process with a non-zero exit code.
-    process.on('unhandledRejection', err => {
-        throw err;
-    });
 
     // tslint:disable-next-line:typedef
     export function parseArgs(args: string[]): { source: string, destination: string, W3importPath: string } {
@@ -32,6 +22,7 @@ export module soltsice {
 
     // tslint:disable-next-line:typedef
     export function generateTypes(options: { source: string, destination: string, W3importPath: string }) {
+        let endOfLine = require('os').EOL;
 
         let destination = options.destination;
 
@@ -191,12 +182,20 @@ export module soltsice {
     public ${name} = Object.assign(
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<W3.TX.TransactionResult> => {
-            return new Promise((resolve, reject) => {
-                this._instance.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
-                    .then((res) => resolve(res))
-                    .catch((err) => reject(err));
-            });
+        (${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.${name}.request(${inputsNamesString}).params[0].data, txParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
         },
         {
             // tslint:disable-next-line:max-line-length
@@ -353,8 +352,44 @@ export class ${contractName} extends SoltsiceContract {
 `;
         return template;
     }
+
+    /** Create or get local key file and return private key and address. This is a blocking sync function for file read/write, therefore should be used during initial startup. */
+    export function getLocalPrivateKeyAndAddress(filepath: string, password: string): { privateKey: string, address: string } {
+
+        let address: string;
+        let privateKey: string = '';
+
+        let keythereum = W3.getKeythereum();
+
+        let createNew = (): string => {
+            let dk = keythereum.create();
+            // let publicKey = W3.EthUtils.privateToPublic(dk.privateKey);
+            privateKey = W3.EthUtils.bufferToHex(dk.privateKey);
+            let addrBuffer = W3.EthUtils.privateToAddress(dk.privateKey);
+
+            let addr = W3.EthUtils.bufferToHex(addrBuffer);
+            let keyObject = keythereum.dump(password, dk.privateKey, dk.salt, dk.iv);
+
+            fs.writeFileSync(filepath, JSON.stringify(keyObject), { encoding: 'ascii' });
+            return addr;
+        };
+
+        if (fs.existsSync(filepath)) {
+            let keyObject = JSON.parse(fs.readFileSync(filepath, { encoding: 'ascii' }).trim());
+            address = keyObject.address;
+            privateKey = W3.EthUtils.bufferToHex(keythereum.recover(password, keyObject));
+        } else {
+            address = createNew();
+        }
+
+        if (privateKey && !privateKey.startsWith('0x')) {
+            privateKey = '0x' + privateKey;
+        }
+
+        if (address && !address.startsWith('0x')) {
+            address = '0x' + address;
+        }
+
+        return { privateKey, address };
+    }
 }
-
-soltsice.generateTypes(soltsice.parseArgs(process.argv.slice(2)));
-
-// TODO ctor, events
