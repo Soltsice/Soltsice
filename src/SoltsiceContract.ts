@@ -20,8 +20,6 @@ export class SoltsiceContract {
             w3 = W3.Default;
         }
         let ct = w3.web3.eth.contract(tokenArtifacts.abi);
-        console.log('CT:', ct);
-        // ct.setProvider(web3.currentProvider);
         let data = ct.new.getData(...constructorParams!, {data: tokenArtifacts.bytecode});
         return data;
     }
