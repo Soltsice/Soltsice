@@ -96,7 +96,7 @@ export class Ownable extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -117,7 +117,7 @@ export class Ownable extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (newOwner: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )

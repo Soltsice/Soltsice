@@ -107,7 +107,7 @@ export class Pausable extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -128,7 +128,7 @@ export class Pausable extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (newOwner: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -165,7 +165,7 @@ export class Pausable extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -186,7 +186,7 @@ export class Pausable extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: ( privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.pause.request().params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -223,7 +223,7 @@ export class Pausable extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -244,7 +244,7 @@ export class Pausable extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: ( privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.unpause.request().params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )

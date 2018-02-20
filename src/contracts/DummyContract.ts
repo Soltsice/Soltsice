@@ -108,7 +108,7 @@ export class DummyContract extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -129,7 +129,7 @@ export class DummyContract extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (newOwner: string, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferOwnership.request(newOwner).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -177,7 +177,7 @@ export class DummyContract extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPrivate.request(_newValue).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPrivate.request(_newValue).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -198,7 +198,7 @@ export class DummyContract extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (_newValue: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPrivate.request(_newValue).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPrivate.request(_newValue).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -246,7 +246,7 @@ export class DummyContract extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPublic.request(_newValue).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPublic.request(_newValue).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -267,7 +267,7 @@ export class DummyContract extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (_newValue: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPublic.request(_newValue).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPublic.request(_newValue).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )

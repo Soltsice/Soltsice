@@ -4,7 +4,6 @@
     "module": "CommonJS",
     "target": "es5",
     "declaration": true,
-    //"outFile": "dist/index.js",
     "lib": [
       "es6",
       "dom"
@@ -31,7 +30,6 @@
     "zeppelin"
   ],
   "include": [
-    "./test/**/*",
     "./src/**/*"
   ]
 }

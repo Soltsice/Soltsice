@@ -11,6 +11,5 @@ module.exports = {
       enabled: true,
       runs: 200
     }
-  },
-  test_directory: 'dist/test',
+  }
 };

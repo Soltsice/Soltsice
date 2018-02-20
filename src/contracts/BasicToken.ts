@@ -97,7 +97,7 @@ export class BasicToken extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -118,7 +118,7 @@ export class BasicToken extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (_to: string, _value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(_to, _value).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )

@@ -108,7 +108,7 @@ export class ERC20 extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(to, value).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(to, value).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -129,7 +129,7 @@ export class ERC20 extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (to: string, value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(to, value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transfer.request(to, value).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -177,7 +177,7 @@ export class ERC20 extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferFrom.request(from, to, value).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferFrom.request(from, to, value).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -198,7 +198,7 @@ export class ERC20 extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (from: string, to: string, value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferFrom.request(from, to, value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.transferFrom.request(from, to, value).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )
@@ -235,7 +235,7 @@ export class ERC20 extends SoltsiceContract {
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
-                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.approve.request(spender, value).params[0].data, txParams, undefined)
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.approve.request(spender, value).params[0].data, txParams || this._sendParams, undefined)
                     .then(txHash => {
                         return this.waitTransactionReceipt(txHash);
                     });
@@ -256,7 +256,7 @@ export class ERC20 extends SoltsiceContract {
                     // tslint:disable-next-line:variable-name
                     sendSigned: (spender: string, value: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                         // tslint:disable-next-line:max-line-length
-                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.approve.request(spender, value).params[0].data, txParams, nonce);
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.approve.request(spender, value).params[0].data, txParams || this._sendParams, nonce);
                     }
                 }
             )

@@ -4,3 +4,7 @@ truffle.js
 build
 migrations
 /src
+/test
+.vscode
+.travis.yml
+.editorconfig
