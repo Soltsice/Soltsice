@@ -10,4 +10,8 @@ contract ArrayTypesTest {
     function funcArrayInArguments(address[] _array) pure external returns (address[] retArray) {
         return _array;
     }
+
+    function funcArrayInArguments(address[] _array, address[] _array2) pure external returns (address[] retArray) {
+        return _array;
+    }
 }

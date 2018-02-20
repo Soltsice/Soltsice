@@ -262,7 +262,17 @@ export module soltsice {
         let ctor = abis.filter(a => a.type === 'constructor');
         let ctorParams = ctor.length === 1 ? processCtor(ctor[0]) : { typesNames: '', names: '' };
 
-        let methodsBody = abis.filter(a => a.type === 'function').map(processAbi).join('');
+        let names = abis.map(x => x.name);
+
+        let methodsBody = abis
+            .filter((value, index, self) => {
+                // filter duplicate names and keep only the first one
+                // order of filters matters because we use names arrays built from abis before the next 'function' filter
+                return names.indexOf(value.name) === index;
+            })
+            .filter(a => a.type === 'function')
+            .map(processAbi)
+            .join('');
 
         let bnImport = ``;
         if (ctorParams.typesNames.indexOf('BigNumber') >= 0 || methodsBody.indexOf('BigNumber') >= 0) {
