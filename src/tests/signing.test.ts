@@ -54,6 +54,7 @@ describe('Signing tests', () => {
         let pkAddress2 = soltsice.getLocalPrivateKeyAndAddress(filepath, 'DummyP@55');
 
         expect(pkAddress.privateKey).toEqual(pkAddress2.privateKey);
+        expect(pkAddress.publicKey).toEqual(pkAddress2.publicKey);
         expect(pkAddress.address).toEqual(pkAddress2.address);
 
         expect(fs.existsSync(filepath)).toBe(true);

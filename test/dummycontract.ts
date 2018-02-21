@@ -10,7 +10,7 @@ contract('DummyContract', function (accounts: any) {
         let instance = await dummyContract.deployed();
 
         // typed contract could be initiated with an instance supplied by Truffle
-        let dummy = await DummyContract.At(instance);
+        let dummy = await DummyContract.at(instance);
 
         console.log(dummy);
 
@@ -43,7 +43,7 @@ contract('DummyContract', function (accounts: any) {
     });
 
     it('should have initial public value from deployer', async function () {
-        let dummy = await DummyContract.At(await dummyContract.deployed());
+        let dummy = await DummyContract.at(await dummyContract.deployed());
         let value = await dummy.getPublic();
         assert.equal(value, 456, '456 wasn\'t in the public value');
     });

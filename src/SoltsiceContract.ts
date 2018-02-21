@@ -6,7 +6,7 @@ import SolidityCoder = require('web3/lib/solidity/coder.js');
  * Base contract for all Soltsice contracts
  */
 export class SoltsiceContract {
-    public static Silent: boolean = false;
+    public static silent: boolean = false;
     public transactionHash: Promise<string>;
     public w3: W3;
     protected _Contract: any;
@@ -15,9 +15,9 @@ export class SoltsiceContract {
     protected _instancePromise: Promise<any>;
     protected _sendParams: W3.TX.TxParams;
 
-    protected static NewDataImpl(w3?: W3, tokenArtifacts?: any, constructorParams?: W3.TX.ContractDataType[]): string {
+    protected static newDataImpl(w3?: W3, tokenArtifacts?: any, constructorParams?: W3.TX.ContractDataType[]): string {
         if (!w3) {
-            w3 = W3.Default;
+            w3 = W3.default;
         }
         let ct = w3.web3.eth.contract(tokenArtifacts.abi);
         let data = ct.new.getData(...constructorParams!, {data: tokenArtifacts.bytecode});
@@ -30,7 +30,7 @@ export class SoltsiceContract {
         deploymentParams?: string | W3.TX.TxParams | object,
         link?: SoltsiceContract[]) {
         if (!web3) {
-            web3 = W3.Default;
+            web3 = W3.default;
         }
         this.w3 = web3;
 
@@ -73,7 +73,7 @@ export class SoltsiceContract {
                 this._Contract.setNetwork(network);
                 this._Contract.deployed().then((inst) => {
                     this.transactionHash = inst.transactionHash;
-                    if (!SoltsiceContract.Silent) {
+                    if (!SoltsiceContract.silent) {
                         console.log('SOLTSICE: USING DEPLOYED CONTRACT', this.constructor.name, ' at ', deploymentParams!);
                     }
                     resolve(inst);
@@ -83,7 +83,7 @@ export class SoltsiceContract {
             };
 
             let useExisting = (address: string) => {
-                if (!SoltsiceContract.Silent) {
+                if (!SoltsiceContract.silent) {
                     console.log('SOLTSICE: USING EXISTING CONTRACT', this.constructor.name, ' at ', deploymentParams!);
                 }
                 this._Contract.at(address).then((inst) => {
@@ -100,7 +100,7 @@ export class SoltsiceContract {
                 useExisting(deploymentParams!);
             } else if (instanceOfTxParams(deploymentParams)) {
                 this._Contract.new(...constructorParams!, deploymentParams).then((inst) => {
-                    if (!SoltsiceContract.Silent) {
+                    if (!SoltsiceContract.silent) {
                         console.log('SOLTSICE: DEPLOYED NEW CONTRACT ', this.constructor.name, ' at ', inst.address);
                     }
                     this.transactionHash = inst.transactionHash;
@@ -120,15 +120,16 @@ export class SoltsiceContract {
         });
     }
 
-    get address(): string {
+    public get address(): string {
         return this._instance.address;
     }
 
-    get instance(): any {
+    public get instance(): any {
         return this._instance;
     }
 
-    public get TxParams() {
+    /** Default tx params for sending transactions. */
+    public get sendTxParams() {
         return this._sendParams;
     }
 
@@ -243,7 +244,7 @@ export class SoltsiceContract {
     /** Get transaction result by hash. Returns receipt + parsed logs. */
     public getTransactionResult(txHash: string): Promise<W3.TX.TransactionResult> {
         return new Promise<W3.TX.TransactionResult>((resolve, reject) => {
-            this.w3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
+            this.w3.web3.eth.getTransactionReceipt(txHash, async (err, receipt) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -300,7 +301,7 @@ export class SoltsiceContract {
 
     public async newFilter(fromBlock: number, toBlock?: number): Promise<number> {
         let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
         let filter = await this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_newFilter',
@@ -320,7 +321,7 @@ export class SoltsiceContract {
     }
 
     public async uninstallFilter(filter: number): Promise<boolean> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
         let ret = await this.w3.sendRPC({
             jsonrpc: '2.0',
             method: 'eth_uninstallFilter',
@@ -336,7 +337,7 @@ export class SoltsiceContract {
     }
 
     public async getFilterChanges(filter: number): Promise<W3.Log[]> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
 
         let logs = this.w3.sendRPC({
             jsonrpc: '2.0',
@@ -356,7 +357,7 @@ export class SoltsiceContract {
     }
 
     public async getFilterLogs(filter: number): Promise<W3.Log[]> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
 
         let logs = this.w3.sendRPC({
             jsonrpc: '2.0',

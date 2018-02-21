@@ -1,17 +1,19 @@
 
-import { W3, getStorage } from '../';
+import { W3, getStorage, testAccounts } from '../';
 import { DummyContract } from '../contracts';
+import * as ganache from 'ganache-cli';
 // import { Storage } from '../contracts';
 
-let w3 = new W3(new W3.providers.HttpProvider('http://localhost:8544'));
-let activeAccount = '0xc08d5fe987c2338d28fd020b771a423b68e665e4';
+let w3 = new W3(ganache.provider({
+    mnemonic: 'dbrainio',
+    network_id: 314
+}));
+W3.default = w3;
+
+let activeAccount = testAccounts[0];
 w3.defaultAccount = activeAccount;
 let deployParams = W3.TX.txParamsDefaultDeploy(activeAccount);
 let sendParams = W3.TX.txParamsDefaultSend(activeAccount);
-
-beforeAll(async () => {
-    await w3.unlockAccount(activeAccount, 'Ropsten1', 150000);
-});
 
 beforeEach(async () => {
     // Ropsten is SLOW compared to TestRPC
@@ -36,26 +38,26 @@ it('Storage: Could get storage for account', async () => {
 
 it('Storage: Could get contract hash', async () => {
     let store = await getStorage(w3, activeAccount);
-    let hash = DummyContract.BytecodeHash;
+    let hash = DummyContract.bytecodeHash;
     // console.log('HASH: ', hash);
-    let manualHash = W3.sha3(JSON.stringify(DummyContract.Artifacts.bytecode));
+    let manualHash = W3.sha3(JSON.stringify(DummyContract.artifacts.bytecode));
     expect(manualHash).toBe(hash);
 
     // pattern to store addresses of a contract and reuse them if bytecode is not changed
     // note that ctor params require unique hash work
-    let ctorParams = { _secret: 123, _wellKnown: 42 };
+    let ctorParams = { _secret: 123, _wellKnown: 42, _array: [1, 2, 3] };
     let contractHash = W3.sha3(hash! + JSON.stringify(ctorParams));
 
     let dummy: DummyContract;
     let address = await store.getAddressValue(contractHash);
     console.log('STORED ADDRESS', address);
     if (address === W3.zeroAddress) {
-        dummy = await DummyContract.New(deployParams, ctorParams, w3);
+        dummy = await DummyContract.new(deployParams, ctorParams, w3);
         await dummy.instance;
         address = await dummy.address;
         await store.setAddressValue(contractHash, address);
     } else {
-        dummy = await DummyContract.At(address, w3);
+        dummy = await DummyContract.at(address, w3);
         dummy.getPublic();
     }
     // expect(await dummy.address).toBe(address);

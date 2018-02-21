@@ -6,11 +6,11 @@ import { W3, SoltsiceContract } from '..';
  * DummyContract API
  */
 export class DummyContract extends SoltsiceContract {
-    public static get Artifacts() { return require('../artifacts/DummyContract.json'); }
+    public static get artifacts() { return require('../artifacts/DummyContract.json'); }
 
-    public static get BytecodeHash() {
+    public static get bytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
-        let artifacts = DummyContract.Artifacts;
+        let artifacts = DummyContract.artifacts;
         if (!artifacts || !artifacts.bytecode) {
             return undefined;
         }
@@ -19,52 +19,52 @@ export class DummyContract extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<DummyContract> {
-        w3 = w3 || W3.Default;
+    public static async new(deploymentParams: W3.TX.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<DummyContract> {
+        w3 = w3 || W3.default;
         if (!privateKey) {
             let contract = new DummyContract(deploymentParams, ctorParams, w3, link);
             await contract._instancePromise;
             return contract;
         } else {
-            let data = DummyContract.NewData(ctorParams, w3);
+            let data = DummyContract.newData(ctorParams, w3);
             let txHash = await w3.sendSignedTransaction(W3.zeroAddress, privateKey, data, deploymentParams);
             let txReceipt = await w3.waitTransactionReceipt(txHash);
             let rawAddress = txReceipt.contractAddress;
-            let contract = await DummyContract.At(rawAddress, w3);
+            let contract = await DummyContract.at(rawAddress, w3);
             return contract;
         }
     }
 
-    public static async At(address: string | object, w3?: W3): Promise<DummyContract> {
+    public static async at(address: string | object, w3?: W3): Promise<DummyContract> {
         let contract = new DummyContract(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    public static async Deployed(w3?: W3): Promise<DummyContract> {
+    public static async deployed(w3?: W3): Promise<DummyContract> {
         let contract = new DummyContract('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
     // tslint:disable-next-line:max-line-length
-    public static NewData(ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number}, w3?: W3): string {
+    public static newData(ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]}, w3?: W3): string {
         // tslint:disable-next-line:max-line-length
-        let data = SoltsiceContract.NewDataImpl(w3, DummyContract.Artifacts, ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : []);
+        let data = SoltsiceContract.newDataImpl(w3, DummyContract.artifacts, ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown, ctorParams!._array] : []);
         return data;
     }
 
     protected constructor(
         deploymentParams: string | W3.TX.TxParams | object,
-        ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number},
+        ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]},
         w3?: W3,
         link?: SoltsiceContract[]
     ) {
         // tslint:disable-next-line:max-line-length
         super(
             w3,
-            DummyContract.Artifacts,
-            ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown] : [],
+            DummyContract.artifacts,
+            ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown, ctorParams!._array] : [],
             deploymentParams,
             link
         );
@@ -72,6 +72,17 @@ export class DummyContract extends SoltsiceContract {
     /*
         Contract methods
     */
+    
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public array(_0: BigNumber | number, txParams?: W3.TX.TxParams): Promise<BigNumber> {
+        return new Promise((resolve, reject) => {
+            this._instance.array
+                .call(_0, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
     
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
@@ -290,5 +301,74 @@ export class DummyContract extends SoltsiceContract {
                 });
             }
         });
+    
+    // tslint:disable-next-line:member-ordering
+    public ArrayTypesTest = Object.assign(
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:variable-name
+        (_array: BigNumber[] | number[], txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+            if (!privateKey) {
+                return new Promise((resolve, reject) => {
+                    this._instance.ArrayTypesTest(_array, txParams || this._sendParams)
+                        .then((res) => resolve(res))
+                        .catch((err) => reject(err));
+                });
+            } else {
+                // tslint:disable-next-line:max-line-length
+                return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.ArrayTypesTest.request(_array).params[0].data, txParams || this._sendParams, undefined)
+                    .then(txHash => {
+                        return this.waitTransactionReceipt(txHash);
+                    });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            sendTransaction: Object.assign((_array: BigNumber[] | number[], txParams?: W3.TX.TxParams): Promise<string> => {
+                    return new Promise((resolve, reject) => {
+                        this._instance.ArrayTypesTest.sendTransaction(_array, txParams || this._sendParams)
+                            .then((res) => resolve(res))
+                            .catch((err) => reject(err));
+                    });
+                },
+                {
+                    // tslint:disable-next-line:max-line-length
+                    // tslint:disable-next-line:variable-name
+                    sendSigned: (_array: BigNumber[] | number[], privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+                        // tslint:disable-next-line:max-line-length
+                        return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.ArrayTypesTest.request(_array).params[0].data, txParams || this._sendParams, nonce);
+                    }
+                }
+            )
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            data: (_array: BigNumber[] | number[]): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    resolve(this._instance.ArrayTypesTest.request(_array).params[0].data);
+                });
+            }
+        },
+        {
+            // tslint:disable-next-line:max-line-length
+            // tslint:disable-next-line:variable-name
+            estimateGas: (_array: BigNumber[] | number[]): Promise<number> => {
+                return new Promise((resolve, reject) => {
+                    this._instance.ArrayTypesTest.estimateGas(_array).then((g) => resolve(g));
+                });
+            }
+        });
+    
+    // tslint:disable-next-line:max-line-length
+    // tslint:disable-next-line:variable-name
+    public funcArrayInArguments(_array: string[], txParams?: W3.TX.TxParams): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            this._instance.funcArrayInArguments
+                .call(_array, txParams || this._sendParams)
+                .then((res) => resolve(res))
+                .catch((err) => reject(err));
+        });
+    }
     
 }

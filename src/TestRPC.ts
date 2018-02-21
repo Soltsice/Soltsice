@@ -18,7 +18,7 @@ export class TestRPC {
             if (!(await this.w3.isTestRPC)) {
                 throw 'Not on TestRPC';
             }
-            const id = 'W3:' + W3.NextCounter();
+            const id = 'W3:' + W3.getNextCounter();
             return this.w3.sendRPC({
                 jsonrpc: '2.0',
                 method: 'evm_snapshot',
@@ -39,7 +39,7 @@ export class TestRPC {
             if (!(await this.w3.isTestRPC)) {
                 throw 'Not on TestRPC';
             }
-            const id = 'W3:' + W3.NextCounter();
+            const id = 'W3:' + W3.getNextCounter();
             return this.w3.sendRPC({
                 jsonrpc: '2.0',
                 method: 'evm_revert',
@@ -58,7 +58,7 @@ export class TestRPC {
             if (!(await this.w3.isTestRPC)) {
                 throw 'Not on TestRPC';
             }
-            const id = 'W3:' + W3.NextCounter();
+            const id = 'W3:' + W3.getNextCounter();
             return this.w3.sendRPC({
                 jsonrpc: '2.0',
                 method: 'evm_increaseTime',
@@ -93,7 +93,7 @@ export class TestRPC {
             if (!(await this.w3.isTestRPC)) {
                 throw 'Not on TestRPC';
             }
-            const id = 'W3:' + W3.NextCounter();
+            const id = 'W3:' + W3.getNextCounter();
             return this.w3.sendRPC({
                 jsonrpc: '2.0',
                 method: 'evm_mine',

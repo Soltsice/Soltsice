@@ -6,22 +6,37 @@ import { W3 } from './W3';
 
 export module soltsice {
 
+    export interface SoltsiceOptions {
+        paths: string[];
+        cleanArtifacts: boolean;
+        skipPattern: string;
+    }
+
     // tslint:disable-next-line:typedef
-    export function parseArgs(args: string[]): { source: string, destination: string, W3importPath: string } {
-        console.log(args);
-        if (args.length < 1 || args.length > 3) {
-            throw 'Wrong number of args';
+    function parseArgs(args: SoltsiceOptions): { source: string, destination: string, W3importPath: string, cleanArtifacts: boolean, skipPattern: string } {
+        if (args.paths.length < 1 || args.paths.length > 3) {
+            throw new Error('Wrong number of args');
+        }
+        if (args.cleanArtifacts) {
+            throw new Error('Cleaning artifacts is not supported yet');
+        }
+        if (args.skipPattern) {
+            throw new Error('Skip pattern is not supported yet');
         }
         var options = {
-            source: args[0],
-            destination: args.length > 1 ? args[1] : args[0],
-            W3importPath: args.length > 2 ? args[2] : 'soltsice'
+            source: args.paths[0],
+            destination: args.paths.length > 1 ? args.paths[1] : args.paths[0],
+            W3importPath: args.paths.length > 2 ? args.paths[2] : 'soltsice',
+            cleanArtifacts: args.cleanArtifacts,
+            skipPattern: args.skipPattern
         };
+        console.log('Soltsice optoins: ', options);
         return options;
     }
 
     // tslint:disable-next-line:typedef
-    export function generateTypes(options: { source: string, destination: string, W3importPath: string }) {
+    export function generateTypes(args: SoltsiceOptions) {
+        let options = parseArgs(args);
         let endOfLine = require('os').EOL;
 
         let destination = options.destination;
@@ -291,11 +306,11 @@ import { W3, SoltsiceContract } from '${importPath}';
  * ${contractName} API
  */
 export class ${contractName} extends SoltsiceContract {
-    public static get Artifacts() { return require('${artifactRelPath}'); }
+    public static get artifacts() { return require('${artifactRelPath}'); }
 
-    public static get BytecodeHash() {
+    public static get bytecodeHash() {
         // we need this before ctor, but artifacts are static and we cannot pass it to the base class, so need to generate
-        let artifacts = ${contractName}.Artifacts;
+        let artifacts = ${contractName}.artifacts;
         if (!artifacts || !artifacts.bytecode) {
             return undefined;
         }
@@ -304,38 +319,38 @@ export class ${contractName} extends SoltsiceContract {
     }
 
     // tslint:disable-next-line:max-line-length
-    public static async New(deploymentParams: W3.TX.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<${contractName}> {
-        w3 = w3 || W3.Default;
+    public static async new(deploymentParams: W3.TX.TxParams, ctorParams?: {${ctorParams.typesNames}}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<${contractName}> {
+        w3 = w3 || W3.default;
         if (!privateKey) {
             let contract = new ${contractName}(deploymentParams, ctorParams, w3, link);
             await contract._instancePromise;
             return contract;
         } else {
-            let data = ${contractName}.NewData(ctorParams, w3);
+            let data = ${contractName}.newData(ctorParams, w3);
             let txHash = await w3.sendSignedTransaction(W3.zeroAddress, privateKey, data, deploymentParams);
             let txReceipt = await w3.waitTransactionReceipt(txHash);
             let rawAddress = txReceipt.contractAddress;
-            let contract = await ${contractName}.At(rawAddress, w3);
+            let contract = await ${contractName}.at(rawAddress, w3);
             return contract;
         }
     }
 
-    public static async At(address: string | object, w3?: W3): Promise<${contractName}> {
+    public static async at(address: string | object, w3?: W3): Promise<${contractName}> {
         let contract = new ${contractName}(address, undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
-    public static async Deployed(w3?: W3): Promise<${contractName}> {
+    public static async deployed(w3?: W3): Promise<${contractName}> {
         let contract = new ${contractName}('', undefined, w3, undefined);
         await contract._instancePromise;
         return contract;
     }
 
     // tslint:disable-next-line:max-line-length
-    public static NewData(ctorParams?: {${ctorParams.typesNames}}, w3?: W3): string {
+    public static newData(ctorParams?: {${ctorParams.typesNames}}, w3?: W3): string {
         // tslint:disable-next-line:max-line-length
-        let data = SoltsiceContract.NewDataImpl(w3, ${contractName}.Artifacts, ctorParams ? [${ctorParams.names}] : []);
+        let data = SoltsiceContract.newDataImpl(w3, ${contractName}.artifacts, ctorParams ? [${ctorParams.names}] : []);
         return data;
     }
 
@@ -348,7 +363,7 @@ export class ${contractName} extends SoltsiceContract {
         // tslint:disable-next-line:max-line-length
         super(
             w3,
-            ${contractName}.Artifacts,
+            ${contractName}.artifacts,
             ctorParams ? [${ctorParams.names}] : [],
             deploymentParams,
             link
@@ -364,42 +379,46 @@ export class ${contractName} extends SoltsiceContract {
     }
 
     /** Create or get local key file and return private key and address. This is a blocking sync function for file read/write, therefore should be used during initial startup. */
-    export function getLocalPrivateKeyAndAddress(filepath: string, password: string): { privateKey: string, address: string } {
+    export function getLocalPrivateKeyAndAddress(filepath: string, password: string): W3.Account {
 
-        let address: string;
+        let address: string = '';
         let privateKey: string = '';
+        let publicKey: string = '';
 
         let keythereum = W3.getKeythereum();
 
-        let createNew = (): string => {
+        let createNew = (): void => {
             let dk = keythereum.create();
-            // let publicKey = W3.EthUtils.privateToPublic(dk.privateKey);
             privateKey = W3.EthUtils.bufferToHex(dk.privateKey);
+            publicKey = W3.EthUtils.bufferToHex(W3.EthUtils.privateToPublic(dk.privateKey));
             let addrBuffer = W3.EthUtils.privateToAddress(dk.privateKey);
-
-            let addr = W3.EthUtils.bufferToHex(addrBuffer);
+            address = W3.EthUtils.bufferToHex(addrBuffer);
             let keyObject = keythereum.dump(password, dk.privateKey, dk.salt, dk.iv);
-
             fs.writeFileSync(filepath, JSON.stringify(keyObject), { encoding: 'ascii' });
-            return addr;
         };
 
         if (fs.existsSync(filepath)) {
             let keyObject = JSON.parse(fs.readFileSync(filepath, { encoding: 'ascii' }).trim());
             address = keyObject.address;
-            privateKey = W3.EthUtils.bufferToHex(keythereum.recover(password, keyObject));
+            let privateBuffer = keythereum.recover(password, keyObject);
+            privateKey = W3.EthUtils.bufferToHex(privateBuffer);
+            publicKey = W3.EthUtils.bufferToHex(W3.EthUtils.privateToPublic(privateBuffer));
         } else {
-            address = createNew();
+            createNew();
         }
 
         if (privateKey && !privateKey.startsWith('0x')) {
             privateKey = '0x' + privateKey;
         }
 
+        if (publicKey && !publicKey.startsWith('0x')) {
+            publicKey = '0x' + publicKey;
+        }
+
         if (address && !address.startsWith('0x')) {
             address = '0x' + address;
         }
 
-        return { privateKey, address };
+        return { privateKey, publicKey, address };
     }
 }

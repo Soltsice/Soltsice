@@ -95,6 +95,7 @@
             "check-separator",
             "check-type"
         ],
-        "deprecation": true
+        "deprecation": true,
+        "member-access": [true, "check-accessor"]
     }
 }

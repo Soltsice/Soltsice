@@ -14,7 +14,7 @@ import { ropstenStorageFactory, rinkebyStorageFactory, mainnetStorageFactory } f
 export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boolean) => Promise<Storage>) = Object.assign(
     // tslint:disable-next-line:max-line-length
     // tslint:disable-next-line:variable-name
-    async (w3: W3, accountAddress: string, createOnMainNet?: boolean): Promise<Storage> => {
+    async (w3: W3, accountAddress: string, createOnMainNet?: boolean, privateKey?: string): Promise<Storage> => {
         let cached = w3[accountAddress] as Storage;
         if (cached) {
             return cached;
@@ -24,13 +24,13 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
         let txDeploy = W3.TX.txParamsDefaultDeploy(accountAddress, 900000, 1000000000);
         let storageFactory: StorageFactory;
         if (await w3.isTestRPC) {
-            storageFactory = await StorageFactory.New(txDeploy, undefined, w3);
+            storageFactory = await StorageFactory.new(txDeploy, undefined, w3, undefined, privateKey);
         } else if (nid === '3') {
-            storageFactory = await StorageFactory.At(ropstenStorageFactory, w3);
+            storageFactory = await StorageFactory.at(ropstenStorageFactory, w3);
         }else if (nid === '4') {
-            storageFactory = await StorageFactory.At(rinkebyStorageFactory, w3);
+            storageFactory = await StorageFactory.at(rinkebyStorageFactory, w3);
         } else if (nid === '1') {
-            storageFactory = await StorageFactory.At(mainnetStorageFactory, w3);
+            storageFactory = await StorageFactory.at(mainnetStorageFactory, w3);
         } else {
             throw new Error(`Storage on network id ${nid} is not supported.`);
         }
@@ -47,7 +47,7 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
                 throw new Error(`Cannot create new storage for ${accountAddress}`);
             }
         }
-        let s = await Storage.At(storageAddress, w3);
+        let s = await Storage.at(storageAddress, w3);
         w3[accountAddress] = s;
         return s;
     }
@@ -58,7 +58,7 @@ export let getStorage: ((w3: W3, accountAddress: string, createOnMainNet?: boole
     //     contractHash: <T extends SoltsiceContract>(): string | undefined => {
     //         let fake: T = {} as T;
     //         console.log('CTOR', fake.constructor);
-    //         let artifacts = ((<typeof SoltsiceContract> fake.constructor) as any).Artifacts;
+    //         let artifacts = ((<typeof SoltsiceContract> fake.constructor) as any).artifacts;
     //         if (!artifacts.bytecode) {
     //             return undefined;
     //         }

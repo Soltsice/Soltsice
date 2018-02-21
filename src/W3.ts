@@ -24,60 +24,52 @@ export function toBN(value: number): BigNumber {
 export class W3 {
     private static _counter: number = 0;
     private static _default: W3;
+    private _globalWeb3;
+    private _netId: string;
+    private _netNode: Promise<string>;
+    private _defaultAccount: string;
 
     /**
-     * Default W3 instance that is used as a fallback when such an instance is not provided to a construct constructor.
-     * You must set it explicitly via W3.Default setter. Use an empty `new W3()` constructor to get an instance that
+     * Default W3 instance that is used as a fallback when such an instance is not provided to a constructor.
+     * You must set it explicitly via W3.default setter. Use an empty `new W3()` constructor to get an instance that
      * automatically resolves to a global web3 instance `window['web3']` provided by e.g. MIST/Metamask or connects
-     * to the default 8545 port if
-     * no global instance is present.
+     * to the default 8545 port if no global instance is present.
      */
-    static get Default(): W3 {
+    public static get default(): W3 {
         if (W3._default) {
             return W3._default;
         }
-        throw 'Default W3 instance is not set. Use W3.Default setter.';
-        // W3._default = new W3();
-        // return W3._default;
+        throw 'Default W3 instance is not set. Use W3.default setter.';
     }
 
-    static set Default(w3: W3) {
+    /**
+     * Set default W3 instance.
+     */
+    public static set default(w3: W3) {
         W3._default = w3;
     }
 
-    static NextCounter(): number {
+    /** Get Global W3 incrementing counter. Starts with zero.  */
+    public static getNextCounter(): number {
         // node is single-threaded
         // same provider in two W3 instances is OK, counter will be unique accross them
-        W3._counter = W3._counter + 1;
-        return W3._counter;
+        let value = W3._counter;
+        W3._counter++;
+        return value;
     }
 
-    static providers: W3.Providers = Web3JS.providers;
-    static givenProvider: W3.Provider = Web3JS.givenProvider;
-    static modules: {
-        Eth: new (provider: W3.Provider) => W3.Eth
-        Net: new (provider: W3.Provider) => W3.Net
-        Personal: new (provider: W3.Provider) => W3.Personal
-        Shh: new (provider: W3.Provider) => W3.Shh
-        Bzz: new (provider: W3.Provider) => W3.Bzz
-    } = Web3JS.modules;
+    /** Web3 providers. */
+    public static providers: W3.Providers = Web3JS.providers;
 
-    get currentProvider(): W3.Provider { return this.web3 ? this.web3.currentProvider : undefined; }
-
-    /** @deprecated Access this property via w3.web3.eth */
-    get eth(): W3.Eth { return this.web3.eth; }
-    /** @deprecated Access this property via w3.web3.version */
-    get version(): W3.Version0 { return this.web3.version; }
-    /** @deprecated Access this property via w3.web3.utils */
-    get utils(): W3.Utils {
-        return this.web3.utils;
-    }
+    /** Current Web3 provider. */
+    public get currentProvider(): W3.Provider { return this.web3 ? this.web3.currentProvider : undefined; }
 
     /** Convert number or hex string to BigNumber */
     public toBigNumber(value: number | string): BigNumber {
         return this.web3.toBigNumber(value);
     }
 
+    /** Converts a number or number string to its HEX representation. */
     public fromDecimal(value: number | string): string {
         return this.web3.fromDecimal(value);
     }
@@ -87,13 +79,7 @@ export class W3 {
      */
     public web3;
 
-    // TODO rename with _ prefix for private methods
-    private globalWeb3;
-    private netId: string;
-    private netNode: Promise<string>;
-
-    private _defaultAccount: string;
-
+    /** Default account for sending transactions without explicit txParams. */
     public get defaultAccount(): string {
         return this._defaultAccount;
     }
@@ -119,11 +105,11 @@ export class W3 {
         if (typeof provider === 'undefined') {
             // tslint:disable-next-line:no-string-literal
             if ((typeof window !== 'undefined' && typeof window['web3'] !== 'undefined' && typeof window['web3'].currentProvider !== 'undefined')
-                || this.globalWeb3) {
+                || this._globalWeb3) {
                 // tslint:disable-next-line:no-string-literal
-                this.globalWeb3 = window['web3'];
+                this._globalWeb3 = window['web3'];
                 // tslint:disable-next-line:no-string-literal
-                tmpWeb3 = new Web3JS(this.globalWeb3.currentProvider);
+                tmpWeb3 = new Web3JS(this._globalWeb3.currentProvider);
                 console.log('Using an injected web3 provider.');
             } else {
                 // set the provider you want from Web3.providers
@@ -161,12 +147,12 @@ export class W3 {
     /** Request netid string from ctor or after provider change */
     private updateNetworkInfo(netid?: string): void {
         if (!netid) {
-            this.networkId.then(nid => this.netId = nid);
+            this.networkId.then(nid => this._netId = nid);
         } else {
-            this.netId = netid;
+            this._netId = netid;
         }
 
-        this.netNode = new Promise((resolve, reject) =>
+        this._netNode = new Promise((resolve, reject) =>
             this.web3.version.getNode((error, result) => error ? reject(error) : resolve(result))
         );
     }
@@ -176,31 +162,35 @@ export class W3 {
     Will update them for web3 1.0 when truffle-contract support it without sendAsync error.
     */
 
+    /** Returns a list of accounts the node controlst */
     public get accounts(): Promise<string[]> {
         return new Promise((resolve, reject) =>
             this.web3.eth.getAccounts((error, result) => error ? reject(error) : resolve(result)));
     }
 
+    /** Web3.js version API */
     public get web3API(): string {
         return this.web3.version.api;
     }
 
+    /** True if current web3.js version is 0.20.x. */
     public get isPre1API(): boolean {
         return this.web3API.startsWith('0.20.');
     }
 
+    /** True if current node name contains TestRPC string */
     public get isTestRPC(): Promise<boolean> {
-        return this.netNode.then(node => { return node.includes('TestRPC'); });
+        return this._netNode.then(node => { return node.includes('TestRPC'); });
     }
 
-    /** Get network ID as a promise. */
+    /** Get network ID. */
     public get networkId(): Promise<string> {
         return new Promise((resolve, reject) =>
             this.web3.version.getNetwork((error, result) => {
                 if (error) {
                     return reject(error);
                 }
-                if (result + '' !== this.netId) {
+                if (result + '' !== this._netId) {
                     this.updateNetworkInfo(result + '');
                 }
                 return resolve(result);
@@ -208,11 +198,13 @@ export class W3 {
         );
     }
 
+    /** Set web3 provider and update network info asynchronously. */
     public setProvider(provider: W3.Provider) {
         this.web3.setProvider(provider);
         this.updateNetworkInfo();
     }
 
+    /** Send raw JSON RPC request to the current provider. */
     public sendRPC(payload: JsonRPCRequest): Promise<JsonRPCResponse> {
         return new Promise((resolve, reject) => {
             if (this.isPre1API) {
@@ -252,6 +244,7 @@ export class W3 {
         });
     }
 
+    /** Returns the current block number */
     public get blockNumber(): Promise<number> {
         // getBlockNumber(callback: (err: Error, blockNumber: number) => void): void;
         return new Promise((resolve, reject) => {
@@ -269,9 +262,9 @@ export class W3 {
         });
     }
 
-    /** Async unlock while web3.js only has sync version */
+    /** Async unlock while web3.js only has sync version. This function uses `personal_unlockAccount` RPC message that is not available in some web3 providers. */
     public async unlockAccount(address: string, password: string, duration?: number): Promise<boolean> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
         return this.sendRPC({
             jsonrpc: '2.0',
             method: 'personal_unlockAccount',
@@ -285,6 +278,7 @@ export class W3 {
         });
     }
 
+    /** Get account balance */
     public async getBalance(address: string): Promise<BigNumber> {
         return new Promise<BigNumber>((resolve, reject) => {
             this.web3.eth.getBalance(address, (error, result) => {
@@ -321,7 +315,7 @@ export class W3 {
 
     /** Message already as hex */
     public async signRaw(message: any, account: string, password?: string): Promise<string> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
         console.log('signRaw MESSAGE', message);
         return this.sendRPC({
             jsonrpc: '2.0',
@@ -343,8 +337,13 @@ export class W3 {
         return this.ecRecoverRaw(message, signature);
     }
 
+    /**
+     * Recover an address from message and signature.
+     * This function uses `personal_ecRecover` RPC message that is not available in some web3 providers.
+     * Use `W3.ecrecover()` to recover an address without geth connection.
+     */
     public async ecRecoverRaw(message: any, signature: string): Promise<string> {
-        const id = 'W3:' + W3.NextCounter();
+        const id = 'W3:' + W3.getNextCounter();
         return this.sendRPC({
             jsonrpc: '2.0',
             method: 'personal_ecRecover',
@@ -358,6 +357,7 @@ export class W3 {
         });
     }
 
+    /** True if current web3 provider is from MetaMask. */
     public get isMetaMask() {
         try {
             return this.web3.currentProvider.isMetaMask ? true : false;
@@ -366,6 +366,11 @@ export class W3 {
         }
     }
 
+    /**
+     * Get the numbers of transactions sent from this address.
+     * @param account The address to get the numbers of transactions from.
+     * @param defaultBlock (optional) If you pass this parameter it will not use the default block set with.
+     */
     public async getTransactionCount(account?: string, defaultBlock?: number | string): Promise<number> {
         account = account || this.defaultAccount;
         if (!account) {
@@ -410,7 +415,7 @@ export class W3 {
 
         let pb = W3.EthUtils.toBuffer(privateKey);
 
-        let nid = +(this.netId || await this.networkId);
+        let nid = +(this._netId || await this.networkId);
 
         const signedTxParams = {
             nonce: W3.toHex(nonce),
@@ -442,10 +447,15 @@ export class W3 {
         });
     }
 
-    public async waitTransactionReceipt(hashString: string): Promise<W3.TransactionReceipt> {
+    /**
+     * Returns the receipt of a transaction by transaction hash. Retries for up to 240 seconds.
+     * @param hashString The transaction hash.
+     * @param timeoutSeconds Timeout in seconds, must be above 240 or ignored.
+     */
+    public async waitTransactionReceipt(hashString: string, timeoutSeconds?: number): Promise<W3.TransactionReceipt> {
 
         return new Promise<W3.TransactionReceipt>((accept, reject) => {
-            var timeout = 240000;
+            var timeout = (timeoutSeconds && timeoutSeconds > 240) ? timeoutSeconds * 1000 : 240000;
             var start = new Date().getTime();
             let makeAttempt = () => {
                 this.web3.eth.getTransactionReceipt(hashString, (err, receipt) => {
@@ -469,14 +479,21 @@ export class W3 {
 }
 
 export namespace W3 {
+    /** Type alias for Ethereum address. */
     export type address = string;
+
+    /** Type alias for bytes string. */
     export type bytes = string;
 
+    /** Hex zero address. */
     export const zeroAddress: string = '0x0000000000000000000000000000000000000000';
+
+    /** Check if Ethereum address is in valid format. */
     export function isValidAddress(addr: address): boolean {
         return W3.EthUtils.isValidAddress(addr);
     }
 
+    /** Utf8 package. */
     export let Utf8: any = require('utf8');
 
     /**
@@ -512,6 +529,7 @@ export namespace W3 {
 
     }
 
+    /** String left pad. Same as the notorious left-pad package as a single function. */
     export function leftPad(str: string, len: number, ch: any) {
         // the notorious 12-lines npm package
         str = String(str);
@@ -524,6 +542,7 @@ export namespace W3 {
         return str;
     }
 
+    /** Utf8 to hex convertor. */
     export function utf8ToHex(str: string, stripPrefix?: boolean): string {
         // this is from web3 1.0
 
@@ -547,16 +566,20 @@ export namespace W3 {
         return (stripPrefix ? hex : '0x' + hex);
     }
 
+    /** Ethereumjs-util package. */
     export let EthUtils: W3.EthUtils = require('ethereumjs-util');
 
-    export function sha3(a: Buffer | Array<any> | string | number, bits?: number) {
+    /** Creates SHA-3 hash of the input. */
+    export function sha3(a: Buffer | Array<any> | string | number, bits?: number): string {
         return EthUtils.bufferToHex(EthUtils.sha3(a, bits));
     }
 
-    export function sha256(a: Buffer | Array<any> | string | number) {
+    /** Creates SHA256 hash of the input. */
+    export function sha256(a: Buffer | Array<any> | string | number): string {
         return EthUtils.bufferToHex(EthUtils.sha256(a));
     }
 
+    /** ECDSA sign. */
     export function sign(message: any, privateKey: string): bytes {
         let mb = W3.EthUtils.toBuffer(message);
         let pb = W3.EthUtils.toBuffer(privateKey);
@@ -566,6 +589,7 @@ export namespace W3 {
         return rpcSignature;
     }
 
+    /** ECDSA public key recovery from signature. */
     export function ecrecover(message: string, signature: string): address {
         let mb = W3.EthUtils.toBuffer(message);
         let sigObject = W3.EthUtils.fromRpcSig(signature);
@@ -578,7 +602,7 @@ export namespace W3 {
 
     let _keythereum: any;
     /**
-     * https://github.com/ethereumjs/keythereum
+     * Get Keythereum instance. https://github.com/ethereumjs/keythereum
      */
     export function getKeythereum() {
         if (_keythereum) {
@@ -596,6 +620,7 @@ export namespace W3 {
 
     /** Truffle Contract */
     export namespace TX {
+        /** Standard transaction parameters. */
         export interface TxParams {
             from: address;
             gas: number | BigNumber;
@@ -693,6 +718,7 @@ export namespace W3 {
         execute(): void;
     }
     export interface Iban { }
+
     export interface Utils {
         BN: BigNumber; // TODO only static-definition
         isBN(obj: any): boolean;
@@ -737,8 +763,11 @@ export namespace W3 {
      * https://github.com/ethereumjs/ethereumjs-util/blob/master/docs/index.md
      */
     export interface EthUtils {
+        /** BN.js */
         BN: BigNumber;
+        /** Adds "0x" to a given String if it does not already start with "0x". */
         addHexPrefix(str: string): string;
+        /** Converts a Buffer or Array to JSON. */
         baToJSON(ba: Buffer | Array<any>): any;
         bufferToHex(buf: Buffer): string;
         bufferToInt(buf: Buffer): number;
@@ -777,6 +806,7 @@ export namespace W3 {
     }
 
     export type Callback<T> = (error: Error, result: T) => void;
+
     export type ABIDataTypes = 'uint256' | 'boolean' | 'string' | 'bytes' | string; // TODO complete list
 
     export interface ABIDefinition {
@@ -845,6 +875,7 @@ export namespace W3 {
             [eventName: string]: EventLog
         };
     }
+
     export interface BlockHeader {
         number: number;
         hash: string;
@@ -861,6 +892,7 @@ export namespace W3 {
         gasUsed: number;
         timestamp: number;
     }
+
     export interface Block extends BlockHeader {
         transactions: Array<Transaction>;
         size: number;
@@ -876,7 +908,7 @@ export namespace W3 {
 
     }
 
-    /**  */
+    /** Transaction log entry. */
     export interface Log {
         /** true when the log was removed, due to a chain reorganization. false if its a valid log. */
         removed?: boolean;
@@ -920,7 +952,6 @@ export namespace W3 {
         address: string;
         privateKey: string;
         publicKey: string;
-
     }
 
     export interface PrivateKey {
@@ -973,6 +1004,7 @@ export namespace W3 {
     }
 
     export type PromiEventType = 'transactionHash' | 'receipt' | 'confirmation' | 'error';
+
     export interface PromiEvent<T> extends Promise<T> {
         once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>;
         once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>;
@@ -987,6 +1019,7 @@ export namespace W3 {
         // tslint:disable-next-line:max-line-length
         on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>;
     }
+
     export interface EventEmitter {
         on(type: 'data', handler: (event: EventLog) => void): EventEmitter;
         on(type: 'changed', handler: (receipt: EventLog) => void): EventEmitter;
@@ -1149,6 +1182,7 @@ export namespace W3 {
         getEthereum(callback: (err: Error, ethereum: string) => void): void;
         getWhisper(callback: (err: Error, whisper: string) => void): void;
     }
+
     export interface Net { }
 
     export interface Personal {

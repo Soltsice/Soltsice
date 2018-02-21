@@ -1,5 +1,5 @@
 import { W3, testAccounts, testPrivateKeys, toBN } from '../';
-import { DummyToken, DummyContract } from '../contracts';
+import { DummyContract } from '../contracts';
 import * as ganache from 'ganache-cli';
 
 let privateKey = '0x' + testPrivateKeys[0]; // '0x1ce01934dbcd6fd84e68faca8c6aebca346162823d20f0562135fe3e4f275bce';
@@ -17,25 +17,10 @@ let w3: W3 = new W3(ganache.provider({
 // }));
 
 w3.defaultAccount = testAccounts[0];
-W3.Default = w3;
+W3.default = w3;
 
 beforeEach(async () => {
     expect(await w3.isTestRPC).toBe(true);
-});
-
-describe('DummyToken tests', () => {
-
-    it('DummyToken total supply should be 1400000 * 1e18', async function () {
-        var token = await DummyToken.New(
-            W3.TX.txParamsDefaultDeploy(testAccounts[0]), { _multisig: testAccounts[0] }
-        );
-        let value = await token.totalSupply();
-        expect(value).toEqual(w3.toBigNumber(1400000 * 1e18));
-        let deployed = await DummyToken.At(await token.address);
-        value = await deployed.totalSupply();
-        expect(value).toEqual(w3.toBigNumber(1400000 * 1e18));
-    });
-
 });
 
 let address: string;
@@ -44,8 +29,8 @@ describe('DummyContract tests', () => {
 
     it('Could get NewData for DummyContract and deploy via SendRaw', async function () {
         let originalValue = 789;
-        let data = DummyContract.NewData(
-            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
+        let data = DummyContract.newData(
+            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue), _array: [1, 2, 3] },
             w3
         );
         console.log('RAW NEW DATA', data);
@@ -55,7 +40,7 @@ describe('DummyContract tests', () => {
         console.log('RAW TX RECEIPT', txReceipt);
         let rawAddress = txReceipt.contractAddress;
         console.log('RAW DEPLOYMENT ADDRESS', rawAddress);
-        let dc = await DummyContract.At(rawAddress);
+        let dc = await DummyContract.at(rawAddress);
         let publicValue = await dc.getPublic();
         expect(publicValue.toNumber()).toEqual(originalValue);
     });
@@ -63,8 +48,8 @@ describe('DummyContract tests', () => {
     it('Could deploy DummyContract with private key', async function () {
         let originalValue = 789;
         let txParams = W3.TX.txParamsDefaultDeploy(testAccounts[0]);
-        let dc = await DummyContract.New(txParams,
-            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue) },
+        let dc = await DummyContract.new(txParams,
+            { _secret: toBN(originalValue), _wellKnown: toBN(originalValue), _array: [1, 2, 3] },
             w3,
             undefined,
             privateKey
@@ -82,9 +67,9 @@ describe('DummyContract tests', () => {
     });
 
     it('Could deploy DummyContract', async function () {
-        let dummy = await DummyContract.New(
+        let dummy = await DummyContract.new(
             W3.TX.txParamsDefaultDeploy(testAccounts[0]),
-            { _secret: toBN(123), _wellKnown: toBN(456) }
+            { _secret: toBN(123), _wellKnown: toBN(456), _array: [1, 2, 3] }
         );
         await dummy.instance;
         address = await dummy.address;
@@ -94,7 +79,7 @@ describe('DummyContract tests', () => {
 
         expect(W3.isValidAddress(address)).toBe(true);
 
-        let dummy = await DummyContract.At(address);
+        let dummy = await DummyContract.at(address);
 
         await dummy.instance;
 
@@ -127,7 +112,7 @@ describe('DummyContract tests', () => {
     });
 
     it('should have initial public value from deployer', async function () {
-        let dummy = await DummyContract.At(address);
+        let dummy = await DummyContract.at(address);
         let value = await dummy.getPublic();
         expect(value).toEqual(toBN(456));
     });
@@ -135,9 +120,9 @@ describe('DummyContract tests', () => {
     // TODO this test randomly fails on TestRPC
     xit('Could send transaction and parse logs', async function () {
         console.log(address);
-        let dummy = await DummyContract.New(
+        let dummy = await DummyContract.new(
             W3.TX.txParamsDefaultDeploy(testAccounts[0]),
-            { _secret: toBN(123), _wellKnown: toBN(456) }
+            { _secret: toBN(123), _wellKnown: toBN(456), _array: [1, 2, 3] }
         );
 
         await dummy.instance;

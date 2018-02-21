@@ -13,7 +13,7 @@ let w3: W3 = new W3(ganache.provider({
 }));
 
 w3.defaultAccount = testAccounts[0];
-W3.Default = w3;
+W3.default = w3;
 
 let dummyAddress: string;
 
@@ -35,9 +35,9 @@ describe('W3 tests', () => {
         let nonce = await w3.getTransactionCount();
         expect(nonce).toBe(0);
 
-        let dummy = await DummyContract.New(
+        let dummy = await DummyContract.new(
             W3.TX.txParamsDefaultDeploy(testAccounts[0]),
-            { _secret: toBN(123), _wellKnown: toBN(456) }
+            { _secret: toBN(123), _wellKnown: toBN(456), _array: [1, 2, 3] }
         );
         dummyAddress = dummy.address;
         nonce = await w3.getTransactionCount();
@@ -55,7 +55,7 @@ describe('W3 tests', () => {
 
         let nonce = await w3.getTransactionCount();
 
-        let dummy = await DummyContract.At(dummyAddress);
+        let dummy = await DummyContract.at(dummyAddress);
 
         let txParams = W3.TX.txParamsDefaultSend(w3.defaultAccount);
 
