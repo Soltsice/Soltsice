@@ -8,7 +8,9 @@ contract DummyContract is Ownable {
     uint private secret;
     uint public wellKnown;
 
-    function DummyContract(uint _secret, uint _wellKnown, uint[10] _array) public {
+    function DummyContract(uint _secret, uint _wellKnown, uint[10] _array) 
+        public 
+    {
         secret = _secret;
         wellKnown = _wellKnown;
         array = _array;

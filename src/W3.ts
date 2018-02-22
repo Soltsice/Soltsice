@@ -2,8 +2,7 @@
 // and https://github.com/0xProject/web3-typescript-typings
 import { JsonRPCRequest, JsonRPCResponse } from './jsonrpc';
 import { BigNumber } from 'bignumber.js'; // TODO change to BN
-
-let Web3JS = require('web3');
+import Web3JS = require('web3');
 
 // W3 is the only class wrapper over JS object, others are interfaces
 // cannot just cast from JS, but ctor does some standard logic to resolve web3
@@ -325,32 +324,6 @@ export class W3 {
         }).then(async r => {
             if (r.error) {
                 console.log('ERROR:', r.error);
-                throw new Error(r.error.message);
-            }
-            return <string>r.result;
-        });
-    }
-
-    /** Recover signature address */
-    public async ecRecover(message: string, signature: string): Promise<string> {
-        message = W3.toHex(message);
-        return this.ecRecoverRaw(message, signature);
-    }
-
-    /**
-     * Recover an address from message and signature.
-     * This function uses `personal_ecRecover` RPC message that is not available in some web3 providers.
-     * Use `W3.ecrecover()` to recover an address without geth connection.
-     */
-    public async ecRecoverRaw(message: any, signature: string): Promise<string> {
-        const id = 'W3:' + W3.getNextCounter();
-        return this.sendRPC({
-            jsonrpc: '2.0',
-            method: 'personal_ecRecover',
-            params: [message, signature],
-            id: id,
-        }).then(async r => {
-            if (r.error) {
                 throw new Error(r.error.message);
             }
             return <string>r.result;
