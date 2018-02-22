@@ -259,14 +259,14 @@ export module soltsice {
     function processFile(fileName: string, filePath: string, targetPath: string, W3ImportPath: string): string {
         console.log('Processing ', filePath);
 
-        let contract = require(filePath);
+        let contract = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
 
         let importPath = W3ImportPath;
         let artifactRelPath = path.relative(path.dirname(targetPath), filePath).replace(/\\/g, '/'); // path.resolve(filePath).replace(/\\/g, '/'); //
         console.log('REL PATH ', artifactRelPath);
         let contractName: string = contract.contract_name || contract.contractName;
         if (!contractName) {
-            throw 'Cannot find contract name in the artifact';
+            throw new Error('Cannot find contract name in the artifact');
         }
 
         let abis = contract.abi as W3.ABIDefinition[];
