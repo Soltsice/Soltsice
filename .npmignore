@@ -8,3 +8,5 @@ migrations
 .vscode
 .travis.yml
 .editorconfig
+/docs
+/misc

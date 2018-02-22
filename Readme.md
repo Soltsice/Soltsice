@@ -1,33 +1,168 @@
 [![Build Status](https://travis-ci.org/dbrainio/Soltsice.svg?branch=master)](https://travis-ci.org/dbrainio/Soltsice)
 
-# Soltsice
+[<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/theme/assets/images/Dbrain_blue.png" alt="Spreads" height="20" align="right" />](https://dbrain.io)
+
+# [Soltsice](https://github.com/dbrainio/Soltsice)
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
-## Install
+With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum contracts from Solidity ABI with a single command. You could also send raw signed transactions to public Ethereum nodes such as [Infura](https://infura.io/) just by adding an optional private key parameter to any method. Soltsice provides convenient utilities for storing key files, for signing arbitrary data for later address recovery with `ecrecover` functions from contracts code and for other frequent tasks. Finally, Soltsice has `MultiOwnable` and `BotManageable` contracts for granular access control for MultiSig majority, individual owners and backend accounts.
 
-You should have `truffle` and `copyfiles` installed globally:
+## Quick links
+
+* **[Features](#features)**
+  * [Solidity ABI to TypeScript contract generation](#solidity-abi-to-typescript-contract-generation)
+    * <small>[Type safety and easy refactoring](#type-safety-and-easy-refactoring)</small>
+    * <small>[Fast API discovery & Intellisense support](#fast-api-discovery-intellisense-support)</small>
+    * <small>[Isomorphic NPM packages for contracts](#isomorphic-npm-packages-for-contracts)</small>
+  * [Transactions and custom data signing](#transactions-and-custom-data-signing)
+    * <small>[Using remote public nodes is easy](#using-remote-public-nodes-is-easy)</small>
+    * <small>[Micropayments state channels example](#micropayments-state-channels-example)</small>
+  * [Private key management](l#private-key-management)
+    * <small>[Security considerations](#security-considerations)</small>
+    * <small>[Local key file storage](#local-key-file-storage)</small>
+  * [Contracts for access control](#contracts-for-access-control)
+    * <small>[MultiOwnable: MultiSig majority and individual owner access](#multiownable-multisig-majority-and-individual-owner-access)</small>
+    * <small>[BotManageable: account managed by backend](#botmanageable-account-managed-by-backend)</small>
+  * [Utilities](#utilities)
+    * <small>[W3 module](#w3-module)</small>
+    * <small>[Ethereum Utils](#ethereum-utils)</small>
+    * <small>[Keythereum](#keythereum)</small>
+    * <small>[Storage contract](#storage-contract)</small>
+    * <small>[`soltsice` code generator from code](#soltsice-code-generator-from-code)</small>
+  * [Work in progress](#work-in-progress)
+* **[Getting started](#getting-started)**
+  * [Install & Usage](#install-usage)
+    * <small>[Workflow](#workflow)</small>
+  * [Starter projects](#starter-projects)
+    * <small>[Contracts starter](#contracts-starter)</small>
+    * <small>[Frontend with CRA & TypeScript](#frontend-with-cra-typescript)</small>
+    * <small>[Backend API with Swagger](#backend-api-with-swagger)</small>
+  * [Examples](#examples)
+    * <small>[Dbrain contracts](#dbrain-contracts)</small>
+    * <small>[Dbrain blockchain API](#dbrain-blockchain-api)</small>
+    * <small>[Dbrain DApp prototype](#dbrain-dapp-prototype)</small>
+* **[Contributing](#contributing)**
+  * [Build](#build)
+  * [License](#license)
+
+---
+
+## Features
+
+### Solidity ABI to TypeScript contract generation
+
+TODO
+
+#### Type safety and easy refactoring
+
+The initial purpose of this library was to have peace of mind and type safety when working with rapidly changing Solidity ABI. TypeScript proxies for contracts allow to use powerful intellisense feature of code editors.
+
+*Methods with signatures*
+
+<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/methods.png" alt="Methods with signatures" width="600" />
+
+*Typed Constructor*
+
+<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/constructor.png" alt="Typed Constructor" width="600" />
+
+#### Fast API discovery & Intellisense support
+
+TODO
+
+#### Isomorphic NPM packages for contracts
+
+TODO
+
+### Transactions and custom data signing
+
+TODO
+
+#### Using remote public nodes is easy
+
+TODO Problem: Geth 1.8 added pruning, but still long-running nodes grow in side. Standard BizSpark subscription cannot keep up, needs more resources.
+
+TODO Deploy via migrations using contracts, showcase @ts-check attribute in VSCode
+
+#### Micropayments state channels example
+
+TODO
+
+### Private key management
+
+TODO
+
+#### Security considerations
+
+TODO
+
+#### Local key file storage
+
+TODO
+
+Note that the format is standard one so you could import existing key files just by providing a filepath and password.
+
+<sub>[top](#quick-links)</sub>
+
+### Contracts for access control
+
+TODO
+
+#### MultiOwnable: MultiSig majority and individual owner access
+
+TODO
+
+#### BotManageable: account managed by backend
+
+TODO
+
+### Utilities
+
+TODO
+
+#### W3 module
+
+TODO
+
+#### Ethereum Utils
+
+TODO 
+
+Typings
+
+#### Keythereum
+
+TODO
+
+#### Storage contract
+
+TODO
+
+#### `soltsice` code generator from code
+
+TODO
+
+### Work in progress
+
+TODO
+
+<sub>[top](#quick-links)</sub>
+
+---
+
+## Getting started
+
+Installing and using Soltsice is very easy. You could just add `soltsice` NPM package to your existing project or use a starter project for new development.
+
+### Install & Usage
+
+You must have `truffle` and `copyfiles` installed globally:
 
 > npm install -g truffle copyfiles
 
 Install and save Soltsice:
 
 > npm install soltsice --save
-
-## Build
-To build & test run the following commands:
-
-```
-npm install
-npm run build:contracts
-npm run soltsice
-npm run testrpc
-truffle migrate
-truffle test
-npm test
-```
-
-## Usage
 
 Soltsice allows to generate TypeScript files for Ethereum contracts with the command:
 
@@ -64,30 +199,74 @@ supply.then(value => {
 
 See [dbrain-contracts](https://github.com/dbrainio/dbrain-contracts) and [dbrain-blockchain-api](https://github.com/dbrainio/dbrain-blockchain-api) projects that use this library and a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
 
-### Type inference & intellisense
-
-The purpose of this library is to have peace of mind and type safety when working with rapidly changing Solidity ABI.
-TypeScript wrappers over contracts allow to use powerful intellisense feature of code editors.
-
-*Methods with signatures*
-
-<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/doc/methods.png" alt="Methods with signatures" width="600" />
-
-*Typed Constructor*
-
-<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/doc/constructor.png" alt="Typed Constructor" width="600" />
-
-### Workflow
+#### Workflow
 
 * Edit Solidity contracts, run `truffle compile`, run tests on Truffle stack (solidity or js, if any)
 * Run Soltsice command `soltsice ./src ./dest`, all TypeScript contracts will be updated, any API changes will block subsequent TS compilation
   (except for rare edge cases such as multiple return parameters which are returned as an array and we use `any` TS type for them)
 * Adjust you code to the changes.
 
+### Starter projects
+
+TODO
+
+#### Contracts starter
+
+TODO A starter project with the shortest path to deploy
+
+#### Frontend with CRA & TypeScript
+
+TODO Use the contract starter package from DApp starter (dbrain-dapp structure)
+
+#### Backend API with Swagger
+
+TODO Use the contract starter from backend (dbrain-blockchain-api structure)
+
+<sub>[top](#quick-links)</sub>
+
+---
+
+## Examples
+
+TODO
+
+### Dbrain contracts
+
+TODO 
+https://github.com/dbrainio/dbrain-contracts
+State channels + in-memory off-chain signing mock
+
+### Dbrain blockchain API
+
+TODO
+https://github.com/dbrainio/dbrain-blockchain-api
+Off-chain signing prototype on Postgres
+
+### Dbrain DApp prototype
+
+TODO
+
+<sub>[top](#quick-links)</sub>
+
+---
+
 ## Contributing
 
-If some functionality is not supported yet you are very welcome to open an issue or pull request!
+If [some functionality](#work-in-progress) is not supported yet you are very welcome to open an issue or pull request!
 
-## License
+### Build
+
+To build & test run the following commands:
+
+```
+npm install
+npm run build:contracts
+npm run soltsice
+npm test
+```
+
+### License
 
 MIT
+
+(c) 2018 Dbrain.io

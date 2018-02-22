@@ -1,0 +1,413 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Soltsice</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="assets/favicon.ico">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Soltsice</a> <!-- <span style="font-size: 8pt">by</span> <a href="https://dbrain.io/" target="_blank"><img draggable="false" alt="Dbrain" src="assets/images/Logo.png" style="height:12px;margin:2px;"></a> -->
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Soltsice</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p><a href="https://travis-ci.org/dbrainio/Soltsice"><img src="https://travis-ci.org/dbrainio/Soltsice.svg?branch=master" alt="Build Status"></a></p>
+				<p><a href="https://dbrain.io"><img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/theme/assets/images/Dbrain_blue.png" alt="Spreads" height="20" align="right" /></a></p>
+				<h1 id="soltsice"><a href="https://github.com/dbrainio/Soltsice">Soltsice</a></h1>
+				<p><strong>Sol</strong>idity &amp; <strong>T</strong>ype<strong>S</strong>cript <strong>I</strong>ntegration, <strong>C</strong>onfiguration and <strong>E</strong>xamples</p>
+				<p>With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum contracts from Solidity ABI with a single command. You could also send raw signed transactions to public Ethereum nodes such as <a href="https://infura.io/">Infura</a> just by adding an optional private key parameter to any method. Soltsice provides convenient utilities for storing key files, for signing arbitrary data for later address recovery with <code>ecrecover</code> functions from contracts code and for other frequent tasks. Finally, Soltsice has <code>MultiOwnable</code> and <code>BotManageable</code> contracts for granular access control for MultiSig majority, individual owners and backend accounts.</p>
+				<h2 id="quick-links">Quick links</h2>
+				<ul>
+					<li><strong><a href="#features">Features</a></strong><ul>
+							<li><a href="#solidity-abi-to-typescript-contract-generation">Solidity ABI to TypeScript contract generation</a><ul>
+									<li><small><a href="#type-safety-and-easy-refactoring">Type safety and easy refactoring</a></small></li>
+									<li><small><a href="#fast-api-discovery-intellisense-support">Fast API discovery &amp; Intellisense support</a></small></li>
+									<li><small><a href="#isomorphic-npm-packages-for-contracts">Isomorphic NPM packages for contracts</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#transactions-and-custom-data-signing">Transactions and custom data signing</a><ul>
+									<li><small><a href="#using-remote-public-nodes-is-easy">Using remote public nodes is easy</a></small></li>
+									<li><small><a href="#micropayments-state-channels-example">Micropayments state channels example</a></small></li>
+								</ul>
+							</li>
+							<li><a href="l#private-key-management">Private key management</a><ul>
+									<li><small><a href="#security-considerations">Security considerations</a></small></li>
+									<li><small><a href="#local-key-file-storage">Local key file storage</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#contracts-for-access-control">Contracts for access control</a><ul>
+									<li><small><a href="#multiownable-multisig-majority-and-individual-owner-access">MultiOwnable: MultiSig majority and individual owner access</a></small></li>
+									<li><small><a href="#botmanageable-account-managed-by-backend">BotManageable: account managed by backend</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#utilities">Utilities</a><ul>
+									<li><small><a href="#w3-module">W3 module</a></small></li>
+									<li><small><a href="#ethereum-utils">Ethereum Utils</a></small></li>
+									<li><small><a href="#keythereum">Keythereum</a></small></li>
+									<li><small><a href="#storage-contract">Storage contract</a></small></li>
+									<li><small><a href="#soltsice-code-generator-from-code"><code>soltsice</code> code generator from code</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#work-in-progress">Work in progress</a></li>
+						</ul>
+					</li>
+					<li><strong><a href="#getting-started">Getting started</a></strong><ul>
+							<li><a href="#install-usage">Install &amp; Usage</a><ul>
+									<li><small><a href="#workflow">Workflow</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#starter-projects">Starter projects</a><ul>
+									<li><small><a href="#contracts-starter">Contracts starter</a></small></li>
+									<li><small><a href="#frontend-with-cra-typescript">Frontend with CRA &amp; TypeScript</a></small></li>
+									<li><small><a href="#backend-api-with-swagger">Backend API with Swagger</a></small></li>
+								</ul>
+							</li>
+							<li><a href="#examples">Examples</a><ul>
+									<li><small><a href="#dbrain-contracts">Dbrain contracts</a></small></li>
+									<li><small><a href="#dbrain-blockchain-api">Dbrain blockchain API</a></small></li>
+									<li><small><a href="#dbrain-dapp-prototype">Dbrain DApp prototype</a></small></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li><strong><a href="#contributing">Contributing</a></strong><ul>
+							<li><a href="#build">Build</a></li>
+							<li><a href="#license">License</a></li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="features">Features</h2>
+				<h3 id="solidity-abi-to-typescript-contract-generation">Solidity ABI to TypeScript contract generation</h3>
+				<p>TODO</p>
+				<h4 id="type-safety-and-easy-refactoring">Type safety and easy refactoring</h4>
+				<p>The initial purpose of this library was to have peace of mind and type safety when working with rapidly changing Solidity ABI. TypeScript proxies for contracts allow to use powerful intellisense feature of code editors.</p>
+				<p><em>Methods with signatures</em></p>
+				<p><img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/methods.png" alt="Methods with signatures" width="600" /></p>
+				<p><em>Typed Constructor</em></p>
+				<p><img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/constructor.png" alt="Typed Constructor" width="600" /></p>
+				<h4 id="fast-api-discovery-intellisense-support">Fast API discovery &amp; Intellisense support</h4>
+				<p>TODO</p>
+				<h4 id="isomorphic-npm-packages-for-contracts">Isomorphic NPM packages for contracts</h4>
+				<p>TODO</p>
+				<h3 id="transactions-and-custom-data-signing">Transactions and custom data signing</h3>
+				<p>TODO</p>
+				<h4 id="using-remote-public-nodes-is-easy">Using remote public nodes is easy</h4>
+				<p>TODO Problem: Geth 1.8 added pruning, but still long-running nodes grow in side. Standard BizSpark subscription cannot keep up, needs more resources.</p>
+				<p>TODO Deploy via migrations using contracts, showcase @ts-check attribute in VSCode</p>
+				<h4 id="micropayments-state-channels-example">Micropayments state channels example</h4>
+				<p>TODO</p>
+				<h3 id="private-key-management">Private key management</h3>
+				<p>TODO</p>
+				<h4 id="security-considerations">Security considerations</h4>
+				<p>TODO</p>
+				<h4 id="local-key-file-storage">Local key file storage</h4>
+				<p>TODO</p>
+				<p>Note that the format is standard one so you could import existing key files just by providing a filepath and password.</p>
+				<p><sub><a href="#quick-links">top</a></sub></p>
+				<h3 id="contracts-for-access-control">Contracts for access control</h3>
+				<p>TODO</p>
+				<h4 id="multiownable-multisig-majority-and-individual-owner-access">MultiOwnable: MultiSig majority and individual owner access</h4>
+				<p>TODO</p>
+				<h4 id="botmanageable-account-managed-by-backend">BotManageable: account managed by backend</h4>
+				<p>TODO</p>
+				<h3 id="utilities">Utilities</h3>
+				<p>TODO</p>
+				<h4 id="w3-module">W3 module</h4>
+				<p>TODO</p>
+				<h4 id="ethereum-utils">Ethereum Utils</h4>
+				<p>TODO </p>
+				<p>Typings</p>
+				<h4 id="keythereum">Keythereum</h4>
+				<p>TODO</p>
+				<h4 id="storage-contract">Storage contract</h4>
+				<p>TODO</p>
+				<h4 id="soltsice-code-generator-from-code"><code>soltsice</code> code generator from code</h4>
+				<p>TODO</p>
+				<h3 id="work-in-progress">Work in progress</h3>
+				<p>TODO</p>
+				<p><sub><a href="#quick-links">top</a></sub></p>
+				<hr>
+				<h2 id="getting-started">Getting started</h2>
+				<p>Installing and using Soltsice is very easy. You could just add <code>soltsice</code> NPM package to your existing project or use a starter project for new development.</p>
+				<h3 id="install-usage">Install &amp; Usage</h3>
+				<p>You must have <code>truffle</code> and <code>copyfiles</code> installed globally:</p>
+				<blockquote>
+					<p>npm install -g truffle copyfiles</p>
+				</blockquote>
+				<p>Install and save Soltsice:</p>
+				<blockquote>
+					<p>npm install soltsice --save</p>
+				</blockquote>
+				<p>Soltsice allows to generate TypeScript files for Ethereum contracts with the command:</p>
+				<blockquote>
+					<p>soltsice ./artifacts ./types</p>
+				</blockquote>
+				<p>All <code>.json</code> artifacts from <code>truffle compile</code> in the folder <code>artifacts</code> will be transformed into TypeScript classes in
+				<code>types</code> with a single <code>index.ts</code> file with all exports.</p>
+				<p>Every TypeScript contract class inherits <code>SoltsiceContract</code>, which is a wrapper over <a href="https://github.com/trufflesuite/truffle-contract">Truffle-contract</a> with methods generated from ABI.
+				If some functionality is not yet supported by Soltsice, you may use <code>SoltsiceContract._instance : Promise&lt;any&gt;</code> field to access untyped Truffle-contract instance.</p>
+				<p>You could import generated types as:</p>
+				<pre><code><span class="hljs-keyword">import</span> { W3 } <span class="hljs-keyword">from</span> <span class="hljs-string">"soltsice"</span>;
+<span class="hljs-keyword">import</span> { BigNumber } <span class="hljs-keyword">from</span> <span class="hljs-string">"bignumber.js"</span>;
+<span class="hljs-keyword">import</span> { StandardToken } <span class="hljs-keyword">from</span> <span class="hljs-string">"./types"</span>;
+
+<span class="hljs-regexp">//</span> <span class="hljs-keyword">default</span> wrapper <span class="hljs-keyword">for</span> web3: either <span class="hljs-built_in">window</span>[<span class="hljs-string">'web3'</span>] <span class="hljs-keyword">if</span> present,
+<span class="hljs-regexp">//</span> <span class="hljs-keyword">or</span> http provider connected to localhost: <span class="hljs-number">8545</span>, <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> running <span class="hljs-literal">on</span> https 
+let w3: W3 = <span class="hljs-keyword">new</span> W3();
+
+<span class="hljs-regexp">//</span> <span class="hljs-literal">null</span> <span class="hljs-keyword">for</span> ctor params which are only used <span class="hljs-keyword">for</span> newly deployed contracts
+let st: StandardToken = <span class="hljs-keyword">new</span> StandardToken(<span class="hljs-string">"address of deployed contract"</span>, <span class="hljs-literal">null</span>, w3);
+
+<span class="hljs-regexp">//</span> note that typings are optional <span class="hljs-keyword">in</span> variable definitions, TypeScript infers types
+let supply: Promise&lt;BigNumber&gt; = st.totalSupply();
+
+supply.<span class="hljs-keyword">then</span>(value =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"TOTAL SUPPLY"</span>, value.dividedBy(<span class="hljs-number">1e18</span>).toFormat(<span class="hljs-number">0</span>));
+});
+
+</code></pre><p>See <a href="https://github.com/dbrainio/dbrain-contracts">dbrain-contracts</a> and <a href="https://github.com/dbrainio/dbrain-blockchain-api">dbrain-blockchain-api</a> projects that use this library and a standalone minimal example <a href="https://github.com/buybackoff/SoltsiceExample">here</a>.</p>
+				<h4 id="workflow">Workflow</h4>
+				<ul>
+					<li>Edit Solidity contracts, run <code>truffle compile</code>, run tests on Truffle stack (solidity or js, if any)</li>
+					<li>Run Soltsice command <code>soltsice ./src ./dest</code>, all TypeScript contracts will be updated, any API changes will block subsequent TS compilation
+					(except for rare edge cases such as multiple return parameters which are returned as an array and we use <code>any</code> TS type for them)</li>
+					<li>Adjust you code to the changes.</li>
+				</ul>
+				<h3 id="starter-projects">Starter projects</h3>
+				<p>TODO</p>
+				<h4 id="contracts-starter">Contracts starter</h4>
+				<p>TODO A starter project with the shortest path to deploy</p>
+				<h4 id="frontend-with-cra-typescript">Frontend with CRA &amp; TypeScript</h4>
+				<p>TODO Use the contract starter package from DApp starter (dbrain-dapp structure)</p>
+				<h4 id="backend-api-with-swagger">Backend API with Swagger</h4>
+				<p>TODO Use the contract starter from backend (dbrain-blockchain-api structure)</p>
+				<p><sub><a href="#quick-links">top</a></sub></p>
+				<hr>
+				<h2 id="examples">Examples</h2>
+				<p>TODO</p>
+				<h3 id="dbrain-contracts">Dbrain contracts</h3>
+				<p>TODO
+					<a href="https://github.com/dbrainio/dbrain-contracts">https://github.com/dbrainio/dbrain-contracts</a>
+				State channels + in-memory off-chain signing mock</p>
+				<h3 id="dbrain-blockchain-api">Dbrain blockchain API</h3>
+				<p>TODO
+					<a href="https://github.com/dbrainio/dbrain-blockchain-api">https://github.com/dbrainio/dbrain-blockchain-api</a>
+				Off-chain signing prototype on Postgres</p>
+				<h3 id="dbrain-dapp-prototype">Dbrain DApp prototype</h3>
+				<p>TODO</p>
+				<p><sub><a href="#quick-links">top</a></sub></p>
+				<hr>
+				<h2 id="contributing">Contributing</h2>
+				<p>If <a href="#work-in-progress">some functionality</a> is not supported yet you are very welcome to open an issue or pull request!</p>
+				<h3 id="build">Build</h3>
+				<p>To build &amp; test run the following commands:</p>
+				<pre><code>npm install
+npm <span class="hljs-keyword">run</span><span class="bash"> build:contracts
+</span>npm <span class="hljs-keyword">run</span><span class="bash"> soltsice
+</span>npm test
+</code></pre><h3 id="license">License</h3>
+				<p>MIT</p>
+				<p>(c) 2018 Dbrain.io</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module tsd-parent-kind-class">
+						<a href="modules/w3.tx.html">W3.TX</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/soltsice.html">soltsice</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/botmanageable.html" class="tsd-kind-icon">Bot<wbr>Manageable</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/jsonrpcerror.html" class="tsd-kind-icon">JsonRPCError</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/jsonrpcrequest.html" class="tsd-kind-icon">JsonRPCRequest</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/jsonrpcresponse.html" class="tsd-kind-icon">JsonRPCResponse</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/multiownable.html" class="tsd-kind-icon">Multi<wbr>Ownable</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/multisigwallet.html" class="tsd-kind-icon">Multi<wbr>Sig<wbr>Wallet</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ownable.html" class="tsd-kind-icon">Ownable</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/soltsicecontract.html" class="tsd-kind-icon">Soltsice<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/storage.html" class="tsd-kind-icon">Storage</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/storagefactory.html" class="tsd-kind-icon">Storage<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/testrpc.html" class="tsd-kind-icon">TestRPC</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/w3.html" class="tsd-kind-icon">W3</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#isproduction" class="tsd-kind-icon">is<wbr>Production</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mainnetstoragefactory" class="tsd-kind-icon">mainnet<wbr>Storage<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#rinkebystoragefactory" class="tsd-kind-icon">rinkeby<wbr>Storage<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#ropstenstoragefactory" class="tsd-kind-icon">ropsten<wbr>Storage<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#testaccounts" class="tsd-kind-icon">test<wbr>Accounts</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#testprivatekeys" class="tsd-kind-icon">test<wbr>Private<wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getstorage" class="tsd-kind-icon">get<wbr>Storage</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tobn" class="tsd-kind-icon">toBN</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>With <img draggable="false" class="emoji" alt="🖖" src="assets/images/vulcan_salut.png" style="width: 16px; height:16px;"> by <a href="https://dbrain.io/" target="_blank"><img draggable="false" alt="Dbrain" src="assets/images/Dbrain_blue.png" style="height:12px"></a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
