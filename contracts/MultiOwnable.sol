@@ -1,13 +1,18 @@
 pragma solidity ^0.4.18;
 
-import './MultiSigWallet.sol';
+/*
+ * A minimum multisig wallet interface. Compatible with MultiSigWallet by Gnosis.
+ */
+contract WalletBasic {
+    function isOwner(address owner) public returns (bool);
+}
 
 /**
  * @dev MultiOwnable contract.
  */
 contract MultiOwnable {
     
-    MultiSigWallet public wallet;
+    WalletBasic public wallet;
     
     event MultiOwnableWalletSet(address indexed _contract, address indexed _wallet);
 
@@ -15,19 +20,13 @@ contract MultiOwnable {
         (address _wallet)
         public
     {
-        wallet = MultiSigWallet(_wallet);
+        wallet = WalletBasic(_wallet);
         MultiOwnableWalletSet(this, wallet);
     }
 
     /** Check if a caller is the MultiSig wallet. */
     modifier onlyWallet() {
         require(wallet == msg.sender);
-        _;
-    }
-
-    /** Check if a caller is the MultiSig wallet or a single owner. */
-    modifier onlyWalletOrSingleOwner() {
-        require(wallet == msg.sender || (wallet.required() == 1 && wallet.isOwner(msg.sender)));
         _;
     }
 

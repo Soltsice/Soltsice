@@ -1179,4 +1179,8 @@ export namespace W3 {
         weeks: function (val: number) { return val * this.days(7); },
         years: function (val: number) { return val * this.days(365); }
     };
+
+    export interface CancellationToken {
+        cancelled: boolean;
+    }
 }

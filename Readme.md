@@ -12,6 +12,8 @@ With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum 
 
 * **[Features](#features)**
   * [Solidity ABI to TypeScript contract generation](#solidity-abi-to-typescript-contract-generation)
+    * <small>[Methods](#methods)</small>
+    * <small>[Events](#events)</small>
     * <small>[Type safety and easy refactoring](#type-safety-and-easy-refactoring)</small>
     * <small>[Fast API discovery & Intellisense support](#fast-api-discovery-intellisense-support)</small>
     * <small>[Isomorphic NPM packages for contracts](#isomorphic-npm-packages-for-contracts)</small>
@@ -51,6 +53,14 @@ With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum 
 ## Features
 
 ### Solidity ABI to TypeScript contract generation
+
+With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum contracts from Solidity ABI with a single command. 
+
+#### Methods
+
+TODO
+
+#### Events
 
 TODO
 

@@ -78,8 +78,8 @@ export class StorageFactory extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.existingStorage
                 .call(_0, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -91,8 +91,8 @@ export class StorageFactory extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.produce( txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -108,8 +108,8 @@ export class StorageFactory extends SoltsiceContract {
             sendTransaction: Object.assign(( txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.produce.sendTransaction( txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -136,7 +136,7 @@ export class StorageFactory extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.produce.estimateGas().then((g) => resolve(g));
+                    this._instance.produce.estimateGas().then((g: any) => resolve(g));
                 });
             }
         });

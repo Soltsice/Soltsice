@@ -78,8 +78,8 @@ export class MultiOwnable extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.wallet
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -89,8 +89,8 @@ export class MultiOwnable extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.paused
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -100,8 +100,8 @@ export class MultiOwnable extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.isOwner
                 .call(_address, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -113,8 +113,8 @@ export class MultiOwnable extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.pause( txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -130,8 +130,8 @@ export class MultiOwnable extends SoltsiceContract {
             sendTransaction: Object.assign(( txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.pause.sendTransaction( txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -158,7 +158,7 @@ export class MultiOwnable extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.pause.estimateGas().then((g) => resolve(g));
+                    this._instance.pause.estimateGas().then((g: any) => resolve(g));
                 });
             }
         });
@@ -171,8 +171,8 @@ export class MultiOwnable extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.unpause( txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -188,8 +188,8 @@ export class MultiOwnable extends SoltsiceContract {
             sendTransaction: Object.assign(( txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.unpause.sendTransaction( txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -216,7 +216,7 @@ export class MultiOwnable extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.unpause.estimateGas().then((g) => resolve(g));
+                    this._instance.unpause.estimateGas().then((g: any) => resolve(g));
                 });
             }
         });

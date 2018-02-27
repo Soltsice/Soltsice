@@ -79,8 +79,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.array
                 .call(_0, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -90,8 +90,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -101,8 +101,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.wellKnown
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -114,8 +114,8 @@ export class DummyContract extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership(newOwner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -131,8 +131,8 @@ export class DummyContract extends SoltsiceContract {
             sendTransaction: Object.assign((newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -159,7 +159,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (newOwner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                    this._instance.transferOwnership.estimateGas(newOwner).then((g: any) => resolve(g));
                 });
             }
         });
@@ -170,8 +170,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.getPrivate
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -183,8 +183,8 @@ export class DummyContract extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.setPrivate(_newValue, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -200,8 +200,8 @@ export class DummyContract extends SoltsiceContract {
             sendTransaction: Object.assign((_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.setPrivate.sendTransaction(_newValue, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -228,7 +228,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_newValue: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.setPrivate.estimateGas(_newValue).then((g) => resolve(g));
+                    this._instance.setPrivate.estimateGas(_newValue).then((g: any) => resolve(g));
                 });
             }
         });
@@ -239,8 +239,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.getPublic
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -252,8 +252,8 @@ export class DummyContract extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.setPublic(_newValue, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -269,8 +269,8 @@ export class DummyContract extends SoltsiceContract {
             sendTransaction: Object.assign((_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.setPublic.sendTransaction(_newValue, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -297,7 +297,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_newValue: BigNumber | number): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.setPublic.estimateGas(_newValue).then((g) => resolve(g));
+                    this._instance.setPublic.estimateGas(_newValue).then((g: any) => resolve(g));
                 });
             }
         });
@@ -310,8 +310,8 @@ export class DummyContract extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.ArrayTypesTest(_array, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -327,8 +327,8 @@ export class DummyContract extends SoltsiceContract {
             sendTransaction: Object.assign((_array: BigNumber[] | number[], txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.ArrayTypesTest.sendTransaction(_array, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -355,7 +355,7 @@ export class DummyContract extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (_array: BigNumber[] | number[]): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.ArrayTypesTest.estimateGas(_array).then((g) => resolve(g));
+                    this._instance.ArrayTypesTest.estimateGas(_array).then((g: any) => resolve(g));
                 });
             }
         });
@@ -366,8 +366,8 @@ export class DummyContract extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.funcArrayInArguments
                 .call(_array, txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     

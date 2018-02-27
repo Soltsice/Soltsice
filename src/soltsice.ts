@@ -186,8 +186,8 @@ export module soltsice {
         return new Promise((resolve, reject) => {
             this._instance.${name}
                 .call(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     `
@@ -201,8 +201,8 @@ export module soltsice {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.${name}(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -218,8 +218,8 @@ export module soltsice {
             sendTransaction: Object.assign((${inputsString === '' ? '' : inputsString + ','} txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.${name}.sendTransaction(${inputsNamesString === '' ? '' : inputsNamesString + ','} txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -246,7 +246,7 @@ export module soltsice {
             // tslint:disable-next-line:variable-name
             estimateGas: (${inputsString}): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.${name}.estimateGas(${inputsNamesString}).then((g) => resolve(g));
+                    this._instance.${name}.estimateGas(${inputsNamesString}).then((g: any) => resolve(g));
                 });
             }
         });

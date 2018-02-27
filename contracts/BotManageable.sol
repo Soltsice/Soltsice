@@ -17,7 +17,7 @@ contract BotManageable is MultiOwnable {
     /**
      * Bot addresses and their start/end times (two uint64 timestamps)
      */
-    mapping (address => uint128) private botsStartEndTime;
+    mapping (address => uint128) internal botsStartEndTime;
 
     event BotsStartEndTimeChange(address indexed _botAddress, uint64 _startTime, uint64 _endTime);
 

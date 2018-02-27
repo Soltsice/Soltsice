@@ -78,8 +78,8 @@ export class Ownable extends SoltsiceContract {
         return new Promise((resolve, reject) => {
             this._instance.owner
                 .call( txParams || this._sendParams)
-                .then((res) => resolve(res))
-                .catch((err) => reject(err));
+                .then((res: any) => resolve(res))
+                .catch((err: any) => reject(err));
         });
     }
     
@@ -91,8 +91,8 @@ export class Ownable extends SoltsiceContract {
             if (!privateKey) {
                 return new Promise((resolve, reject) => {
                     this._instance.transferOwnership(newOwner, txParams || this._sendParams)
-                        .then((res) => resolve(res))
-                        .catch((err) => reject(err));
+                        .then((res: any) => resolve(res))
+                        .catch((err: any) => reject(err));
                 });
             } else {
                 // tslint:disable-next-line:max-line-length
@@ -108,8 +108,8 @@ export class Ownable extends SoltsiceContract {
             sendTransaction: Object.assign((newOwner: string, txParams?: W3.TX.TxParams): Promise<string> => {
                     return new Promise((resolve, reject) => {
                         this._instance.transferOwnership.sendTransaction(newOwner, txParams || this._sendParams)
-                            .then((res) => resolve(res))
-                            .catch((err) => reject(err));
+                            .then((res: any) => resolve(res))
+                            .catch((err: any) => reject(err));
                     });
                 },
                 {
@@ -136,7 +136,7 @@ export class Ownable extends SoltsiceContract {
             // tslint:disable-next-line:variable-name
             estimateGas: (newOwner: string): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.transferOwnership.estimateGas(newOwner).then((g) => resolve(g));
+                    this._instance.transferOwnership.estimateGas(newOwner).then((g: any) => resolve(g));
                 });
             }
         });

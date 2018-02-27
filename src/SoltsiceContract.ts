@@ -20,7 +20,7 @@ export class SoltsiceContract {
             w3 = W3.default;
         }
         let ct = w3.web3.eth.contract(tokenArtifacts.abi);
-        let data = ct.new.getData(...constructorParams!, {data: tokenArtifacts.bytecode});
+        let data = ct.new.getData(...constructorParams!, { data: tokenArtifacts.bytecode });
         return data;
     }
 
@@ -71,13 +71,13 @@ export class SoltsiceContract {
             let useDeployed = async () => {
                 let network = +(await this.w3.networkId);
                 this._Contract.setNetwork(network);
-                this._Contract.deployed().then((inst) => {
+                this._Contract.deployed().then((inst: any) => {
                     this.transactionHash = inst.transactionHash;
                     if (!SoltsiceContract.silent) {
                         console.log('SOLTSICE: USING DEPLOYED CONTRACT', this.constructor.name, ' at ', deploymentParams!);
                     }
                     resolve(inst);
-                }).catch((err) => {
+                }).catch((err: any) => {
                     reject(err);
                 });
             };
@@ -374,19 +374,174 @@ export class SoltsiceContract {
         return logs;
     }
 
-    public async getLogs(fromBlock: number, toBlock?: number): Promise<W3.Log[]> {
+    /** Get all events starting from the given block number. */
+    public async getLogs(fromBlock?: number, toBlock?: number, eventName?: string, filter?: object): Promise<W3.Log[]> {
+
+        if (!fromBlock) {
+            fromBlock = await this.w3.blockNumber;
+        }
+
+        if (toBlock && toBlock < fromBlock) {
+            throw new Error('toBlock is less than FromBlock');
+        }
 
         let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
 
-        return new Promise<W3.Log[]>(async (resolve, reject) => {
-            (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(log);
+        if (eventName) {
+            if (filter) {
+                console.warn('Unused filter parameter without event name.');
+            }
+            return new Promise<W3.Log[]>(async (resolve, reject) => {
+                (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(log);
+                });
             });
-        });
-
+        } else {
+            filter = filter || {};
+            return new Promise<W3.Log[]>(async (resolve, reject) => {
+                (await this.instance)[eventName!](filter, { fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(log);
+                });
+            });
+        }
     }
+
+    public allEvents(fromBlock?: number, eventName?: string, filter?: object, cancellationToken?: W3.CancellationToken) {
+
+        filter = filter || {};
+
+        if (eventName) {
+            throw new Error('not implemented yet');
+        }
+
+        let th = this;
+
+        let i = async function* () {
+            if (!fromBlock) {
+                fromBlock = await th.w3.blockNumber;
+            }
+
+            let lastUsedFromBlock = fromBlock;
+            while (!cancellationToken || !cancellationToken.cancelled) {
+                let logs = await th.getLogs(lastUsedFromBlock, undefined, eventName, filter);
+                if (logs && logs.length > 0) {
+                    yield* logs;
+                    lastUsedFromBlock = logs[logs.length - 1].blockNumber;
+                }
+
+                let newBlock = 0;
+                // always first loop
+                while (true) {
+                    newBlock = await th.w3.blockNumber;
+                    if (newBlock > lastUsedFromBlock) {
+                        // GT doesn't guarantee than newBlock = lastUsedFromBlock + 1, due to some delays it could be greater by more than 1
+                        lastUsedFromBlock = lastUsedFromBlock + 1;
+                        break;
+                    }
+                    // wait 3 seconds, approx. half new block period
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+            }
+        };
+        return i();
+    }
+
+    // tslint:disable-next-line:member-ordering
+    public static Events = class {
+        public contract: SoltsiceContract;
+        constructor(c: SoltsiceContract) {
+            this.contract = c;
+        }
+        public MyEvent(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+
+        public MyEvent1(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent2(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent3(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent4(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent5(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent6(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent7(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent8(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent9(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+        public MyEvent10(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+            // usage:
+            // for await (const x of await this.events.MyEvent(...)) {
+            //     console.log(x);
+            // }
+            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+        }
+
+    };
+
+    // tslint:disable-next-line:member-ordering
+    private _events = new SoltsiceContract.Events(this);
+
+    public get events() { return this._events; }
 
 }
