@@ -477,6 +477,9 @@ export namespace W3 {
     export function toHex(value: number | string | BigNumber, stripPrefix?: boolean, size?: number): string {
         const HEX_CHAR_SIZE = 4;
         if (typeof value === 'string') {
+            if (size) {
+                throw new Error('W3.toHex: using optional size argument with strings is not supported');
+            }
             if (!value.startsWith('0x')) {
                 // non-hex string
                 return W3.utf8ToHex(value, stripPrefix);
@@ -486,16 +489,23 @@ export namespace W3 {
             }
         }
 
+        let hexWithPrefix: string;
+        if ((value as any).isBigNumber) {
+            let bn = value as BigNumber;
+            let hex = bn.toString(16);
+            hexWithPrefix = bn.lessThan(0) ? '-0x' + hex.substr(1) : '0x' + hex;;
+        } else {
+            hexWithPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any)));
+        }
+
         // numbers, big numbers, and hex strings
         if (size) {
             // tslint:disable-next-line:no-bitwise
-            let hexNoPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0)).slice(2);
+            let hexNoPrefix = hexWithPrefix.slice(2);
             // tslint:disable-next-line:no-bitwise
             let leftPadded = W3.leftPad(hexNoPrefix, size / HEX_CHAR_SIZE, value < 0 ? 'F' : '0');
             return (stripPrefix ? leftPadded : '0x' + leftPadded);
         } else {
-            // tslint:disable-next-line:no-bitwise
-            let hexWithPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any) >>> 0));
             // tslint:disable-next-line:no-bitwise
             return (stripPrefix ? hexWithPrefix.slice(2) : hexWithPrefix);
         }

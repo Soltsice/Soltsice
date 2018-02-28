@@ -19,7 +19,7 @@ let dummyAddress: string;
 
 describe('W3 tests', () => {
 
-    xit('Could convert to hex', async function () {
+    it('Could convert to hex', async function () {
         let hex = W3.toHex('0xABC123');
         expect(hex).toEqual('0xABC123'.toLowerCase());
         console.log('0xABC123 hex', hex, true);
@@ -29,6 +29,10 @@ describe('W3 tests', () => {
         console.log('BigNumber(1234567) hex', hexBN);
         let hexNumber = W3.toHex(1234567, true);
         console.log('1234567 hex', hexNumber);
+        let hexGasPrice = W3.toHex(20000000000);
+        console.log('20 Gwei hex', hexGasPrice);
+        let recoveredGasPrice = new BigNumber(hexGasPrice);
+        expect(recoveredGasPrice).toEqual(new BigNumber(20000000000));
     });
 
     it('Should return tx number', async function () {
