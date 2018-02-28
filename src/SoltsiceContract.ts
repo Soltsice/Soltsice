@@ -375,38 +375,34 @@ export class SoltsiceContract {
     }
 
     /** Get all events starting from the given block number. */
-    public async getLogs(fromBlock?: number, toBlock?: number, eventName?: string, filter?: object): Promise<W3.Log[]> {
+    public async getLogs(fromBlock?: W3.BlockType, toBlock?: W3.BlockType, eventName?: string, filter?: object): Promise<W3.EventLog[]> {
 
         if (!fromBlock) {
-            fromBlock = await this.w3.blockNumber;
+            fromBlock = 'latest';
         }
 
-        if (toBlock && toBlock < fromBlock) {
-            throw new Error('toBlock is less than FromBlock');
-        }
-
-        let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
+        let toBlock1 = toBlock ? toBlock : 'latest';
 
         if (eventName) {
             if (filter) {
                 console.warn('Unused filter parameter without event name.');
             }
-            return new Promise<W3.Log[]>(async (resolve, reject) => {
-                (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
+            return new Promise<W3.EventLog[]>(async (resolve, reject) => {
+                (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, logs: W3.EventLog[]) => {
                     if (error) {
                         reject(error);
                     }
-                    resolve(log);
+                    resolve(logs);
                 });
             });
         } else {
             filter = filter || {};
-            return new Promise<W3.Log[]>(async (resolve, reject) => {
-                (await this.instance)[eventName!](filter, { fromBlock: fromBlock, toBlock: toBlock1 }).get((error, log) => {
+            return new Promise<W3.EventLog[]>(async (resolve, reject) => {
+                (await this.instance)[eventName!](filter, { fromBlock: fromBlock, toBlock: toBlock1 }).get((error, logs: W3.EventLog[]) => {
                     if (error) {
                         reject(error);
                     }
-                    resolve(log);
+                    resolve(logs);
                 });
             });
         }

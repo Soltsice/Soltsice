@@ -5,3 +5,4 @@ export * from './MultiSigWallet';
 export * from './Ownable';
 export * from './Storage';
 export * from './StorageFactory';
+export * from './WalletBasic';
