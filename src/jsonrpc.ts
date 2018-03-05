@@ -1,10 +1,10 @@
 export class JsonRPCRequest {
     private static counter: number = 0;
 
-    readonly jsonrpc: string = '2.0';
-    method: string;
-    params: any[];
-    id?: number | string;
+    public readonly jsonrpc: string = '2.0';
+    public method: string;
+    public params: any[];
+    public id?: number | string;
 
     private static nextCounter() {
         JsonRPCRequest.counter++;
@@ -21,10 +21,10 @@ export class JsonRPCRequest {
 }
 
 export class JsonRPCResponse {
-    id: number | string;
-    result?: any;
-    error?: JsonRPCError;
-    readonly jsonrpc: string = '2.0';
+    public id: number | string;
+    public result?: any;
+    public error?: JsonRPCError;
+    public readonly jsonrpc: string = '2.0';
     constructor(id: number | string, result?: any, error?: JsonRPCError) {
         this.id = id;
         this.result = result;
