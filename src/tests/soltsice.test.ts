@@ -118,7 +118,7 @@ describe('DummyContract tests', () => {
     });
 
     // TODO this test randomly fails on TestRPC
-    xit('Could send transaction and parse logs', async function () {
+    it('Could send transaction and parse logs', async function () {
         console.log(address);
         let dummy = await DummyContract.new(
             W3.TX.txParamsDefaultDeploy(testAccounts[0]),

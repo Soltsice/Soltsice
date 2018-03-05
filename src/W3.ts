@@ -27,6 +27,7 @@ export class W3 {
     private _netId: string;
     private _netNode: Promise<string>;
     private _defaultAccount: string;
+    private _defaultTimeout: number = 240000;
 
     /**
      * Default W3 instance that is used as a fallback when such an instance is not provided to a constructor.
@@ -86,6 +87,19 @@ export class W3 {
     public set defaultAccount(defaultAccount: string) {
         this._defaultAccount = defaultAccount;
         this.web3.defaultAccount = defaultAccount;
+    }
+
+    /** Default timeout in seconds. */
+    public get defaultTimeout(): number {
+        return this._defaultTimeout / 1000;
+    }
+
+    public set defaultTimeout(defaultTimeout: number) {
+        if (defaultTimeout && defaultTimeout > 240) {
+            this._defaultTimeout = defaultTimeout;
+        } else {
+            throw new Error('Bad defaultTimeout value.');
+        }
     }
 
     /**
@@ -428,7 +442,7 @@ export class W3 {
     public async waitTransactionReceipt(hashString: string, timeoutSeconds?: number): Promise<W3.TransactionReceipt> {
 
         return new Promise<W3.TransactionReceipt>((accept, reject) => {
-            var timeout = (timeoutSeconds && timeoutSeconds > 240) ? timeoutSeconds * 1000 : 240000;
+            var timeout = (timeoutSeconds && timeoutSeconds > 240) ? timeoutSeconds * 1000 : this._defaultTimeout;
             var start = new Date().getTime();
             let makeAttempt = () => {
                 this.web3.eth.getTransactionReceipt(hashString, (err, receipt) => {
@@ -493,7 +507,7 @@ export namespace W3 {
         if ((value as any).isBigNumber) {
             let bn = value as BigNumber;
             let hex = bn.toString(16);
-            hexWithPrefix = bn.lessThan(0) ? '-0x' + hex.substr(1) : '0x' + hex;;
+            hexWithPrefix = bn.lessThan(0) ? '-0x' + hex.substr(1) : '0x' + hex;
         } else {
             hexWithPrefix = EthUtils.bufferToHex(EthUtils.toBuffer((value as any)));
         }
@@ -831,17 +845,6 @@ export namespace W3 {
         r?: string;
         s?: string;
     }
-    export interface EventLog {
-        event: string;
-        address: string;
-        returnValues: object;
-        logIndex: number;
-        transactionIndex: number;
-        transactionHash: string;
-        blockHash: string;
-        blockNumber: number;
-        raw?: { data: string, topics: any[] };
-    }
 
     export interface TransactionReceipt {
         transactionHash: string;
@@ -893,24 +896,45 @@ export namespace W3 {
 
     /** Transaction log entry. */
     export interface Log {
-        /** true when the log was removed, due to a chain reorganization. false if its a valid log. */
-        removed?: boolean;
+
+        address: string;
         logIndex: number;
         transactionIndex: number;
         transactionHash: string;
         blockHash: string;
         blockNumber: number;
-        address: string;
+
+        /** true when the log was removed, due to a chain reorganization. false if its a valid log. */
+        removed?: boolean;
+
         data?: string;
         topics?: Array<string>;
+
+        /** Event name decoded by Truffle-contract */
+        event?: string;
 
         /** Truffle-contract returns this as 'mined' */
         type?: string;
 
-        /** Event name decoded by Truffle-contract */
-        event?: string;
         /** Args passed to a Truffle-contract method */
         args?: any;
+    }
+
+    export interface EventLog extends Log {
+
+        event: string;
+
+        // from parent Log
+        // address: string;
+        // logIndex: number;
+        // transactionIndex: number;
+        // transactionHash: string;
+        // blockHash: string;
+        // blockNumber: number;
+
+        returnValues: any;
+        signature: string | null;
+        raw?: { data: string, topics: any[] };
     }
 
     export interface Subscribe<T> {

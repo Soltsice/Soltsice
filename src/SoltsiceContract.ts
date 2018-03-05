@@ -143,21 +143,21 @@ export class SoltsiceContract {
         return instance.sendTransaction(txParams);
     }
 
-    public async parseLogs(logs: W3.Log[]): Promise<W3.Log[]> {
+    protected async parseLogs(logs: W3.Log[] ): Promise<W3.Log[] | W3.EventLog[]> {
         let web3 = this.w3;
         let inst = await this.instance;
         let abi = inst.abi;
 
         return logs!.map((log) => {
             let logABI: any = null;
-
+            let signature: string | null = null;
             for (let i = 0; i < abi.length; i++) {
                 let item = abi[i];
                 if (item.type !== 'event') {
                     continue;
                 }
                 // tslint:disable-next-line:max-line-length
-                let signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
+                signature = item.name + '(' + item.inputs.map(function (input: any) { return input.type; }).join(',') + ')';
                 let hash = this.w3.web3.sha3(signature);
                 if (hash === log.topics![0]) {
                     logABI = item;
@@ -221,9 +221,14 @@ export class SoltsiceContract {
                         copy.args[key] = web3.toBigNumber('0x' + val.toString(16));
                     }
                 });
+                // fill interface for EventLogs
+                (copy as any).signature = signature;
+                (copy as any).returnValues = copy.args;
+                (copy as any).raw = { data: copy.data || '', topics: copy.topics || [] };
 
-                delete copy.data;
-                delete copy.topics;
+                // These are optional on Log interface, keep them
+                // delete copy.data;
+                // delete copy.topics;
 
                 return copy;
 
@@ -238,7 +243,7 @@ export class SoltsiceContract {
         if (!receipt.logs) {
             return [];
         }
-        return this.parseLogs(receipt.logs);
+        return this.parseLogs(receipt.logs as W3.Log[]);
     }
 
     /** Get transaction result by hash. Returns receipt + parsed logs. */
@@ -269,7 +274,7 @@ export class SoltsiceContract {
     public async waitTransactionReceipt(hashString: string): Promise<W3.TX.TransactionResult> {
 
         return new Promise<W3.TX.TransactionResult>((accept, reject) => {
-            var timeout = 240000;
+            var timeout = this.w3.defaultTimeout * 1000;
             var start = new Date().getTime();
             let makeAttempt = () => {
                 this.w3.web3.eth.getTransactionReceipt(hashString, async (err, receipt) => {
@@ -288,7 +293,8 @@ export class SoltsiceContract {
                     }
 
                     if (timeout > 0 && new Date().getTime() - start > timeout) {
-                        return reject(new Error('Transaction ' + hashString + ' wasn\'t processed in ' + (timeout / 1000) + ' seconds!'));
+                        return reject(new Error('Transaction ' + hashString +
+                            ' wasn\'t processed in ' + (timeout / 1000) + ' seconds! You may increase the w3.defaultTimeout property on w3 instance.'));
                     }
 
                     setTimeout(makeAttempt, 1000);
@@ -375,169 +381,179 @@ export class SoltsiceContract {
     }
 
     /** Get all events starting from the given block number. */
-    public async getLogs(fromBlock?: W3.BlockType, toBlock?: W3.BlockType, eventName?: string, filter?: object): Promise<W3.EventLog[]> {
+    public async getEventLogs(fromBlock?: number, toBlock?: number, eventName?: string, filter?: object): Promise<W3.EventLog[]> {
 
-        if (!fromBlock) {
-            fromBlock = 'latest';
-        }
+        let fromBlock1 = fromBlock || 0;
 
-        let toBlock1 = toBlock ? toBlock : 'latest';
+        let toBlock1 = toBlock ? this.w3.fromDecimal(toBlock) : 'latest';
 
-        if (eventName) {
+        let topics: string[] = [];
+
+        if (!eventName) {
             if (filter) {
                 console.warn('Unused filter parameter without event name.');
             }
-            return new Promise<W3.EventLog[]>(async (resolve, reject) => {
-                (await this.instance).allEvents({ fromBlock: fromBlock, toBlock: toBlock1 }).get((error, logs: W3.EventLog[]) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(logs);
-                });
-            });
         } else {
             filter = filter || {};
-            return new Promise<W3.EventLog[]>(async (resolve, reject) => {
-                (await this.instance)[eventName!](filter, { fromBlock: fromBlock, toBlock: toBlock1 }).get((error, logs: W3.EventLog[]) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(logs);
-                });
-            });
+            // encode filter params using web3 implementation detail, must use public method from web3 1.0 later
+            topics = (this.instance)[eventName](filter).options.topics;
         }
+
+        // Need to call manually in web3 0.20.x
+        // https://github.com/ethereum/web3.js/issues/879#issuecomment-304164245
+        let rpcResponse = await this.w3.sendRPC({
+            jsonrpc: '2.0',
+            method: 'eth_getLogs',
+            params: [{
+                'fromBlock': this.w3.fromDecimal(fromBlock1),
+                'toBlock': toBlock1,
+                'address': this.address,
+                'topics': topics
+            }],
+            id: W3.getNextCounter()
+        });
+
+        if (rpcResponse.error) {
+            throw new Error(rpcResponse.error.message);
+        }
+
+        let parsed = await this.parseLogs(rpcResponse.result as W3.Log[]) as W3.EventLog[];
+
+        return parsed;
     }
 
-    public allEvents(fromBlock?: number, eventName?: string, filter?: object, cancellationToken?: W3.CancellationToken) {
+    ///////////// EVENTS PLAYGROUND BELOW ////////////////////
 
-        filter = filter || {};
+    // public allEvents(fromBlock?: number, eventName?: string, filter?: object, cancellationToken?: W3.CancellationToken) {
 
-        if (eventName) {
-            throw new Error('not implemented yet');
-        }
+    //     filter = filter || {};
 
-        let th = this;
+    //     if (eventName) {
+    //         throw new Error('not implemented yet');
+    //     }
 
-        let i = async function* () {
-            if (!fromBlock) {
-                fromBlock = await th.w3.blockNumber;
-            }
+    //     let th = this;
 
-            let lastUsedFromBlock = fromBlock;
-            while (!cancellationToken || !cancellationToken.cancelled) {
-                let logs = await th.getLogs(lastUsedFromBlock, undefined, eventName, filter);
-                if (logs && logs.length > 0) {
-                    yield* logs;
-                    lastUsedFromBlock = logs[logs.length - 1].blockNumber;
-                }
+    //     let i = async function* () {
+    //         if (!fromBlock) {
+    //             fromBlock = await th.w3.blockNumber;
+    //         }
 
-                let newBlock = 0;
-                // always first loop
-                while (true) {
-                    newBlock = await th.w3.blockNumber;
-                    if (newBlock > lastUsedFromBlock) {
-                        // GT doesn't guarantee than newBlock = lastUsedFromBlock + 1, due to some delays it could be greater by more than 1
-                        lastUsedFromBlock = lastUsedFromBlock + 1;
-                        break;
-                    }
-                    // wait 3 seconds, approx. half new block period
-                    await new Promise(resolve => setTimeout(resolve, 3000));
-                }
-            }
-        };
-        return i();
-    }
+    //         let lastUsedFromBlock = fromBlock;
+    //         while (!cancellationToken || !cancellationToken.cancelled) {
+    //             let logs = await th.getLogs(lastUsedFromBlock, undefined, eventName, filter);
+    //             if (logs && logs.length > 0) {
+    //                 yield* logs;
+    //                 lastUsedFromBlock = logs[logs.length - 1].blockNumber;
+    //             }
 
-    // tslint:disable-next-line:member-ordering
-    public static Events = class {
-        public contract: SoltsiceContract;
-        constructor(c: SoltsiceContract) {
-            this.contract = c;
-        }
-        public MyEvent(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
+    //             let newBlock = 0;
+    //             // always first loop
+    //             while (true) {
+    //                 newBlock = await th.w3.blockNumber;
+    //                 if (newBlock > lastUsedFromBlock) {
+    //                     // GT doesn't guarantee than newBlock = lastUsedFromBlock + 1, due to some delays it could be greater by more than 1
+    //                     lastUsedFromBlock = lastUsedFromBlock + 1;
+    //                     break;
+    //                 }
+    //                 // wait 3 seconds, approx. half new block period
+    //                 await new Promise(resolve => setTimeout(resolve, 3000));
+    //             }
+    //         }
+    //     };
+    //     return i();
+    // }
 
-        public MyEvent1(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent2(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent3(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent4(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent5(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent6(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent7(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent8(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent9(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
-        public MyEvent10(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
-            // usage:
-            // for await (const x of await this.events.MyEvent(...)) {
-            //     console.log(x);
-            // }
-            return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
-        }
+    // // tslint:disable-next-line:member-ordering
+    // public static Events = class {
+    //     public contract: SoltsiceContract;
+    //     constructor(c: SoltsiceContract) {
+    //         this.contract = c;
+    //     }
+    //     public MyEvent(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
 
-    };
+    //     public MyEvent1(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent2(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent3(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent4(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent5(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent6(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent7(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent8(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent9(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
+    //     public MyEvent10(fromBlock?: number, filter?: object, cancellationToken?: W3.CancellationToken) {
+    //         // usage:
+    //         // for await (const x of await this.events.MyEvent(...)) {
+    //         //     console.log(x);
+    //         // }
+    //         return this.contract.allEvents(fromBlock, 'MyEvent', filter, cancellationToken);
+    //     }
 
-    // tslint:disable-next-line:member-ordering
-    private _events = new SoltsiceContract.Events(this);
+    // };
 
-    public get events() { return this._events; }
+    // // tslint:disable-next-line:member-ordering
+    // private _events = new SoltsiceContract.Events(this);
+
+    // public get events() { return this._events; }
 
 }
