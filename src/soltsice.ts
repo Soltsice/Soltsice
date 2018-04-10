@@ -246,7 +246,7 @@ export module soltsice {
             // tslint:disable-next-line:variable-name
             estimateGas: (${inputsString}): Promise<number> => {
                 return new Promise((resolve, reject) => {
-                    this._instance.${name}.estimateGas(${inputsNamesString}).then((g: any) => resolve(g));
+                    this._instance.${name}.estimateGas(${inputsNamesString}).then((g: any) => resolve(g)).catch((err: any) => reject(err));
                 });
             }
         });
