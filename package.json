@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
     "private": false,
-    "version": "0.11.3",
+    "version": "0.11.5",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

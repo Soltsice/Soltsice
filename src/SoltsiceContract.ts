@@ -143,7 +143,7 @@ export class SoltsiceContract {
         return instance.sendTransaction(txParams);
     }
 
-    protected async parseLogs(logs: W3.Log[] ): Promise<W3.Log[] | W3.EventLog[]> {
+    public async parseLogs(logs: W3.Log[] ): Promise<W3.EventLog[]> {
         let web3 = this.w3;
         let inst = await this.instance;
         let abi = inst.abi;
@@ -236,7 +236,7 @@ export class SoltsiceContract {
                 return undefined;
             }
 
-        }).filter(d => d) as W3.Log[];
+        }).filter(d => d) as W3.EventLog[];
     }
 
     public async parseReceipt(receipt: W3.TransactionReceipt): Promise<W3.Log[]> {
