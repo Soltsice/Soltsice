@@ -1,7 +1,3 @@
-[![Build Status](https://travis-ci.org/Soltsice/Soltsice.svg?branch=master)](https://travis-ci.org/Soltsice/Soltsice)
-
-[<img src="https://raw.githubusercontent.com/Soltsice/Soltsice/master/misc/theme/assets/images/Dbrain_blue.png" alt="Spreads" height="20" align="right" />](https://dbrain.io)
-
 # [Soltsice](https://github.com/Soltsice/Soltsice)
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples

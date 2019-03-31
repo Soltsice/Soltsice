@@ -1,7 +1,7 @@
 {
     "name": "soltsice",
-    "private": true,
-    "version": "0.2.0",
+    "private": false,
+    "version": "0.2.4",
     "description": "Solidity & TypeScript Integration, Configuration and Examples",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -60,14 +60,15 @@
     },
     "scripts": {
         "test": "jest --watch",
-        "clear_jest": "jest --clearCache",
         "build:contracts": "truffle compile",
         "soltsice": "tsc && copyfiles -u 2 build/contracts/**/* src/artifacts && copyfiles -u 2 build/contracts/**/* dist/artifacts && npm run soltsice:gen && tsc",
         "soltsice:gen": "copyfiles -u 2 build/contracts/**/* src/artifacts && node ./dist/soltsice.bin.js ./src/artifacts ./src/contracts ..",
         "_prepublishOnly": "npm run soltsice && jest",
         "travis": "npm run build:contracts && npm run soltsice && jest",
-        "docs": "typedoc --excludePrivate --excludeProtected --excludeExternals --hideGenerator --exclude \"**/*+(test|.bin|index|DummyContract).ts\" --theme ./misc/theme --name Soltsice --mode file --out ./docs ./src"
-    },
+        "docs": "typedoc --excludePrivate --excludeProtected --excludeExternals --hideGenerator --exclude \"**/*+(test|.bin|index|DummyContract).ts\" --theme ./misc/theme --name Soltsice --mode file --out ./docs ./src",
+        "clear_jest": "jest --clearCache",
+        "test_ci": "jest"
+      },
     "bin": {
         "soltsice": "dist/soltsice.bin.js"
     },
