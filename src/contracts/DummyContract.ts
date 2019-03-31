@@ -1,11 +1,11 @@
 
-import { W3, BN, SoltsiceContract } from '..';
+    import { BigNumber } from 'bignumber.js';
+import { W3, SoltsiceContract } from '..';
 
 /**
  * DummyContract API
  */
 export class DummyContract extends SoltsiceContract {
-  protected useBN: BN = new BN(0);
 
   public static get artifacts() { return require('../artifacts/DummyContract.json'); }
 
@@ -20,7 +20,7 @@ export class DummyContract extends SoltsiceContract {
   }
 
   // tslint:disable-next-line:max-line-length
-  public static async new(deploymentParams: W3.TX.TxParams, ctorParams?: {_secret: BN | number, _wellKnown: BN | number, _array: BN[] | number[]}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<DummyContract> {
+  public static async new(deploymentParams: W3.TX.TxParams, ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]}, w3?: W3, link?: SoltsiceContract[], privateKey?: string): Promise<DummyContract> {
     w3 = w3 || W3.default;
     if (!privateKey) {
       let contract = new DummyContract(deploymentParams, ctorParams, w3, link);
@@ -49,17 +49,15 @@ export class DummyContract extends SoltsiceContract {
   }
 
   // tslint:disable-next-line:max-line-length
-  public static newData(ctorParams?: {_secret: BN | number, _wellKnown: BN | number, _array: BN[] | number[]}, w3?: W3): string {
+  public static newData(ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]}, w3?: W3): string {
     // tslint:disable-next-line:max-line-length
     let data = SoltsiceContract.newDataImpl(w3, DummyContract.artifacts, ctorParams ? [ctorParams!._secret, ctorParams!._wellKnown, ctorParams!._array] : []);
     return data;
   }
 
-
-
   protected constructor(
     deploymentParams: string | W3.TX.TxParams | object,
-    ctorParams?: {_secret: BN | number, _wellKnown: BN | number, _array: BN[] | number[]},
+    ctorParams?: {_secret: BigNumber | number, _wellKnown: BigNumber | number, _array: BigNumber[] | number[]},
     w3?: W3,
     link?: SoltsiceContract[]
   ) {
@@ -78,7 +76,7 @@ export class DummyContract extends SoltsiceContract {
   
   // tslint:disable-next-line:max-line-length
   // tslint:disable-next-line:variable-name
-  public array(_0: BN | number, txParams?: W3.TX.TxParams): Promise<BN> {
+  public array(_0: BigNumber | number, txParams?: W3.TX.TxParams): Promise<BigNumber> {
     return new Promise((resolve, reject) => {
       this._instance.array
         .call(_0, txParams || this._sendParams)
@@ -169,7 +167,7 @@ export class DummyContract extends SoltsiceContract {
   
   // tslint:disable-next-line:max-line-length
   // tslint:disable-next-line:variable-name
-  public wellKnown( txParams?: W3.TX.TxParams): Promise<BN> {
+  public wellKnown( txParams?: W3.TX.TxParams): Promise<BigNumber> {
     return new Promise((resolve, reject) => {
       this._instance.wellKnown
         .call( txParams || this._sendParams)
@@ -238,7 +236,7 @@ export class DummyContract extends SoltsiceContract {
   
   // tslint:disable-next-line:max-line-length
   // tslint:disable-next-line:variable-name
-  public getPrivate( txParams?: W3.TX.TxParams): Promise<BN> {
+  public getPrivate( txParams?: W3.TX.TxParams): Promise<BigNumber> {
     return new Promise((resolve, reject) => {
       this._instance.getPrivate
         .call( txParams || this._sendParams)
@@ -251,7 +249,7 @@ export class DummyContract extends SoltsiceContract {
   public setPrivate = Object.assign(
       // tslint:disable-next-line:max-line-length
       // tslint:disable-next-line:variable-name
-      (_newValue: BN | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+      (_newValue: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
           if (!privateKey) {
             return new Promise((resolve, reject) => {
               this._instance.setPrivate(_newValue, txParams || this._sendParams)
@@ -269,7 +267,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        sendTransaction: Object.assign((_newValue: BN | number, txParams?: W3.TX.TxParams): Promise<string> => {
+        sendTransaction: Object.assign((_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
               return new Promise((resolve, reject) => {
                 this._instance.setPrivate.sendTransaction(_newValue, txParams || this._sendParams)
                   .then((res: any) => resolve(res))
@@ -279,7 +277,7 @@ export class DummyContract extends SoltsiceContract {
             {
               // tslint:disable-next-line:max-line-length
               // tslint:disable-next-line:variable-name
-              sendSigned: (_newValue: BN | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+              sendSigned: (_newValue: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                 // tslint:disable-next-line:max-line-length
                 return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPrivate.request(_newValue).params[0].data, txParams || this._sendParams, nonce);
               }
@@ -289,7 +287,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        data: (_newValue: BN | number): Promise<string> => {
+        data: (_newValue: BigNumber | number): Promise<string> => {
           return new Promise((resolve, reject) => {
             resolve(this._instance.setPrivate.request(_newValue).params[0].data);
           });
@@ -298,7 +296,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        estimateGas: (_newValue: BN | number): Promise<number> => {
+        estimateGas: (_newValue: BigNumber | number): Promise<number> => {
           return new Promise((resolve, reject) => {
             this._instance.setPrivate.estimateGas(_newValue).then((g: any) => resolve(g)).catch((err: any) => reject(err));
           });
@@ -307,7 +305,7 @@ export class DummyContract extends SoltsiceContract {
   
   // tslint:disable-next-line:max-line-length
   // tslint:disable-next-line:variable-name
-  public getPublic( txParams?: W3.TX.TxParams): Promise<BN> {
+  public getPublic( txParams?: W3.TX.TxParams): Promise<BigNumber> {
     return new Promise((resolve, reject) => {
       this._instance.getPublic
         .call( txParams || this._sendParams)
@@ -320,7 +318,7 @@ export class DummyContract extends SoltsiceContract {
   public setPublic = Object.assign(
       // tslint:disable-next-line:max-line-length
       // tslint:disable-next-line:variable-name
-      (_newValue: BN | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+      (_newValue: BigNumber | number, txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
           if (!privateKey) {
             return new Promise((resolve, reject) => {
               this._instance.setPublic(_newValue, txParams || this._sendParams)
@@ -338,7 +336,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        sendTransaction: Object.assign((_newValue: BN | number, txParams?: W3.TX.TxParams): Promise<string> => {
+        sendTransaction: Object.assign((_newValue: BigNumber | number, txParams?: W3.TX.TxParams): Promise<string> => {
               return new Promise((resolve, reject) => {
                 this._instance.setPublic.sendTransaction(_newValue, txParams || this._sendParams)
                   .then((res: any) => resolve(res))
@@ -348,7 +346,7 @@ export class DummyContract extends SoltsiceContract {
             {
               // tslint:disable-next-line:max-line-length
               // tslint:disable-next-line:variable-name
-              sendSigned: (_newValue: BN | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+              sendSigned: (_newValue: BigNumber | number, privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                 // tslint:disable-next-line:max-line-length
                 return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.setPublic.request(_newValue).params[0].data, txParams || this._sendParams, nonce);
               }
@@ -358,7 +356,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        data: (_newValue: BN | number): Promise<string> => {
+        data: (_newValue: BigNumber | number): Promise<string> => {
           return new Promise((resolve, reject) => {
             resolve(this._instance.setPublic.request(_newValue).params[0].data);
           });
@@ -367,7 +365,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        estimateGas: (_newValue: BN | number): Promise<number> => {
+        estimateGas: (_newValue: BigNumber | number): Promise<number> => {
           return new Promise((resolve, reject) => {
             this._instance.setPublic.estimateGas(_newValue).then((g: any) => resolve(g)).catch((err: any) => reject(err));
           });
@@ -378,7 +376,7 @@ export class DummyContract extends SoltsiceContract {
   public ArrayTypesTest = Object.assign(
       // tslint:disable-next-line:max-line-length
       // tslint:disable-next-line:variable-name
-      (_array: BN[] | number[], txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
+      (_array: BigNumber[] | number[], txParams?: W3.TX.TxParams, privateKey?: string): Promise<W3.TX.TransactionResult> => {
           if (!privateKey) {
             return new Promise((resolve, reject) => {
               this._instance.ArrayTypesTest(_array, txParams || this._sendParams)
@@ -396,7 +394,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        sendTransaction: Object.assign((_array: BN[] | number[], txParams?: W3.TX.TxParams): Promise<string> => {
+        sendTransaction: Object.assign((_array: BigNumber[] | number[], txParams?: W3.TX.TxParams): Promise<string> => {
               return new Promise((resolve, reject) => {
                 this._instance.ArrayTypesTest.sendTransaction(_array, txParams || this._sendParams)
                   .then((res: any) => resolve(res))
@@ -406,7 +404,7 @@ export class DummyContract extends SoltsiceContract {
             {
               // tslint:disable-next-line:max-line-length
               // tslint:disable-next-line:variable-name
-              sendSigned: (_array: BN[] | number[], privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
+              sendSigned: (_array: BigNumber[] | number[], privateKey: string, txParams?: W3.TX.TxParams, nonce?: number): Promise<string> => {
                 // tslint:disable-next-line:max-line-length
                 return this.w3.sendSignedTransaction(this.address, privateKey, this._instance.ArrayTypesTest.request(_array).params[0].data, txParams || this._sendParams, nonce);
               }
@@ -416,7 +414,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        data: (_array: BN[] | number[]): Promise<string> => {
+        data: (_array: BigNumber[] | number[]): Promise<string> => {
           return new Promise((resolve, reject) => {
             resolve(this._instance.ArrayTypesTest.request(_array).params[0].data);
           });
@@ -425,7 +423,7 @@ export class DummyContract extends SoltsiceContract {
       {
         // tslint:disable-next-line:max-line-length
         // tslint:disable-next-line:variable-name
-        estimateGas: (_array: BN[] | number[]): Promise<number> => {
+        estimateGas: (_array: BigNumber[] | number[]): Promise<number> => {
           return new Promise((resolve, reject) => {
             this._instance.ArrayTypesTest.estimateGas(_array).then((g: any) => resolve(g)).catch((err: any) => reject(err));
           });

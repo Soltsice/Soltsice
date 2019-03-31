@@ -23,8 +23,7 @@
     "noUnusedLocals": false,
     "experimentalDecorators": true,
     "noEmit": false,
-    "downlevelIteration": true,
-    "esModuleInterop": true
+    "downlevelIteration": true
   },
   "exclude": [
     "node_modules",

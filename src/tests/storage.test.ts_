@@ -1,5 +1,5 @@
 
-import { W3, getStorage, testAccounts } from '../';
+import { W3, getStorage, testAddresses } from '../';
 import { DummyContract } from '../contracts';
 import * as ganache from 'ganache-cli';
 // import { Storage } from '../contracts';
@@ -10,7 +10,7 @@ let w3 = new W3(ganache.provider({
 }));
 W3.default = w3;
 
-let activeAccount = testAccounts[0];
+let activeAccount = testAddresses[0];
 w3.defaultAccount = activeAccount;
 let deployParams = W3.TX.txParamsDefaultDeploy(activeAccount);
 let sendParams = W3.TX.txParamsDefaultSend(activeAccount);

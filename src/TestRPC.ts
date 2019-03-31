@@ -17,10 +17,18 @@ export class TestRPC {
     if (!(await this.w3.isTestRPC)) {
       throw 'Not on TestRPC';
     }
-    return this.w3.send('evm_snapshot', []).then(r => {
-      console.log('RPC RESPONSE: ', r);
-      return <string>r;
-    });
+    const id = 'W3:' + W3.getNextCounter();
+    return this.w3
+      .sendRPC({
+        jsonrpc: '2.0',
+        method: 'evm_snapshot',
+        params: [],
+        id: id
+      })
+      .then(r => {
+        console.log('RPC RESPONSE: ', r);
+        return <string>r.result;
+      });
   }
 
   /**
@@ -32,9 +40,17 @@ export class TestRPC {
     if (!(await this.w3.isTestRPC)) {
       throw 'Not on TestRPC';
     }
-    return this.w3.send('evm_revert', snapshotId ? [snapshotId] : []).then(async r => {
-      return true;
-    });
+    const id = 'W3:' + W3.getNextCounter();
+    return this.w3
+      .sendRPC({
+        jsonrpc: '2.0',
+        method: 'evm_revert',
+        params: snapshotId ? [snapshotId] : [],
+        id: id
+      })
+      .then(async r => {
+        return true;
+      });
   }
 
   /**
@@ -45,10 +61,18 @@ export class TestRPC {
     if (!(await this.w3.isTestRPC)) {
       throw 'Not on TestRPC';
     }
-    return this.w3.send('evm_increaseTime', [W3.duration.seconds(seconds)]).then(async r => {
-      await this.mine();
-      return <number>r;
-    });
+    const id = 'W3:' + W3.getNextCounter();
+    return this.w3
+      .sendRPC({
+        jsonrpc: '2.0',
+        method: 'evm_increaseTime',
+        params: [W3.duration.seconds(seconds)],
+        id: id
+      })
+      .then(async r => {
+        await this.mine();
+        return <number>r.result;
+      });
   }
 
   /**
@@ -59,7 +83,7 @@ export class TestRPC {
    * @param target time in seconds
    */
   public async increaseTimeTo(target: number): Promise<number> {
-    let now = await this.w3.getLatestTime();
+    let now = await this.w3.latestTime;
     if (target < now) {
       throw Error(`Cannot increase current time(${now}) to a moment in the past(${target})`);
     }
@@ -74,17 +98,25 @@ export class TestRPC {
     if (!(await this.w3.isTestRPC)) {
       throw 'Not on TestRPC';
     }
-    return this.w3.send('evm_mine', []).then(r => {
-      return;
-    });
+    const id = 'W3:' + W3.getNextCounter();
+    return this.w3
+      .sendRPC({
+        jsonrpc: '2.0',
+        method: 'evm_mine',
+        params: [],
+        id: id
+      })
+      .then(r => {
+        return;
+      });
   }
 
   public async advanceToBlock(blockNumber: number) {
-    let lastBlock = await this.w3.eth.getBlockNumber();
+    let lastBlock = await this.w3.blockNumber;
     if (lastBlock > blockNumber) {
       throw Error(`block number ${blockNumber} is in the past (current is ${lastBlock})`);
     }
-    while ((await this.w3.eth.getBlockNumber()) < blockNumber) {
+    while ((await this.w3.blockNumber) < blockNumber) {
       await this.mine();
     }
   }

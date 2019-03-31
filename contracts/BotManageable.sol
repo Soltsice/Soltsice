@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.2;
 
 import './MultiOwnable.sol';
 
@@ -21,7 +21,7 @@ contract BotManageable is MultiOwnable {
 
     event BotsStartEndTimeChange(address indexed _botAddress, uint64 _startTime, uint64 _endTime);
 
-    function BotManageable 
+    constructor 
         (address _wallet)
         public
         MultiOwnable(_wallet)
@@ -49,7 +49,7 @@ contract BotManageable is MultiOwnable {
         require((botLifetime >> 64) == 0 && (botLifetime & MASK64) == 0);
         botLifetime |= uint128(now) << 64;
         botsStartEndTime[_botAddress] = botLifetime;
-        BotsStartEndTimeChange(_botAddress, uint64(botLifetime >> 64), uint64(botLifetime & MASK64));
+        emit BotsStartEndTimeChange(_botAddress, uint64(botLifetime >> 64), uint64(botLifetime & MASK64));
     }
 
     /** Disable bot address. */
@@ -62,13 +62,13 @@ contract BotManageable is MultiOwnable {
         require((botLifetime >> 64) > 0 && (botLifetime & MASK64) == 0);
         botLifetime |= uint128(_fromTimeStampSeconds);
         botsStartEndTime[_botAddress] = botLifetime;
-        BotsStartEndTimeChange(_botAddress, uint64(botLifetime >> 64), uint64(botLifetime & MASK64));
+        emit BotsStartEndTimeChange(_botAddress, uint64(botLifetime >> 64), uint64(botLifetime & MASK64));
     }
 
     /** Operational contracts call this method to check if a caller is an approved bot. */
     function isBot(address _botAddress) 
         public
-        constant
+        view
         returns(bool)
     {
         return isBotAt(_botAddress, uint64(now));
@@ -78,7 +78,7 @@ contract BotManageable is MultiOwnable {
 
     function isBotAt(address _botAddress, uint64 _atTimeStampSeconds) 
         public
-        constant 
+        view 
         returns(bool)
     {
         uint128 botLifetime = botsStartEndTime[_botAddress];

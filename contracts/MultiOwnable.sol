@@ -4,7 +4,7 @@ pragma solidity ^0.5.2;
  * A minimum multisig wallet interface. Compatible with MultiSigWallet by Gnosis.
  */
 contract WalletBasic {
-    function isOwner(address owner) public returns (bool);
+    function isOwner(address owner) public view returns (bool);
 }
 
 /**
@@ -16,17 +16,17 @@ contract MultiOwnable {
     
     event MultiOwnableWalletSet(address indexed _contract, address indexed _wallet);
 
-    function MultiOwnable 
+    constructor
         (address _wallet)
         public
     {
         wallet = WalletBasic(_wallet);
-        MultiOwnableWalletSet(this, wallet);
+        emit MultiOwnableWalletSet(address(this), _wallet);
     }
 
     /** Check if a caller is the MultiSig wallet. */
     modifier onlyWallet() {
-        require(wallet == msg.sender);
+        require(address(wallet) == msg.sender);
         _;
     }
 
@@ -42,7 +42,7 @@ contract MultiOwnable {
         returns(bool)
     {
         // NB due to lazy eval wallet could be a normal address and isOwner won't be called if the first condition is met
-        return wallet == _address || wallet.isOwner(_address);
+        return address(wallet) == _address || wallet.isOwner(_address);
     }
 
 
@@ -78,7 +78,7 @@ contract MultiOwnable {
         public 
     {
         paused = true;
-        Pause();
+        emit Pause();
     }
 
     /**
@@ -90,6 +90,6 @@ contract MultiOwnable {
         public
     {
         paused = false;
-        Unpause();
+        emit Unpause();
     }
 }

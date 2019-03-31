@@ -98,7 +98,7 @@ export module soltsice {
       }
 
       if (abiType.startsWith('uint') || abiType.startsWith('int')) {
-        outputType = isReturnType ? ['BN'] : ['BN', 'number'];
+        outputType = isReturnType ? ['BigNumber'] : ['BigNumber', 'number'];
       } else if (abiType.startsWith('bytes')) {
         outputType = ['string'];
       } else {
@@ -187,7 +187,7 @@ export module soltsice {
     });
   }
   `
-    : `
+      : `
   // tslint:disable-next-line:member-ordering
   public ${name} = Object.assign(
       // tslint:disable-next-line:max-line-length
@@ -198,8 +198,8 @@ export module soltsice {
           if (!privateKey) {
             return new Promise((resolve, reject) => {
               this._instance.${name}(${
-                        inputsNamesString === '' ? '' : inputsNamesString + ','
-                      } txParams || this._sendParams)
+          inputsNamesString === '' ? '' : inputsNamesString + ','
+        } txParams || this._sendParams)
                 .then((res: any) => resolve(res))
                 .catch((err: any) => reject(err));
             });
@@ -219,8 +219,8 @@ export module soltsice {
         } txParams?: W3.TX.TxParams): Promise<string> => {
               return new Promise((resolve, reject) => {
                 this._instance.${name}.sendTransaction(${
-                      inputsNamesString === '' ? '' : inputsNamesString + ','
-                    } txParams || this._sendParams)
+          inputsNamesString === '' ? '' : inputsNamesString + ','
+        } txParams || this._sendParams)
                   .then((res: any) => resolve(res))
                   .catch((err: any) => reject(err));
               });
@@ -294,22 +294,21 @@ export module soltsice {
       .join('');
 
     let bnImport = ``;
-    // TODO remove
-    //         if (ctorParams.typesNames.indexOf('BigNumber') >= 0 || methodsBody.indexOf('BigNumber') >= 0) {
-    //             bnImport = `
-    // import { BN } from 'bignumber.js';`;
-    //         }
+
+    if (ctorParams.typesNames.indexOf('BigNumber') >= 0 || methodsBody.indexOf('BigNumber') >= 0) {
+      bnImport = `
+    import { BigNumber } from 'bignumber.js';`;
+    }
 
     // TODO
 
     let template: string = `${bnImport}
-import { W3, BN, SoltsiceContract } from '${importPath}';
+import { W3, SoltsiceContract } from '${importPath}';
 
 /**
  * ${contractName} API
  */
 export class ${contractName} extends SoltsiceContract {
-  protected useBN: BN = new BN(0);
 
   public static get artifacts() { return require('${artifactRelPath}'); }
 
