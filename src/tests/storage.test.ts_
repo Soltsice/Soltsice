@@ -5,7 +5,7 @@ import * as ganache from 'ganache-cli';
 // import { Storage } from '../contracts';
 
 let w3 = new W3(ganache.provider({
-    mnemonic: 'dbrainio',
+    mnemonic: 'soltsice',
     network_id: 314
 }));
 W3.default = w3;

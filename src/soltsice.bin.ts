@@ -3,7 +3,7 @@
 // npm runnable script, set in "bin" section in package.json
 
 import { soltsice } from './soltsice';
-import * as cla from 'command-line-args';
+import  cla from 'command-line-args';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will

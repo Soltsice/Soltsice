@@ -6,4 +6,4 @@ export * from './contracts';
 export * from './TestRPC';
 export * from './jsonrpc';
 export * from './soltsice';
-export * from './storage';
+// export * from './storage';

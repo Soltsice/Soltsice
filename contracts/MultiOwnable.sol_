@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.2;
 
 /*
  * A minimum multisig wallet interface. Compatible with MultiSigWallet by Gnosis.
@@ -38,7 +38,7 @@ contract MultiOwnable {
 
     function isOwner(address _address) 
         public
-        constant
+        view
         returns(bool)
     {
         // NB due to lazy eval wallet could be a normal address and isOwner won't be called if the first condition is met

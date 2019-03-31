@@ -20,10 +20,11 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "experimentalDecorators": true,
     "noEmit": false,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

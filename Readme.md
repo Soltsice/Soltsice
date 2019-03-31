@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/dbrainio/Soltsice.svg?branch=master)](https://travis-ci.org/dbrainio/Soltsice)
+[![Build Status](https://travis-ci.org/Soltsice/Soltsice.svg?branch=master)](https://travis-ci.org/Soltsice/Soltsice)
 
-[<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/theme/assets/images/Dbrain_blue.png" alt="Spreads" height="20" align="right" />](https://dbrain.io)
+[<img src="https://raw.githubusercontent.com/Soltsice/Soltsice/master/misc/theme/assets/images/Dbrain_blue.png" alt="Spreads" height="20" align="right" />](https://dbrain.io)
 
-# [Soltsice](https://github.com/dbrainio/Soltsice)
+# [Soltsice](https://github.com/Soltsice/Soltsice)
 
 **Sol**idity & **T**ype**S**cript **I**ntegration, **C**onfiguration and **E**xamples
 
@@ -10,43 +10,45 @@ With Soltsice you could generate strongly-typed TypeScript proxies for Ethereum 
 
 ## Quick links
 
-* **[Features](#features)**
-  * [Solidity ABI to TypeScript contract generation](#solidity-abi-to-typescript-contract-generation)
-    * <small>[Methods](#methods)</small>
-    * <small>[Events](#events)</small>
-    * <small>[Type safety and easy refactoring](#type-safety-and-easy-refactoring)</small>
-    * <small>[Fast API discovery & Intellisense support](#fast-api-discovery-intellisense-support)</small>
-    * <small>[Isomorphic NPM packages for contracts](#isomorphic-npm-packages-for-contracts)</small>
-  * [Transactions and custom data signing](#transactions-and-custom-data-signing)
-    * <small>[Using remote public nodes is easy](#using-remote-public-nodes-is-easy)</small>
-    * <small>[Micropayments state channels example](#micropayments-state-channels-example)</small>
-  * [Private key management](l#private-key-management)
-    * <small>[Security considerations](#security-considerations)</small>
-    * <small>[Local key file storage](#local-key-file-storage)</small>
-  * [Contracts for access control](#contracts-for-access-control)
-    * <small>[MultiOwnable: MultiSig majority and individual owner access](#multiownable-multisig-majority-and-individual-owner-access)</small>
-    * <small>[BotManageable: account managed by backend](#botmanageable-account-managed-by-backend)</small>
-  * [Utilities](#utilities)
-    * <small>[W3 module](#w3-module)</small>
-    * <small>[Ethereum Utils](#ethereum-utils)</small>
-    * <small>[Keythereum](#keythereum)</small>
-    * <small>[Storage contract](#storage-contract)</small>
-    * <small>[`soltsice` code generator from code](#soltsice-code-generator-from-code)</small>
-  * [Work in progress](#work-in-progress)
-* **[Getting started](#getting-started)**
-  * [Install & Usage](#install-usage)
-    * <small>[Workflow](#workflow)</small>
-  * [Starter projects](#starter-projects)
-    * <small>[Contracts starter](#contracts-starter)</small>
-    * <small>[Frontend with CRA & TypeScript](#frontend-with-cra-typescript)</small>
-    * <small>[Backend API with Swagger](#backend-api-with-swagger)</small>
-  * [Examples](#examples)
-    * <small>[Dbrain contracts](#dbrain-contracts)</small>
-    * <small>[Dbrain blockchain API](#dbrain-blockchain-api)</small>
-    * <small>[Dbrain DApp prototype](#dbrain-dapp-prototype)</small>
-* **[Contributing](#contributing)**
-  * [Build](#build)
-  * [License](#license)
+- [Soltsice](#soltsice)
+  - [Quick links](#quick-links)
+  - [Features](#features)
+    - [Solidity ABI to TypeScript contract generation](#solidity-abi-to-typescript-contract-generation)
+      - [Methods](#methods)
+      - [Events](#events)
+      - [Type safety and easy refactoring](#type-safety-and-easy-refactoring)
+      - [Fast API discovery & Intellisense support](#fast-api-discovery--intellisense-support)
+      - [Isomorphic NPM packages for contracts](#isomorphic-npm-packages-for-contracts)
+    - [Transactions and custom data signing](#transactions-and-custom-data-signing)
+      - [Using remote public nodes is easy](#using-remote-public-nodes-is-easy)
+      - [Micropayments state channels example](#micropayments-state-channels-example)
+    - [Private key management](#private-key-management)
+      - [Security considerations](#security-considerations)
+      - [Local key file storage](#local-key-file-storage)
+    - [Contracts for access control](#contracts-for-access-control)
+      - [MultiOwnable: MultiSig majority and individual owner access](#multiownable-multisig-majority-and-individual-owner-access)
+      - [BotManageable: account managed by backend](#botmanageable-account-managed-by-backend)
+    - [Utilities](#utilities)
+      - [W3 module](#w3-module)
+      - [Ethereum Utils](#ethereum-utils)
+      - [Keythereum](#keythereum)
+      - [Storage contract](#storage-contract)
+      - [`soltsice` code generator from code](#soltsice-code-generator-from-code)
+    - [Work in progress](#work-in-progress)
+  - [Getting started](#getting-started)
+    - [Install & Usage](#install--usage)
+      - [Workflow](#workflow)
+    - [Starter projects](#starter-projects)
+      - [Contracts starter](#contracts-starter)
+      - [Frontend with CRA & TypeScript](#frontend-with-cra--typescript)
+      - [Backend API with Swagger](#backend-api-with-swagger)
+  - [Examples](#examples)
+    - [Dbrain contracts](#dbrain-contracts)
+    - [Dbrain blockchain API](#dbrain-blockchain-api)
+    - [Dbrain DApp prototype](#dbrain-dapp-prototype)
+  - [Contributing](#contributing)
+    - [Build](#build)
+    - [License](#license)
 
 ---
 
@@ -70,11 +72,11 @@ The initial purpose of this library was to have peace of mind and type safety wh
 
 *Methods with signatures*
 
-<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/methods.png" alt="Methods with signatures" width="600" />
+<img src="https://raw.githubusercontent.com/Soltsice/Soltsice/master/misc/images/methods.png" alt="Methods with signatures" width="600" />
 
 *Typed Constructor*
 
-<img src="https://raw.githubusercontent.com/dbrainio/Soltsice/master/misc/images/constructor.png" alt="Typed Constructor" width="600" />
+<img src="https://raw.githubusercontent.com/Soltsice/Soltsice/master/misc/images/constructor.png" alt="Typed Constructor" width="600" />
 
 #### Fast API discovery & Intellisense support
 
@@ -207,7 +209,7 @@ supply.then(value => {
 
 ```
 
-See [dbrain-contracts](https://github.com/dbrainio/dbrain-contracts) and [dbrain-blockchain-api](https://github.com/dbrainio/dbrain-blockchain-api) projects that use this library and a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
+See [dbrain-contracts](https://github.com/Soltsice/dbrain-contracts) and [dbrain-blockchain-api](https://github.com/Soltsice/dbrain-blockchain-api) projects that use this library and a standalone minimal example [here](https://github.com/buybackoff/SoltsiceExample).
 
 #### Workflow
 
@@ -243,13 +245,13 @@ TODO
 ### Dbrain contracts
 
 TODO 
-https://github.com/dbrainio/dbrain-contracts
+https://github.com/Soltsice/dbrain-contracts
 State channels + in-memory off-chain signing mock
 
 ### Dbrain blockchain API
 
 TODO
-https://github.com/dbrainio/dbrain-blockchain-api
+https://github.com/Soltsice/dbrain-blockchain-api
 Off-chain signing prototype on Postgres
 
 ### Dbrain DApp prototype
